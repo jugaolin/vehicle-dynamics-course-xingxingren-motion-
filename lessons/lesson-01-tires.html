@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 1 课 · 力从四块橡胶来</title>
+<meta name="description" content="汽车运动性能第一课:轮胎坐标系、侧偏角如何产生侧向力、抓地力极限与摩擦圆(含三张原创插图)。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">第 1 课 · 第一章 轮胎特性</p>
+    <h1>力,从四块橡胶来</h1>
+    <p class="lede">你的车再重、动力再猛,它和地面之间全部的联系,只有四块巴掌大的橡胶。车能转、能停、能加速——所有的力,都从这里长出来。</p>
+    <div class="meta">
+      <span>面向零基础驾驶者</span><span>约 8 分钟</span><span>KEYWORDS&nbsp;&nbsp;侧偏角 · 侧抗刚度 · 摩擦圆</span>
+    </div>
+
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step here"><span class="n">01</span>轮胎</div>
+      <div class="step"><span class="n">02</span>如何响应</div>
+      <div class="step"><span class="n">03</span>各种工况</div>
+      <div class="step"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step"><span class="n">08</span>人来闭环</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先问你一个开车的感觉</span>
+    <p>下雨天你稍快一点打方向进弯,车头"哗"地往外推、不听使唤(推头);或者后轮突然一滑(甩尾)。<strong>这一课学完,你就能说清楚那一刻到底发生了什么。</strong></p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>先学"行话":轮胎坐标系</h2>
+    <p>想聊清楚力,得先给力起名字。站在一个轮胎上看,它受的力分三个方向,再加两个关键角度——这套命名是<strong>全书的通用语言</strong>,后面每一章都在用。</p>
+
+    <figure>
+      <svg viewBox="0 0 480 330" role="img" aria-label="轮胎坐标系:车轮指向、行进方向、侧偏角与侧向力">
+        <ellipse cx="240" cy="205" rx="150" ry="30" class="s-grid"/>
+        <rect x="219" y="120" width="42" height="118" rx="12" class="s-tirefill" opacity="0.86"/>
+        <line x1="240" y1="128" x2="240" y2="230" stroke="var(--paper)" stroke-width="2" opacity=".5"/>
+        <defs>
+          <marker id="ha" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-filla"/></marker>
+          <marker id="ht" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillt"/></marker>
+        </defs>
+        <line x1="240" y1="150" x2="240" y2="46" class="s-acc" stroke-width="2.5" marker-end="url(#ha)"/>
+        <text x="248" y="52" class="t acc">车轮指向</text>
+        <text x="248" y="70" class="t mut">F_x 纵向(加/刹)</text>
+        <line x1="240" y1="150" x2="279" y2="53" class="s-teal s-dash" stroke-width="2.5" marker-end="url(#ht)"/>
+        <text x="286" y="96" class="t teal">行进方向</text>
+        <path d="M240,92 A58,58 0 0,1 258,88" class="s-axis" fill="none"/>
+        <text x="250" y="118" class="t mono acc">α 侧偏角</text>
+        <line x1="240" y1="150" x2="150" y2="150" class="s-acc" stroke-width="2.5" marker-end="url(#ha)"/>
+        <text x="70" y="146" class="t acc">F_y 侧向力</text>
+        <text x="60" y="164" class="t mut">让车转弯的力</text>
+        <circle cx="240" cy="205" r="9" class="s-axis" fill="none"/><circle cx="240" cy="205" r="2" class="s-filla"/>
+        <text x="256" y="210" class="t mut">F_z 垂直力(载荷),垂直地面向下</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 原创重绘</span> &nbsp;轮胎<b>指的方向</b>(实线)和它<b>实际滚过去的方向</b>(虚线)差了一个角度,这个角就是<b>侧偏角 α</b>。<b>F_x</b> 是前后方向的力(加速/刹车),<b>F_y</b> 是左右方向的力(转弯就靠它),<b>F_z</b> 是这个轮子压在地上的重量。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>这一课的心脏:侧偏角 → 侧向力</h2>
+    <p>轮胎怎么产生"转弯的力"?<strong>不是你把轮子转多少度它就往哪走。</strong>真实情况是:轮子指的方向和实际走的方向<span class="u">别着一个角度(侧偏角 α)</span>,正是这个"别着劲",挤出了侧向力 F_y。</p>
+    <ul>
+      <li>侧偏角<strong>很小时(约 0°~1°),侧向力和它成正比</strong>——越大越有劲,线性、听话。这条正比线的斜率,书里叫 <strong>侧抗刚度 K_y</strong>(轮胎"抓侧向"有多硬)。</li>
+      <li>而且 K_y 还跟这个轮子压了多重(轮荷 F_z)有关:</li>
+    </ul>
+    <div class="formula">K_y / F_z ≈ 0.33 − 3.46×10⁻⁵ · F_z</div>
+    <p><strong>轮子压得越重,单位载荷能榨出的侧向力反而下降。</strong>(这句话在后面讲过弯载荷转移时会反复用到,先记住。)</p>
+
+    <figure>
+      <svg viewBox="0 0 520 340" role="img" aria-label="侧偏角与侧向力关系曲线:线性区、非线性区与抓地力极限">
+        <rect x="70" y="40" width="46" height="250" class="band" opacity=".8"/>
+        <line x1="70" y1="90" x2="490" y2="90" class="s-grid"/>
+        <line x1="70" y1="165" x2="490" y2="165" class="s-grid"/>
+        <line x1="70" y1="240" x2="490" y2="240" class="s-grid"/>
+        <line x1="70" y1="30" x2="70" y2="292" class="s-axis"/>
+        <line x1="70" y1="290" x2="496" y2="290" class="s-axis"/>
+        <text x="16" y="60" class="t mut">侧向力</text><text x="30" y="76" class="t mut">F_y</text>
+        <text x="404" y="312" class="t mut">侧偏角 α (°)</text>
+        <line x1="70" y1="72" x2="490" y2="72" class="s-teal s-dash"/>
+        <text x="300" y="66" class="t teal">抓地力极限(饱和)</text>
+        <path d="M70,290 C150,132 300,80 490,73" class="s-curve"/>
+        <line x1="70" y1="290" x2="172" y2="98" class="s-teal" stroke-width="2"/>
+        <text x="120" y="150" class="t mono teal">K_y 斜率</text>
+        <text x="80" y="284" class="t mono acc" transform="rotate(-90 80,284)">线性区 0–1°</text>
+        <text x="300" y="150" class="t acc">非线性区</text>
+        <text x="300" y="170" class="t mut">越来越"给不动"</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 原创重绘</span> &nbsp;曲线一开始是<b>直线上升</b>(线性区,斜率就是侧抗刚度 K_y),到后面<b>弯过去、涨不动、直至到顶</b>——这就是<b>抓地力的极限</b>。你能不能转过这个弯,就看需要的 F_y 有没有超过这条顶线。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>为什么"抓地力有极限"?</h2>
+    <p>上面的"成正比"只在小角度成立。角度继续加大,接地面里的橡胶承受的剪切力<strong>一旦超过它和路面之间的静摩擦力</strong>,那一小块就开始打滑;角度越大,滑的区域越大,直到整个接地面都在滑——<span class="u">这就是非线性区,也就是抓地力的极限</span>。</p>
+    <p class="lead-line">而且,同一块橡胶要同时管"前后"和"左右"两件事——它俩在<strong>抢同一份摩擦力</strong>。</p>
+
+    <figure>
+      <svg viewBox="0 0 400 320" role="img" aria-label="摩擦圆:纵向力与侧向力共享同一份摩擦力">
+        <circle cx="180" cy="165" r="120" class="s-teal" stroke-width="2.5"/>
+        <line x1="180" y1="45" x2="180" y2="285" class="s-grid"/>
+        <line x1="60" y1="165" x2="300" y2="165" class="s-grid"/>
+        <line x1="180" y1="165" x2="180" y2="92" class="s-acc s-dash" stroke-width="1.8"/>
+        <line x1="180" y1="165" x2="252" y2="165" class="s-acc s-dash" stroke-width="1.8"/>
+        <line x1="180" y1="165" x2="252" y2="92" class="s-acc" stroke-width="3.5" marker-end="url(#ha)"/>
+        <circle cx="252" cy="92" r="3.5" class="s-filla"/>
+        <text x="150" y="80" class="t mut">F_x 纵向</text>
+        <text x="258" y="182" class="t mut">F_y 侧向</text>
+        <text x="196" y="120" class="t acc">合力</text>
+        <text x="196" y="300" class="t teal">圆的边 = 极限 μ·W</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 原创重绘</span> &nbsp;把轮胎能给的<b>总力</b>想象成一个圆(半径 = 路面摩擦上限)。纵向力 F_x(加速/刹车)和侧向力 F_y(转弯)是这根合力的两条边——<b>合力不能超出圆</b>。所以你<b>刹车用掉的力越多,能留给转弯的力就越少</b>。这就是"边刹车边急打方向容易失控"的根。</figcaption>
+    </figure>
+
+    <div class="hook teal">
+      <span class="k">回到开头那个问题</span>
+      <p>下雨天路面摩擦小(圆更小),你稍快点打方向,前轮侧偏角很快冲进非线性区、侧向力饱和给不动了 → 车头需要的转弯力不够 → <strong>推头</strong>。后轮先到极限,就是<strong>甩尾</strong>。你感觉到的"不听使唤",就是<strong>轮胎侧向力饱和</strong>的那一刻。</p>
+    </div>
+  </section>
+
+  <div class="take">
+    <h2>一课一收:你现在能说的三句话</h2>
+    <ol>
+      <li>车的所有力,都从四块橡胶接地面里长出来;</li>
+      <li>转弯的侧向力,是靠"侧偏角"这个别着劲的角度挤出来的,小角度成正比(侧抗刚度 K_y);</li>
+      <li>角度太大就进非线性区、侧向力饱和——这就是抓地力极限;而纵向和侧向共用一个"摩擦圆",一个用多了另一个就不够。推头和甩尾都在这里。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 开车验证题</span>
+    <p>在<strong>空旷安全</strong>的低速场地里,慢慢加大转弯时打方向的幅度,体会车头从"跟手"到"开始往外推"的那个转变点——那就是前轮侧偏角从<strong>线性区</strong>滑进<strong>非线性区</strong>的临界。记住那个手感。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">第 2 课 · 车是怎么转弯的?</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">把这些力装到四个轮子、一整台车上,看它们合起来怎么让车"横摆"和"侧移"——这就是全书骨架:<strong>二自由度模型</strong>,以及"推头/甩尾"的正式名字:<strong>不足转向 / 过度转向</strong>。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　第 1 课 / 共 7 课</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a></p>
+  </footer>
+</div>
+</body>
+</html>

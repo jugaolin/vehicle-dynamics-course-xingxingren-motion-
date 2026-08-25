@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全书框架与地图</title>
+<meta name="description" content="《汽车运动性能技术》全书 8 章的一条'人—车—环境'运动链、真实目录与逻辑对照。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="index.html">首页</a>
+    <a href="framework.html" class="active">全书框架</a>
+    <a href="syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">全书地图 · The Big Picture</p>
+    <h1>这本书,是一条因果链</h1>
+    <p class="lede">全书 8 章不是 8 个孤立话题,而是一条从"力从哪来"一路走到"人怎么把车开稳"的链子。先看清这条链,再学每一课,就永远不会迷路。</p>
+  </header>
+
+  <section>
+    <h2><span class="idx">01</span>一条"人—车—环境"运动链</h2>
+    <div class="chainbox">
+      <div class="envband">环境包裹全程:路面摩擦 μ · 空气 / 侧风</div>
+      <div class="chain">
+        <div class="node">
+          <div class="stage">力从哪来</div>
+          <div class="ch">第 1 章 轮胎</div>
+          <div class="sub">侧偏角→侧向力;摩擦圆(纵/侧力互抢)</div>
+        </div>
+        <div class="sep">→</div>
+        <div class="node">
+          <div class="stage">车怎么响应</div>
+          <div class="ch">第 2 章 运动理论</div>
+          <div class="sub">平面二自由度;US/OS/NS;稳定性因子;瞬态/非线性</div>
+        </div>
+        <div class="sep">→</div>
+        <div class="node big">
+          <div class="stage">用什么调</div>
+          <div class="ch">第 4–7 章 旋钮</div>
+          <div class="sub">转向 · 悬架 · 4WS · 驱动/制动力控制(本质都在"重新分配轮胎力")</div>
+        </div>
+        <div class="sep">→</div>
+        <div class="node">
+          <div class="stage">谁来闭环</div>
+          <div class="ch">第 8 章 人—车</div>
+          <div class="sub">驾驶人模型;预瞄;人车稳定性</div>
+        </div>
+      </div>
+      <p style="margin:16px 0 0;font-size:13px;color:var(--muted);text-align:center">
+        第 3 章 <b style="color:var(--ink)">车辆的运动性能</b>:把上面这台车放进各种工况(转弯/侧风/乘坐/驱动制动/极限)去评价与解析。
+      </p>
+    </div>
+    <div class="thesis">
+      <strong>一句话总纲:</strong>轮胎是唯一力源,力受摩擦圆约束 → 前后/左右怎么分配这些力,决定车的横摆与侧移响应(二自由度模型)→ 转向、悬架、4WS、驱动/制动控制都只是调节这个响应的旋钮 → 最后把车交给"人",在人—车闭环里检验稳定性。<b>前 7 章造车,第 8 章把车交给人。</b>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>全书真实目录(8 章)</h2>
+    <p style="color:var(--muted);font-size:.95rem">页码为原书印刷页码。本书<b>没有单独的"绪论"章</b>(开篇即第 1 章轮胎),也<b>没有单独的"空气动力学"章</b>(侧风稳定性见 3.3.1)。</p>
+
+    <h3>第 1 章 轮胎特性 <span class="mono" style="color:var(--faint)">p1</span></h3>
+    <ul><li>1.1 影响运动性能的轮胎特性(坐标系 / 尺寸 / 刚度 / 线性区 / 非线性区 / 主观评价)</li>
+    <li>1.2 解析用轮胎模型　1.3 模型案例:Magic Formula　1.4 轮胎特性测量技术</li></ul>
+
+    <h3>第 2 章 车辆的运动性能理论 <span class="mono" style="color:var(--faint)">p21</span></h3>
+    <ul><li>2.1 运动与运动方程式(平面 / 含转向系 / 含侧倾 / 垂向)</li>
+    <li>2.2 平面 2 自由度模型的线性分析(匀速环行 / 瞬态响应 / 外部干扰 / 柔性偏向 / 复合侧抗刚度)</li>
+    <li>2.3 非线性区域分析方法(线性化 / 环行几何学 / <b>横摆力矩法</b> / 状态平面)</li></ul>
+
+    <h3>第 3 章 车辆的运动性能 <span class="mono" style="color:var(--faint)">p39</span></h3>
+    <ul><li>3.1 评价与解析(参数测量 / 道路试验 / 室内试验 / 仿真)</li>
+    <li>3.2 转向时　3.3 外部干扰(<b>侧风稳定性</b> / 乘坐舒适性 / 路面干扰)　3.4 驱动制动时　3.5 极限附近</li></ul>
+
+    <h3>第 4 章 转向系统与车辆运动性能 <span class="mono" style="color:var(--faint)">p65</span></h3>
+    <ul><li>转向响应/反作用力 · 动力转向 · 转向几何学(阿克曼、主销) · 跑偏 · 转向角/力控制</li></ul>
+
+    <h3>第 5 章 悬架与车辆的运动性能 <span class="mono" style="color:var(--faint)">p76</span></h3>
+    <ul><li>功能 · 悬架特性与操稳(束角/接地点/外倾/侧倾/加减速姿态) · 乘坐舒适性 · 类型 · 主动悬架</li></ul>
+
+    <h3>第 6 章 4WS 系统与车辆运动性能 <span class="mono" style="color:var(--faint)">p104</span></h3>
+    <ul><li>目的与原理 · 运动学理论 · 控制分类 · 实际控制(横摆率延迟改进、车身零侧偏、理想转向响应) · 各种结构</li></ul>
+
+    <h3>第 7 章 驱动力及制动力控制与车辆运动性能 <span class="mono" style="color:var(--faint)">p121</span></h3>
+    <ul><li>控制定位与目标 · 前后分配 · <b>左右分配(DYC)</b>、扩展动态四边形 · 纵向力与侧向力综合控制(与 4WS 综合)</li></ul>
+
+    <h3>第 8 章 人—车系统的运动 <span class="mono" style="color:var(--faint)">p146</span></h3>
+    <ul><li>前言 · 人的控制动作 · 操纵动作模型(传递函数 / <b>预瞄控制</b> / 专家系统) · 人与汽车的稳定性</li></ul>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>逻辑主线 ↔ 真实章节 对照</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>逻辑环节</th><th>对应章</th></tr></thead>
+      <tbody>
+        <tr><td>力从哪来(唯一力源、摩擦圆)</td><td>第 1 章</td></tr>
+        <tr><td>车如何响应(二自由度、US/OS、稳定性因子、瞬态/非线性)</td><td>第 2 章</td></tr>
+        <tr><td>把车放进各种工况评价(转弯/侧风/乘坐/驱动制动/极限)</td><td>第 3 章</td></tr>
+        <tr><td>调节响应的旋钮</td><td>第 4 章(转向)· 第 5 章(悬架)· 第 6 章(4WS)· 第 7 章(驱动/制动、DYC)</td></tr>
+        <tr><td>人进入闭环(可控性、稳定性)</td><td>第 8 章</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">继续</div>
+      <div class="ti"><a href="syllabus.html">课程表与教学方法 →</a></div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">看这 7 节课怎么顺着这条链排下来,以及第 1 课先讲什么。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　全书框架</p>
+    <p>内容依据《汽车运动性能技术》(主编 安部正人、大沢洋)整理,不与外部资料对比、不扩展。<a href="index.html">← 回首页</a></p>
+  </footer>
+</div>
+</body>
+</html>
