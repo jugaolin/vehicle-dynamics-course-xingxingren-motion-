@@ -14,6 +14,7 @@
 | [全书框架 `framework.html`](framework.html) | 一条"人—车—环境"运动链 + 全书真实目录(8 章)|
 | [课程表 `syllabus.html`](syllabus.html) | 教学方法 + 7 节课安排 |
 | [第 1 课 `lessons/lesson-01-tires.html`](lessons/lesson-01-tires.html) | 轮胎特性:侧偏角→侧向力 · 抓地力极限 · 摩擦圆 |
+| [第 2 课 `lessons/lesson-02-2dof.html`](lessons/lesson-02-2dof.html) | 平面二自由度模型 · 不足/过度/中性转向 · 稳定系数 K · 临界车速 · 为什么 US 才稳定 |
 
 > `docs/` 下另存有早期的纯 Markdown 版讲义,便于在 GitHub 上直接浏览;线上 HTML 站点为主。
 
