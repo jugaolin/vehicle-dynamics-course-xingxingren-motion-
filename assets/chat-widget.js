@@ -45,7 +45,7 @@
   input.onkeydown = function(e){ if(e.key==='Enter') doSend(); };
 
   // Worker URL (Cloudflare Worker 代理,token安全存储在Worker中)
-  var WORKER_URL = ''; // 部署后填入
+  var WORKER_URL = 'https://chat-feedback.1169607528.workers.dev';
 
   function addMsg(text, who, rawQ){
     var d = document.createElement('div');
