@@ -177,8 +177,8 @@ figcaption b{color:var(--ink)}
   header.hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both}
 }
 @media (prefers-reduced-motion:reduce){
-  .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
-  .playtag{display:none}
+  html:not([data-anim="on"]) .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
+  html:not([data-anim="on"]) .playtag{display:none}
 }
 
 /* 手动开关:html[data-anim="on"] 强制开启动画(无视系统设置) */
@@ -193,8 +193,12 @@ html[data-anim="on"] .playtag::before{animation:blink 1.4s steps(1) infinite}
 html[data-anim="on"] header.hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both}
 
 /* 手动开关:html[data-anim="off"] 强制关闭动画 */
-html[data-anim="off"] .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
+html[data-anim="off"] .anim-draw{stroke-dasharray:none; stroke-dashoffset:0; animation:none}
+html[data-anim="off"] .travel{animation:none}
+html[data-anim="off"] .flow{animation:none}
+html[data-anim="off"] .pulse{animation:none}
 html[data-anim="off"] .playtag{display:none}
+html[data-anim="off"] header.hero{animation:none}
 
 /* ===== 收尾块 ===== */
 .take{background:var(--accent-soft); border-radius:12px; padding:22px 24px; margin:30px 0}
