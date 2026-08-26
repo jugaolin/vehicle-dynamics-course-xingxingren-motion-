@@ -319,6 +319,11 @@ footer a{color:var(--muted)}
 .fb-btn:hover{opacity:1; background:var(--hair)}
 .fb-done{font-size:11px; color:var(--muted); padding:2px 6px}
 
+/* AI 回复来源标注 */
+.ai-reply-source{font-size:11px; color:var(--accent); margin-bottom:6px; padding:3px 8px;
+  background:rgba(200,60,20,.08); border-radius:6px; display:inline-block}
+.ai-reply-more{font-size:11px; color:var(--muted); margin-top:6px; border-top:1px solid var(--hair); padding-top:4px}
+
 @media (max-width:480px){
   .chat-panel{right:8px; left:8px; width:auto; bottom:92px}
   .chat-avatar{bottom:14px; right:14px; width:54px; height:54px}

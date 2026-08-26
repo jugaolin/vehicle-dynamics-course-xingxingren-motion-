@@ -231,10 +231,118 @@
      a:'拜拜~ 🍉 记得去上课哦!首页就有~'},
   ];
 
+  /* ========== TF-IDF 语义搜索 ========== */
+  var _kbData = null, _idf = null, _vectors = null;
+  var _STOP = '的了是在有和与或但而也都不这就我你他她它们被把让给从到对于及等所能会可以应该需要因为所以如果虽然但是可以已经正在'.split('');
+
+  // 加载知识库 + TF-IDF 索引(后台异步)
+  function loadIndex(){
+    var base = imgBase;
+    Promise.all([
+      fetch(base + 'knowledge-base.json').then(function(r){ return r.json(); }),
+      fetch(base + 'tfidf-index.json').then(function(r){ return r.json(); })
+    ]).then(function(res){
+      _kbData = res[0];
+      var idx = res[1];
+      _idf = idx.idf;
+      // 还原稀疏向量: [term,val,...] → {term:val}
+      _vectors = idx.vectors.map(function(flat){
+        var v = {};
+        for(var i=0; i<flat.length; i+=2) v[flat[i]] = flat[i+1];
+        return v;
+      });
+      console.log('[AI] 知识库加载完成: ' + _kbData.length + ' 个文本块');
+    }).catch(function(e){ console.warn('[AI] 知识库加载失败:', e.message); });
+  }
+
+  // 中文分词:unigram + bigram + trigram + 英文词
+  function tokenize(text){
+    var clean = text.toLowerCase()
+      .replace(/[a-zA-Z0-9]+/g, function(m){ return ' '+m+' '; })
+      .replace(/[^一-龥a-z0-9\s]/g, ' ');
+    var chars = clean.split('').filter(function(c){ return c.trim(); });
+    var tokens = [];
+    for(var i=0; i<chars.length; i++){
+      if(_STOP.indexOf(chars[i])===-1) tokens.push(chars[i]); // unigram
+      if(i<chars.length-1) tokens.push(chars[i]+chars[i+1]); // bigram
+      if(i<chars.length-2) tokens.push(chars[i]+chars[i+1]+chars[i+2]); // trigram
+    }
+    var enWords = text.toLowerCase().match(/[a-z][a-z0-9]+/g) || [];
+    tokens.push.apply(tokens, enWords);
+    return tokens;
+  }
+
+  // 计算查询向量
+  function queryVec(q){
+    var toks = tokenize(q);
+    var freq = {};
+    for(var i=0; i<toks.length; i++) freq[toks[i]] = (freq[toks[i]]||0)+1;
+    var vec = {};
+    var maxF = 1;
+    for(var k in freq) if(freq[k]>maxF) maxF=freq[k];
+    for(var k in freq){
+      var tf = 0.5 + 0.5*(freq[k]/maxF);
+      vec[k] = tf * (_idf[k]||1);
+    }
+    // 归一化
+    var norm = 0;
+    for(var k in vec) norm += vec[k]*vec[k];
+    norm = Math.sqrt(norm)||1;
+    for(var k in vec) vec[k] /= norm;
+    return vec;
+  }
+
+  // 余弦相似度(稀疏向量)
+  function cosine(a, b){
+    var dot = 0;
+    for(var k in a){ if(b[k]) dot += a[k]*b[k]; }
+    return dot;
+  }
+
+  // TF-IDF 搜索:返回 top 个最相关文本块
+  function tfidfSearch(q, topN){
+    if(!_vectors || !_kbData) return [];
+    var qv = queryVec(q);
+    var scores = [];
+    for(var i=0; i<_vectors.length; i++){
+      var s = cosine(qv, _vectors[i]);
+      if(s > 0.05) scores.push({ idx: i, score: s });
+    }
+    scores.sort(function(a,b){ return b.score - a.score; });
+    var results = [];
+    for(var i=0; i<Math.min(topN||3, scores.length); i++){
+      var chunk = _kbData[scores[i].idx];
+      results.push({ text: chunk.text, lesson: chunk.lesson, section: chunk.sectionTitle, score: scores[i].score });
+    }
+    return results;
+  }
+
+  // 格式化 TF-IDF 搜索结果为回复
+  function formatReply(results){
+    if(results.length === 0) return null;
+    var best = results[0];
+    // 提取最相关的句子(取前200字)
+    var text = best.text.substring(0, 300);
+    if(best.text.length > 300) text += '...';
+    var reply = '<div class="ai-reply-source">📖 《汽车运动性能技术》第' + best.lesson + '课 · ' + best.section + '</div>'
+      + '<p>' + text + '</p>';
+    // 如果有多个相关结果,附加其他来源
+    if(results.length > 1){
+      reply += '<div class="ai-reply-more">相关还有: ';
+      for(var i=1; i<results.length; i++){
+        reply += '第' + results[i].lesson + '课(' + Math.round(results[i].score*100) + '%) ';
+      }
+      reply += '</div>';
+    }
+    return reply;
+  }
+
+  /* ========== 回复逻辑:关键词优先 → TF-IDF语义搜索 ========== */
   function mockReply(q){
+    var raw = q;
     q = q.toLowerCase().replace(/[？?！!。，,\s]+/g,' ');
 
-    // 优先匹配:更长的关键词优先
+    // 第1层:关键词精确匹配(快速,对已知问题效果好)
     var best = null, bestLen = 0;
     for(var i=0; i<KB.length; i++){
       var patterns = KB[i].k.split('|');
@@ -246,7 +354,7 @@
     }
     if(best) return best.a;
 
-    // 模糊匹配:按课号
+    // 第2层:课号匹配
     if(q.match(/第?1|第一/)) return'第1课讲<b>轮胎</b>——唯一的力源。摩擦圆、侧偏角、侧偏刚度是核心概念。详见<b>第1课</b>~';
     if(q.match(/第?2|第二/)) return'第2课讲<b>二自由度模型</b>——车怎么转弯。不足/过度/中性转向、稳定系数K。详见<b>第2课</b>~';
     if(q.match(/第?3|第三/)) return'第3课讲<b>瞬态响应</b>——快不快、晃不晃。固有频率、阻尼比、频率响应共振峰。详见<b>第3课</b>~';
@@ -255,6 +363,15 @@
     if(q.match(/第?6|第六/)) return'第6课讲<b>4WS+力分配</b>——让车更听话。低速逆相/高速同相、DYC、LSD。详见<b>第6课</b>~';
     if(q.match(/第?7|第七|收尾/)) return'第7课讲<b>人—车闭环</b>——最后一环是你。预瞄、驾驶人模型、稳定极限速度。详见<b>第7课</b>~';
 
+    // 第3层:TF-IDF 语义搜索(智能,处理自然语言问题)
+    var results = tfidfSearch(raw, 3);
+    var reply = formatReply(results);
+    if(reply) return reply;
+
+    // 兜底
     return'好问题!我暂时没有精确匹配的答案,但本站 7 课覆盖了全书核心内容,建议翻阅对应章节~<br><br>💡 你可以问我:<br>· 摩擦圆公式<br>· 不足转向和过度转向的区别<br>· 悬架怎么影响操控<br>· 4WS原理<br>· 预瞄时间是什么';
   }
+
+  // 后台加载知识库索引
+  loadIndex();
 })();
