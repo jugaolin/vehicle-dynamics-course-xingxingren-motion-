@@ -337,12 +337,18 @@
     return reply;
   }
 
-  /* ========== 回复逻辑:关键词优先 → TF-IDF语义搜索 ========== */
+  /* ========== 回复逻辑:TF-IDF语义搜索优先 → 关键词兜底 ========== */
   function mockReply(q){
     var raw = q;
     q = q.toLowerCase().replace(/[？?！!。，,\s]+/g,' ');
 
-    // 第1层:关键词精确匹配(快速,对已知问题效果好)
+    // 第1层:TF-IDF 语义搜索(最智能,能理解自然语言)
+    var results = tfidfSearch(raw, 3);
+    if(results.length > 0 && results[0].score > 0.08){
+      return formatReply(results);
+    }
+
+    // 第2层:关键词精确匹配(对已知问题效果好,作为兜底)
     var best = null, bestLen = 0;
     for(var i=0; i<KB.length; i++){
       var patterns = KB[i].k.split('|');
@@ -354,7 +360,7 @@
     }
     if(best) return best.a;
 
-    // 第2层:课号匹配
+    // 第3层:课号匹配
     if(q.match(/第?1|第一/)) return'第1课讲<b>轮胎</b>——唯一的力源。摩擦圆、侧偏角、侧偏刚度是核心概念。详见<b>第1课</b>~';
     if(q.match(/第?2|第二/)) return'第2课讲<b>二自由度模型</b>——车怎么转弯。不足/过度/中性转向、稳定系数K。详见<b>第2课</b>~';
     if(q.match(/第?3|第三/)) return'第3课讲<b>瞬态响应</b>——快不快、晃不晃。固有频率、阻尼比、频率响应共振峰。详见<b>第3课</b>~';
@@ -363,10 +369,10 @@
     if(q.match(/第?6|第六/)) return'第6课讲<b>4WS+力分配</b>——让车更听话。低速逆相/高速同相、DYC、LSD。详见<b>第6课</b>~';
     if(q.match(/第?7|第七|收尾/)) return'第7课讲<b>人—车闭环</b>——最后一环是你。预瞄、驾驶人模型、稳定极限速度。详见<b>第7课</b>~';
 
-    // 第3层:TF-IDF 语义搜索(智能,处理自然语言问题)
-    var results = tfidfSearch(raw, 3);
-    var reply = formatReply(results);
-    if(reply) return reply;
+    // 第4层:低置信度TF-IDF结果(有结果但得分不高)
+    if(results.length > 0){
+      return formatReply(results);
+    }
 
     // 兜底
     return'好问题!我暂时没有精确匹配的答案,但本站 7 课覆盖了全书核心内容,建议翻阅对应章节~<br><br>💡 你可以问我:<br>· 摩擦圆公式<br>· 不足转向和过度转向的区别<br>· 悬架怎么影响操控<br>· 4WS原理<br>· 预瞄时间是什么';
