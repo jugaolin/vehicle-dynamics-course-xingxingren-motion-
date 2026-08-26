@@ -150,34 +150,51 @@ figcaption b{color:var(--ink)}
 .t.teal{fill:var(--teal); font-weight:700}
 .band{fill:var(--accent-soft)}
 
-/* ===== 动态图:动画原语(统一尊重"减少动态效果") ===== */
+/* ===== 动态图:动画原语 ===== */
+/* keyframes 始终定义(确保手动开启时也能找到) */
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes travel{from{offset-distance:0%}to{offset-distance:100%}}
+@keyframes flow{to{stroke-dashoffset:-28}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes blink{50%{opacity:.25}}
+@keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1;transform:none}}
+
 .figanim{position:relative}
 .playtag{position:absolute; top:12px; right:14px; font-family:"JetBrains Mono",monospace;
   font-size:10px; letter-spacing:.1em; color:var(--faint); text-transform:uppercase;
   border:1px solid var(--hair); border-radius:999px; padding:2px 9px; background:var(--paper)}
 .playtag::before{content:"● "; color:var(--accent)}
+
+/* 默认:尊重系统"减少动态效果"设置 */
 @media (prefers-reduced-motion:no-preference){
-  /* 曲线自动描出:元素设 --dash 为略大于路径长度 */
   .anim-draw{stroke-dasharray:var(--dash,1600); stroke-dashoffset:var(--dash,1600);
     animation:draw var(--dur,2.4s) cubic-bezier(.3,.6,.3,1) var(--delay,0s) forwards}
-  @keyframes draw{to{stroke-dashoffset:0}}
-  /* 沿路径行进的点/物:在元素 style 里设 offset-path:path('...') */
   .travel{animation:travel var(--dur,4s) linear infinite; offset-rotate:0deg}
   .travel.rot{offset-rotate:auto}
-  @keyframes travel{from{offset-distance:0%}to{offset-distance:100%}}
-  /* 流动虚线:表现方向/流向 */
   .flow{stroke-dasharray:6 8; animation:flow 1s linear infinite}
-  @keyframes flow{to{stroke-dashoffset:-28}}
-  /* 脉冲强调 */
   .pulse{animation:pulse 1.9s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
   .playtag::before{animation:blink 1.4s steps(1) infinite}
-  @keyframes blink{50%{opacity:.25}}
+  header.hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both}
 }
 @media (prefers-reduced-motion:reduce){
   .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
   .playtag{display:none}
 }
+
+/* 手动开关:html[data-anim="on"] 强制开启动画(无视系统设置) */
+html[data-anim="on"] .anim-draw{stroke-dasharray:var(--dash,1600); stroke-dashoffset:var(--dash,1600);
+  animation:draw var(--dur,2.4s) cubic-bezier(.3,.6,.3,1) var(--delay,0s) forwards}
+html[data-anim="on"] .travel{animation:travel var(--dur,4s) linear infinite; offset-rotate:0deg}
+html[data-anim="on"] .travel.rot{offset-rotate:auto}
+html[data-anim="on"] .flow{stroke-dasharray:6 8; animation:flow 1s linear infinite}
+html[data-anim="on"] .pulse{animation:pulse 1.9s ease-in-out infinite}
+html[data-anim="on"] .playtag{display:block}
+html[data-anim="on"] .playtag::before{animation:blink 1.4s steps(1) infinite}
+html[data-anim="on"] header.hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both}
+
+/* 手动开关:html[data-anim="off"] 强制关闭动画 */
+html[data-anim="off"] .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
+html[data-anim="off"] .playtag{display:none}
 
 /* ===== 收尾块 ===== */
 .take{background:var(--accent-soft); border-radius:12px; padding:22px 24px; margin:30px 0}
@@ -213,8 +230,12 @@ footer a{color:var(--muted)}
   .nav-links{gap:13px}
   .chain .sep{display:none}
 }
-@media (prefers-reduced-motion:no-preference){
-  header.hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both}
-  @keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1;transform:none}}
-}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+
+/* ===== 动画开关按钮 ===== */
+.anim-toggle{background:none; border:1px solid var(--hair); border-radius:999px;
+  padding:3px 10px; font-size:12px; color:var(--muted); cursor:pointer;
+  font-family:"JetBrains Mono",monospace; letter-spacing:.04em;
+  transition:border-color .15s,color .15s; white-space:nowrap; line-height:1.4}
+.anim-toggle:hover{border-color:var(--accent); color:var(--accent)}
+.anim-toggle.on{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
