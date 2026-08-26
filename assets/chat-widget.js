@@ -85,13 +85,20 @@
     try { log = JSON.parse(localStorage.getItem('chat-feedback') || '[]'); } catch(e){}
     log.push({q:q, a:a, rating:rating, time:Date.now()});
     try { localStorage.setItem('chat-feedback', JSON.stringify(log)); } catch(e){}
-    // 尝试发送到 Worker
+    // 发送到 Worker
     if(WORKER_URL){
       fetch(WORKER_URL, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({question:q, answer:a, rating:rating, timestamp:Date.now()})
-      }).catch(function(){});
+      }).then(function(res){
+        console.log('[反馈] Worker响应:', res.status, res.statusText);
+        if(!res.ok) console.warn('[反馈] 发送失败,状态码:', res.status);
+      }).catch(function(err){
+        console.error('[反馈] 网络错误:', err.message);
+      });
+    } else {
+      console.warn('[反馈] WORKER_URL未配置');
     }
   }
 
