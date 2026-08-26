@@ -95,11 +95,11 @@
     log.push({q:q, a:a, rating:rating, time:Date.now()});
     try { localStorage.setItem('chat-feedback', JSON.stringify(log)); } catch(e){}
     // 直接调 GitHub API 创建 Issue
-    var title = '[反馈] ' + (rating === 'good' ? '👍 有用' : '👎 待改进');
+    var title = '[反馈] ' + (rating === 'up' ? '👍 有用' : '👎 待改进');
     var body = '### AI问答反馈\n'
       + '- **问题**: ' + q + '\n'
       + '- **回答**: ' + a.replace(/<[^>]*>/g, '').substring(0, 200) + '\n'
-      + '- **评价**: ' + (rating === 'good' ? '👍 有用' : '👎 待改进') + '\n'
+      + '- **评价**: ' + (rating === 'up' ? '👍 有用' : '👎 待改进') + '\n'
       + '- **时间**: ' + new Date().toLocaleString('zh-CN') + '\n'
       + '- **来源**: GitHub Pages 课程网站';
     fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/issues', {
