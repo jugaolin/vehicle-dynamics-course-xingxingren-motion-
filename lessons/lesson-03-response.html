@@ -15,7 +15,7 @@
   /* 推头:整车顺着变宽的弧线往外滑 */
   .push{offset-path:path('M60,150 C120,120 210,116 300,150'); animation:travel 4.4s ease-in-out infinite; offset-rotate:auto}
   /* 甩尾:车尾甩出,车身绕质心旋转 */
-  .spin{transform-box:view-box; transform-origin:170px 165px; animation:spin 4.4s cubic-bezier(.5,0,.4,1) infinite}
+  .spin{transform-box:view-box; transform-origin:490px 170px; animation:spin 4.4s cubic-bezier(.5,0,.4,1) infinite}
   @keyframes spin{0%,14%{transform:rotate(0deg)}52%,72%{transform:rotate(28deg)}92%,100%{transform:rotate(0deg)}}
   .swaytag{animation:pulse 2s ease-in-out infinite}
 }
@@ -126,25 +126,39 @@
 
     <figure class="figanim">
       <span class="playtag">动态</span>
-      <svg viewBox="0 0 520 260" role="img" aria-label="极限两种情形:前轮先到极限车往外推(推头),后轮先到极限车尾甩出向内打转(甩尾)">
-        <!-- Scene A: 推头 -->
-        <text x="60" y="30" class="t acc" font-size="13">前轮先到极限 → 转不进、往外推</text>
-        <path d="M60,150 C120,120 210,116 300,150" class="s-grid s-dash"/>
-        <path d="M60,150 C120,132 200,150 300,196" class="s-faint s-dash"/>
-        <text x="150" y="112" class="t mut" font-size="11">你想走的弧</text>
-        <text x="196" y="212" class="t mut" font-size="11">车实际冲出去</text>
+      <svg viewBox="0 0 640 290" role="img" aria-label="极限两种情形:前轮先到极限车往外推(推头),后轮先到极限车尾甩出向内打转(甩尾)">
+        <!-- Scene A: 推头(左半) -->
+        <text x="50" y="32" class="t acc" font-size="13.5">前轮先到极限 → 转不进、往外推</text>
+        <!-- 你想走的弧 -->
+        <path d="M50,160 C130,116 230,112 310,160" class="s-grid s-dash" stroke-width="1.8"/>
+        <text x="130" y="106" class="t mut" font-size="11">你想走的弧</text>
+        <!-- 车实际冲出去的弧(更宽) -->
+        <path d="M50,160 C130,138 240,160 310,220" class="s-faint s-dash" stroke-width="1.8"/>
+        <text x="180" y="240" class="t mut" font-size="11">车实际冲出去</text>
+        <!-- push car -->
         <g class="push">
           <rect x="-16" y="-11" width="32" height="22" rx="5" class="s-tirefill"/>
         </g>
+
         <!-- divider -->
-        <line x1="330" y1="40" x2="330" y2="230" class="s-grid"/>
-        <!-- Scene B: 甩尾 -->
-        <text x="356" y="30" class="t teal" font-size="13">后轮先到极限 → 尾部甩、向内打转</text>
-        <g class="spin" transform="translate(190,0)">
-          <rect x="-15" y="-30" width="30" height="60" rx="8" class="s-fillsurface s-ink"/>
-          <circle cx="0" cy="26" r="4" class="s-fillt"/>
+        <line x1="348" y1="40" x2="348" y2="260" class="s-grid"/>
+
+        <!-- Scene B: 甩尾(右半) -->
+        <text x="370" y="32" class="t teal" font-size="13.5">后轮先到极限 → 尾部甩、向内打转</text>
+        <!-- 你想走的弧(右半同理) -->
+        <path d="M380,160 C440,116 540,112 600,160" class="s-grid s-dash" stroke-width="1.8"/>
+        <text x="440" y="106" class="t mut" font-size="11">你想走的弧</text>
+        <!-- spin car: parent <g> handles translate, inner <g> handles rotation -->
+        <g transform="translate(490,170)">
+          <g class="spin">
+            <rect x="-15" y="-30" width="30" height="60" rx="8" class="s-fillsurface s-ink"/>
+            <circle cx="0" cy="26" r="4" class="s-fillt"/>
+          </g>
+          <!-- 车尾甩出去的弧线 -->
+          <path d="M15,0 Q30,-10 36,14" class="s-teal" fill="none" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <text x="40" y="10" class="t teal" font-size="10">尾巴甩</text>
         </g>
-        <text x="392" y="238" class="t mut" font-size="11">车身绕质心转,尾巴甩出去</text>
+        <text x="380" y="268" class="t mut" font-size="11">车身绕质心转,尾巴甩出去(向内打转)</text>
       </svg>
       <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;左:<b class="acc">前轮先到极限</b>——你再加方向,转弯半径也不再变小,车顺着变宽的弧往外冲(推头)。右:<b class="teal">后轮先到极限</b>——车身侧滑角骤增、绕着质心转起来,尾巴甩出去(向内打转)。书里(3.5.1)特别提醒:多数车后轮摩擦系数偏大,反而更容易前轮先到、往外推。</figcaption>
     </figure>
