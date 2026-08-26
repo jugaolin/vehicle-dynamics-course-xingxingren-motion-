@@ -244,45 +244,75 @@ footer a{color:var(--muted)}
 .anim-toggle:hover{border-color:var(--accent); color:var(--accent)}
 .anim-toggle.on{border-color:var(--accent); color:var(--accent); background:var(--accent-soft)}
 
-/* ===== AI对话气泡 ===== */
-.chat-bubble{position:fixed; bottom:24px; right:24px; z-index:100;
-  width:54px; height:54px; border-radius:50%; background:var(--accent);
-  color:#fff; font-size:24px; display:flex; align-items:center; justify-content:center;
-  cursor:pointer; box-shadow:0 4px 16px rgba(206,83,38,.35);
-  transition:transform .2s, box-shadow .2s}
-.chat-bubble:hover{transform:scale(1.08); box-shadow:0 6px 24px rgba(206,83,38,.45)}
-.chat-bubble.active{transform:scale(.9); background:var(--muted)}
-.chat-window{position:fixed; bottom:90px; right:24px; z-index:101;
-  width:340px; max-height:520px; border-radius:16px; overflow:hidden;
+/* ===== AI对话助手(西瓜小人) ===== */
+.chat-avatar{position:fixed; bottom:22px; right:22px; z-index:100;
+  width:62px; height:62px; border-radius:50%; overflow:hidden;
+  cursor:pointer; box-shadow:0 4px 18px rgba(0,0,0,.18);
+  transition:transform .22s, box-shadow .22s;
+  background:var(--paper); border:2.5px solid var(--accent)}
+.chat-avatar img{width:100%; height:100%; object-fit:cover; display:block;
+  /* 原图白底在浅色模式下自然融入,深色模式下用mix-blend变暗 */
+  mix-blend-mode:normal}
+.chat-avatar:hover{transform:scale(1.1); box-shadow:0 6px 24px rgba(206,83,38,.35)}
+.chat-avatar.active{transform:scale(.92); box-shadow:0 2px 10px rgba(0,0,0,.15)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .chat-avatar img,
+  :root[data-theme="dark"] .chat-avatar img{mix-blend-mode:luminosity; opacity:.92}
+  :root:not([data-theme="light"]) .chat-avatar,
+  :root[data-theme="dark"] .chat-avatar{border-color:var(--accent); background:#2a2a2a}
+}
+
+/* 对话面板 */
+.chat-panel{position:fixed; bottom:96px; right:22px; z-index:101;
+  width:360px; max-height:540px; border-radius:18px; overflow:hidden;
   background:var(--surface); border:1px solid var(--hair);
-  box-shadow:0 8px 40px rgba(0,0,0,.18);
+  box-shadow:0 12px 48px rgba(0,0,0,.22);
   display:flex; flex-direction:column;
-  opacity:0; transform:translateY(16px) scale(.95);
-  pointer-events:none; transition:opacity .22s, transform .22s}
-.chat-window.open{opacity:1; transform:none; pointer-events:auto}
-.chat-header{display:flex; align-items:center; justify-content:space-between;
-  padding:14px 16px; background:var(--accent); color:#fff;
-  font-family:"Noto Serif SC",serif; font-weight:700; font-size:15px}
-.chat-close{background:none; border:none; color:#fff; font-size:22px;
-  cursor:pointer; padding:0 4px; line-height:1}
-.chat-messages{flex:1; overflow-y:auto; padding:14px; display:flex;
-  flex-direction:column; gap:10px; min-height:260px; max-height:360px}
-.chat-msg{max-width:88%; padding:10px 14px; border-radius:14px;
-  font-size:14px; line-height:1.6; word-break:break-word}
-.chat-msg.user{align-self:flex-end; background:var(--accent); color:#fff;
+  opacity:0; transform:translateY(18px) scale(.94);
+  pointer-events:none; transition:opacity .25s ease, transform .25s ease}
+.chat-panel.open{opacity:1; transform:none; pointer-events:auto}
+
+.chat-panel-header{display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; background:linear-gradient(135deg, var(--accent), #d4612e); color:#fff;
+  font-weight:700}
+.chat-panel-title{font-size:14.5px; display:flex; align-items:center; gap:6px}
+.chat-panel-icon{font-size:16px}
+.chat-panel-close{background:none; border:none; color:rgba(255,255,255,.8); font-size:22px;
+  cursor:pointer; padding:0 2px; line-height:1; transition:color .15s}
+.chat-panel-close:hover{color:#fff}
+
+.chat-panel-messages{flex:1; overflow-y:auto; padding:14px 12px; display:flex;
+  flex-direction:column; gap:12px; min-height:280px; max-height:380px;
+  scroll-behavior:smooth}
+
+.chat-msg{display:flex; gap:8px; max-width:92%}
+.chat-msg.user{align-self:flex-end; flex-direction:row-reverse}
+.chat-msg.bot{align-self:flex-start}
+
+.chat-avatar-sm{width:30px; height:30px; border-radius:50%; overflow:hidden; flex-shrink:0;
+  background:var(--paper); border:1.5px solid var(--hair)}
+.chat-avatar-sm img{width:100%; height:100%; object-fit:cover; display:block}
+
+.chat-bubble-text{padding:10px 14px; border-radius:14px;
+  font-size:13.5px; line-height:1.65; word-break:break-word}
+.chat-msg.user .chat-bubble-text{background:var(--accent); color:#fff;
   border-bottom-right-radius:4px}
-.chat-msg.bot{align-self:flex-start; background:var(--paper); color:var(--ink);
+.chat-msg.bot .chat-bubble-text{background:var(--paper); color:var(--ink);
   border:1px solid var(--hair); border-bottom-left-radius:4px}
-.chat-input-wrap{display:flex; border-top:1px solid var(--hair); padding:8px}
-.chat-input-wrap input{flex:1; border:1px solid var(--hair); border-radius:10px;
+
+.chat-panel-input{display:flex; gap:6px; border-top:1px solid var(--hair);
+  padding:10px 12px; background:var(--surface)}
+.chat-panel-input input{flex:1; border:1px solid var(--hair); border-radius:12px;
   padding:10px 14px; font-size:14px; background:var(--paper); color:var(--ink);
-  outline:none; font-family:inherit}
-.chat-input-wrap input:focus{border-color:var(--accent)}
-.chat-input-wrap button{margin-left:6px; width:40px; border:none; border-radius:10px;
-  background:var(--accent); color:#fff; font-size:18px; cursor:pointer;
+  outline:none; font-family:inherit; transition:border-color .15s}
+.chat-panel-input input:focus{border-color:var(--accent)}
+.chat-panel-input button{width:40px; height:40px; border:none; border-radius:12px;
+  background:var(--accent); color:#fff; cursor:pointer; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
   transition:background .15s}
-.chat-input-wrap button:hover{background:#b8471f}
+.chat-panel-input button:hover{background:#b8471f}
+
 @media (max-width:480px){
-  .chat-window{right:10px; left:10px; width:auto; bottom:80px}
-  .chat-bubble{bottom:16px; right:16px}
+  .chat-panel{right:8px; left:8px; width:auto; bottom:92px}
+  .chat-avatar{bottom:14px; right:14px; width:54px; height:54px}
 }
