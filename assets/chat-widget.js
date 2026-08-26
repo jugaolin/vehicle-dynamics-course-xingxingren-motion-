@@ -299,17 +299,70 @@
     return dot;
   }
 
+  // 直接匹配:对短查询(单字符/希腊字母/变量名)直接查Q/A问题文本
+  function directMatch(q, topN){
+    if(!_kbData) return [];
+    var results = [];
+    // 提取查询中的所有token(包括英文字母组合)
+    var tokens = q.toLowerCase().match(/[a-zαβγδεζηθικλμνξοπρστυφχψω]+/g) || [];
+    // 去掉停止词
+    var meaningful = tokens.filter(function(t){ return t.length > 1 || /[αβγδεζηθικλμνξοπρστυφχψω]/.test(t); });
+    if(meaningful.length === 0) meaningful = tokens;
+
+    for(var i=0; i<_kbData.length; i++){
+      var item = _kbData[i];
+      var ql = item.q.toLowerCase();
+      var score = 0;
+      // 精确匹配:"X代表什么"/"X是什么" 直接命中
+      for(var j=0; j<meaningful.length; j++){
+        var t = meaningful[j];
+        if(ql.indexOf(t) !== -1){
+          // token必须是独立词(前后是非字母数字),避免τ被rτ抢
+          var re = new RegExp('(^|[^a-z0-9])'+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^a-z0-9]|$)');
+          var isStandalone = re.test(ql);
+          var exactMatch = isStandalone && (ql.indexOf(t+'代表') !== -1 || ql.indexOf(t+'是什么') !== -1 || ql.indexOf(t+'是什么意思') !== -1);
+          score += exactMatch ? 0.9 : (isStandalone ? 0.5 : 0.15);
+        }
+      }
+      // 答案中包含这个变量名也加分
+      var al = item.a.toLowerCase();
+      for(var j=0; j<meaningful.length; j++){
+        if(al.indexOf(meaningful[j]) !== -1) score += 0.1;
+      }
+      if(score > 0.3) results.push({ idx: i, score: Math.min(score, 1) });
+    }
+    results.sort(function(a,b){ return b.score - a.score; });
+    var out = [];
+    for(var i=0; i<Math.min(topN||3, results.length); i++){
+      var item = _kbData[results[i].idx];
+      out.push({ q: item.q, a: item.a, lesson: item.lesson, score: results[i].score });
+    }
+    return out;
+  }
+
   // TF-IDF 搜索:返回 top 个最相关问答
   function tfidfSearch(q, topN){
     if(!_vectors || !_kbData) return [];
     var qv = queryVec(q);
     var wantFormula = /公式|方程|表达式|数学|equation/.test(q);
     var scores = [];
+    // 提取查询中的中文关键词(2字以上)
+    var qTokens = q.toLowerCase().match(/[一-鿿]{2,}/g) || [];
     for(var i=0; i<_vectors.length; i++){
       var s = cosine(qv, _vectors[i]);
       if(s > 0.05){
-        // 如果用户问公式,包含公式的条目加分
-        if(wantFormula && _kbData[i].a && _kbData[i].a.indexOf('公式') !== -1) s *= 1.5;
+        // 公式相关条目加分
+        var qHasFormula = wantFormula && (_kbData[i].q || '').indexOf('公式') !== -1;
+        if(wantFormula && _kbData[i].a && _kbData[i].a.indexOf('公式') !== -1) s *= 1.3;
+        if(qHasFormula) s *= 1.5; // Q/A问题本身含"公式"大幅加分
+        // 问题文本匹配加分:至少2个中文关键词匹配才boost
+        var ql = _kbData[i].q || '';
+        var matchCount = 0;
+        for(var j=0; j<qTokens.length; j++){
+          if(ql.indexOf(qTokens[j]) !== -1) matchCount++;
+        }
+        if(matchCount >= 2) s *= 1.4;
+        else if(matchCount === 1 && qTokens.length <= 2) s *= 1.2;
         scores.push({ idx: i, score: s });
       }
     }
@@ -365,8 +418,26 @@
     if(q.match(/第?6|第六/)) return'第6课讲<b>4WS+力分配</b>——让车更听话。低速逆相/高速同相、DYC、LSD。详见<b>第6课</b>~';
     if(q.match(/第?7|第七|收尾/)) return'第7课讲<b>人—车闭环</b>——最后一环是你。预瞄、驾驶人模型、稳定极限速度。详见<b>第7课</b>~';
 
-    // 第3层:TF-IDF 语义搜索(未知问题,智能检索)
+    // 第3层:直接匹配(短查询/变量名/希腊字母)
+    var shortQuery = raw.length <= 10 || /[αβγδεζηθικλμνξοπρστυφχψω]/.test(raw) || /^[A-Za-z]+[是什么代表]/.test(raw);
+    if(shortQuery){
+      var direct = directMatch(raw, 3);
+      if(direct.length > 0 && direct[0].score >= 0.5){
+        return formatReply(direct);
+      }
+    }
+
+    // 第4层:TF-IDF 语义搜索(未知问题,智能检索)
     var results = tfidfSearch(raw, 3);
+    if(results.length > 0){
+      return formatReply(results);
+    }
+
+    // 第5层:直接匹配兜底(短查询TF-IDF没命中时)
+    if(shortQuery){
+      var direct = directMatch(raw, 1);
+      if(direct.length > 0) return formatReply(direct);
+    }
     if(results.length > 0){
       return formatReply(results);
     }
