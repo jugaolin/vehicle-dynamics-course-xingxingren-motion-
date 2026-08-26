@@ -38,21 +38,61 @@
   function doSend(){
     var t = input.value.trim(); if(!t) return;
     addMsg(t, 'user'); input.value = '';
-    setTimeout(function(){ addMsg(mockReply(t), 'bot'); }, 400 + Math.random()*300);
+    var reply = mockReply(t);
+    setTimeout(function(){ addMsg(reply, 'bot', t); }, 400 + Math.random()*300);
   }
   send.onclick = doSend;
   input.onkeydown = function(e){ if(e.key==='Enter') doSend(); };
 
-  function addMsg(text, who){
+  // Worker URL (Cloudflare Worker 代理,token安全存储在Worker中)
+  var WORKER_URL = ''; // 部署后填入
+
+  function addMsg(text, who, rawQ){
     var d = document.createElement('div');
     d.className = 'chat-msg ' + who;
     if(who==='bot'){
-      d.innerHTML = '<div class="chat-avatar-sm"><img src="../assets/avatar.jpg" alt="" onerror="this.src=\'assets/avatar.jpg\'"/></div><div class="chat-bubble-text">' + text + '</div>';
+      var id = 'msg-' + Date.now();
+      d.innerHTML = '<div class="chat-avatar-sm"><img src="../assets/avatar.jpg" alt="" onerror="this.src=\'assets/avatar.jpg\'"/></div>'
+        + '<div><div class="chat-bubble-text">' + text + '</div>'
+        + '<div class="chat-feedback" id="'+id+'">'
+        + '<button class="fb-btn" data-q="'+escHtml(rawQ||'')+'" data-a="'+escHtml(text)+'" data-r="up" title="有帮助">👍</button>'
+        + '<button class="fb-btn" data-q="'+escHtml(rawQ||'')+'" data-a="'+escHtml(text)+'" data-r="down" title="需改进">👎</button>'
+        + '</div></div>';
+      // 绑定点击
+      setTimeout(function(){
+        var btns = d.querySelectorAll('.fb-btn');
+        btns.forEach(function(btn){
+          btn.onclick = function(){
+            sendFeedback(btn.dataset.q, btn.dataset.a, btn.dataset.r);
+            // 标记已评价
+            var container = btn.parentElement;
+            container.innerHTML = btn.dataset.r==='up' ? '<span class="fb-done">👍 感谢反馈!</span>' : '<span class="fb-done">👎 已记录,我们会改进</span>';
+          };
+        });
+      }, 10);
     } else {
       d.innerHTML = '<div class="chat-bubble-text">' + text + '</div>';
     }
     msgs.appendChild(d);
     msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+  function sendFeedback(q, a, rating){
+    // 存到 localStorage
+    var log = [];
+    try { log = JSON.parse(localStorage.getItem('chat-feedback') || '[]'); } catch(e){}
+    log.push({q:q, a:a, rating:rating, time:Date.now()});
+    try { localStorage.setItem('chat-feedback', JSON.stringify(log)); } catch(e){}
+    // 尝试发送到 Worker
+    if(WORKER_URL){
+      fetch(WORKER_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({question:q, answer:a, rating:rating, timestamp:Date.now()})
+      }).catch(function(){});
+    }
   }
 
   /* ========== 知识库:严格依据《汽车运动性能技术》 ========== */
