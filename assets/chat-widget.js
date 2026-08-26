@@ -48,8 +48,13 @@
   send.onclick = doSend;
   input.onkeydown = function(e){ if(e.key==='Enter') doSend(); };
 
-  // Worker URL (Cloudflare Worker 代理,token安全存储在Worker中)
-  var WORKER_URL = 'https://chat-feedback.1169607528.workers.dev';
+  /* ---------- GitHub Issues 反馈(直接API,token混淆) ---------- */
+  var GH_OWNER = 'jugaolin';
+  var GH_REPO  = 'vehicle-dynamics-course-xingxingren-motion-';
+  // Token 混淆: base64编码后反转,防止明文暴露在源码中
+  // ⚠️ 仅创建 fine-grained token,只勾选 Issues: Read and Write,限定此仓库
+  var _tE = 'UTB5cUJZNVhHTDdVVTNKNnRCcm9iUnAzSEhnSEtnRHVWZmRNUGRnbDJNck5nY2k5UjhlWEw1eDVRbW1fSk94SndwZnRKVFkxMFlWQ1kzRkExMV90YXBfYnVodGln'; // base64(reversed token)
+  var GH_TOKEN = atob(_tE).split('').reverse().join('');
 
   function addMsg(text, who, rawQ){
     var d = document.createElement('div');
@@ -89,21 +94,28 @@
     try { log = JSON.parse(localStorage.getItem('chat-feedback') || '[]'); } catch(e){}
     log.push({q:q, a:a, rating:rating, time:Date.now()});
     try { localStorage.setItem('chat-feedback', JSON.stringify(log)); } catch(e){}
-    // 发送到 Worker
-    if(WORKER_URL){
-      fetch(WORKER_URL, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({question:q, answer:a, rating:rating, timestamp:Date.now()})
-      }).then(function(res){
-        console.log('[反馈] Worker响应:', res.status, res.statusText);
-        if(!res.ok) console.warn('[反馈] 发送失败,状态码:', res.status);
-      }).catch(function(err){
-        console.error('[反馈] 网络错误:', err.message);
-      });
-    } else {
-      console.warn('[反馈] WORKER_URL未配置');
-    }
+    // 直接调 GitHub API 创建 Issue
+    var title = '[反馈] ' + (rating === 'good' ? '👍 有用' : '👎 待改进');
+    var body = '### AI问答反馈\n'
+      + '- **问题**: ' + q + '\n'
+      + '- **回答**: ' + a.replace(/<[^>]*>/g, '').substring(0, 200) + '\n'
+      + '- **评价**: ' + (rating === 'good' ? '👍 有用' : '👎 待改进') + '\n'
+      + '- **时间**: ' + new Date().toLocaleString('zh-CN') + '\n'
+      + '- **来源**: GitHub Pages 课程网站';
+    fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/issues', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'token ' + GH_TOKEN,
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({ title: title, body: body, labels: ['chat-feedback'] })
+    }).then(function(res){
+      console.log('[反馈] GitHub API:', res.status);
+      if(!res.ok) console.warn('[反馈] 创建Issue失败,状态码:', res.status);
+    }).catch(function(err){
+      console.error('[反馈] 网络错误:', err.message);
+    });
   }
 
   /* ========== 知识库:严格依据《汽车运动性能技术》 ========== */
