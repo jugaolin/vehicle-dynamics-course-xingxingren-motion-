@@ -1,10 +1,14 @@
 /* chat-widget.js — 西瓜小人AI对话助手(纯前端mock,无需API) */
 (function(){
+  // 计算头像路径:lessons/ 下用 ../assets/, 根目录用 ./assets/
+  var inLesson = /\/lessons\//.test(location.pathname);
+  var imgBase = inLesson ? '../assets/' : './assets/';
+
   // 注入HTML
   var wrap = document.createElement('div');
   wrap.innerHTML =
     '<div class="chat-avatar" id="chatAvatar" aria-label="AI问答">'
-    + '<img src="../assets/avatar.jpg" alt="西瓜小人" onerror="this.src=\'assets/avatar.jpg\'"/>'
+    + '<img src="' + imgBase + 'avatar.jpg" alt="西瓜小人" onerror="this.src=\'' + imgBase + 'avatar.jpg\'"/>'
     + '</div>'
     + '<div class="chat-panel" id="chatPanel">'
     + '<div class="chat-panel-header">'
@@ -12,7 +16,7 @@
     + '<button class="chat-panel-close" id="chatClose">×</button>'
     + '</div>'
     + '<div class="chat-panel-messages" id="chatMessages">'
-    + '<div class="chat-msg bot"><div class="chat-avatar-sm"><img src="../assets/avatar.jpg" alt="" onerror="this.src=\'assets/avatar.jpg\'"/></div><div class="chat-bubble-text">你好呀!我是星星人 AI 助手 🍉<br>问我关于《汽车运动性能技术》的任何问题吧~<br><br>💡 试试问我:<br>· 摩擦圆是什么?<br>· 不足转向和过度转向?<br>· 悬架怎么影响操控?<br>· 预瞄时间是什么?</div></div>'
+    + '<div class="chat-msg bot"><div class="chat-avatar-sm"><img src="' + imgBase + 'avatar.jpg" alt="" onerror="this.src=\'' + imgBase + 'avatar.jpg\'"/></div><div class="chat-bubble-text">你好呀!我是星星人 AI 助手 🍉<br>问我关于《汽车运动性能技术》的任何问题吧~<br><br>💡 试试问我:<br>· 摩擦圆是什么?<br>· 不足转向和过度转向?<br>· 悬架怎么影响操控?<br>· 预瞄时间是什么?</div></div>'
     + '</div>'
     + '<div class="chat-panel-input">'
     + '<input type="text" id="chatInput" placeholder="输入你的问题..." autocomplete="off"/>'
@@ -52,7 +56,7 @@
     d.className = 'chat-msg ' + who;
     if(who==='bot'){
       var id = 'msg-' + Date.now();
-      d.innerHTML = '<div class="chat-avatar-sm"><img src="../assets/avatar.jpg" alt="" onerror="this.src=\'assets/avatar.jpg\'"/></div>'
+      d.innerHTML = '<div class="chat-avatar-sm"><img src="' + imgBase + 'avatar.jpg" alt="" onerror="this.src=\'' + imgBase + 'avatar.jpg\'"/></div>'
         + '<div><div class="chat-bubble-text">' + text + '</div>'
         + '<div class="chat-feedback" id="'+id+'">'
         + '<button class="fb-btn" data-q="'+escHtml(rawQ||'')+'" data-a="'+escHtml(text)+'" data-r="up" title="有帮助">👍</button>'
