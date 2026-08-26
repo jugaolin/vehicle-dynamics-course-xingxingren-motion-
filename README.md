@@ -15,6 +15,11 @@
 | [课程表 `syllabus.html`](syllabus.html) | 教学方法 + 7 节课安排 |
 | [第 1 课 `lessons/lesson-01-tires.html`](lessons/lesson-01-tires.html) | 轮胎特性:侧偏角→侧向力 · 抓地力极限 · 摩擦圆 |
 | [第 2 课 `lessons/lesson-02-2dof.html`](lessons/lesson-02-2dof.html) | 平面二自由度模型 · 不足/过度/中性转向 · 稳定系数 K · 临界车速 · 为什么 US 才稳定 |
+| [第 3 课 `lessons/lesson-03-response.html`](lessons/lesson-03-response.html) | 瞬态响应:固有频率/阻尼 · 横摆角速度频率响应与共振峰 · 极限(前后轮谁先到)· 低摩擦路面 |
+| [第 4 课 `lessons/lesson-04-steering.html`](lessons/lesson-04-steering.html) | 转向系统两件事 · 路感/回正力矩与主销后倾拖距 · 理想转向力 · 阿克曼 · 主销后倾角 |
+| [第 5 课 `lessons/lesson-05-suspension.html`](lessons/lesson-05-suspension.html) | 悬架三功能 · 侧倾转向/柔性转向/等效侧抗刚度 · 侧倾中心与侧倾轴 · 侧倾刚度分配改 US/OS · 抗前俯/抗上浮 · 主动悬架 Skyhook |
+| [第 6 课 `lessons/lesson-06-active.html`](lessons/lesson-06-active.html) | 4WS(低速逆相位/高速同相位/零侧偏角)· 前后分配=间接横摆 · 左右分配=DYC 直接横摆力矩 · LSD · 摩擦圆约束 |
+| [第 7 课 `lessons/lesson-07-human.html`](lessons/lesson-07-human.html) | 人—车—环境闭环 · 驾驶人模型(PID/预瞄/模糊/神经网络)· 预瞄时间 · 闭环稳定性与稳定极限速度 · 收尾:这台车好不好开 |
 
 > `docs/` 下另存有早期的纯 Markdown 版讲义,便于在 GitHub 上直接浏览;线上 HTML 站点为主。
 

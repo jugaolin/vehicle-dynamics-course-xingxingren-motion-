@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 7 课 · 最后一环,是你</title>
+<meta name="description" content="汽车运动性能第七课(收尾):人—车—环境闭环系统、驾驶人模型(PID/预瞄/模糊/神经网络)、预瞄时间、闭环稳定性(预瞄时间/增益/滞后/车速)与稳定极限速度,并回答'这台车好不好开'。含动态原创插图。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+@media (prefers-reduced-motion:no-preference){
+  .loopdot2{animation:travel 5s linear infinite}
+  /* 注视点在前方道路上移动 */
+  .gaze{animation:gaze 3.6s ease-in-out infinite}
+  @keyframes gaze{0%,100%{transform:translateX(0)}50%{transform:translateX(26px)}}
+  .gazeray{animation:pulse 2.4s ease-in-out infinite}
+  .stabdot{animation:pulse 1.8s ease-in-out infinite}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">第 7 课 · 第八章 驾驶人—车辆闭环系统</p>
+    <h1>最后一环,是你</h1>
+    <p class="lede">前六课把车造好、调到最听话。可书的最后一章要提醒你:<strong>车再好,也只有交到人手里、在"人—车—环境"这个闭环里跑起来,才谈得上"好不好开"</strong>。这一课,把人正式请进方程。</p>
+    <div class="meta">
+      <span>面向零基础驾驶者</span><span>约 12 分钟</span><span>KEYWORDS&nbsp;&nbsp;闭环 · 驾驶人模型 · 预瞄 · 稳定极限</span>
+    </div>
+
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step"><span class="n">01</span>轮胎</div>
+      <div class="step"><span class="n">02–03</span>如何响应</div>
+      <div class="step"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step here"><span class="n">08</span>人来闭环</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先想一件你天天在做、却从没细想的事</span>
+    <p>开车时,你的眼睛并不盯着车头正前方,而是<strong>望向前方更远的一点</strong>;手则不停地做<strong>细微修正</strong>。你几乎意识不到,但正是这套"看—判断—打方向"的循环,和车本身的脾气<strong>合在一起</strong>,决定了这趟车稳不稳。书里把这套循环,建成了模型。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>真正的系统,是一个闭环</h2>
+    <p>前六课研究的都是车的<strong>开环</strong>特性(给个输入、看车怎么响应)。但书里(第 8 章)强调:实际行驶是<strong>人—车—环境</strong>组成的<strong>闭环</strong>系统——人不断观察偏差、修正方向,车再响应,环境(道路)又给出新的偏差,如此循环:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 250" role="img" aria-label="人-车-环境闭环:目标轨迹→人(眼睛/大脑/手)→车辆→实际轨迹,偏差再反馈给人">
+        <defs>
+          <marker id="hm3" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillmut"/></marker>
+        </defs>
+        <!-- boxes -->
+        <rect x="40" y="96" width="92" height="48" rx="10" class="s-fillsurface s-ink"/>
+        <text x="86" y="118" text-anchor="middle" class="t" font-size="13">目标轨迹</text>
+        <text x="86" y="134" text-anchor="middle" class="t mut" font-size="10">你想走的线</text>
+        <rect x="176" y="96" width="92" height="48" rx="10" class="s-fillsurface s-ink"/>
+        <text x="222" y="117" text-anchor="middle" class="t" font-size="13">驾驶人</text>
+        <text x="222" y="133" text-anchor="middle" class="t mut" font-size="10">眼·脑·手</text>
+        <rect x="312" y="96" width="80" height="48" rx="10" class="s-fillsurface s-ink"/>
+        <text x="352" y="124" text-anchor="middle" class="t" font-size="13">车辆</text>
+        <rect x="430" y="96" width="60" height="48" rx="10" class="s-fillsurface s-ink"/>
+        <text x="460" y="118" text-anchor="middle" class="t" font-size="12">实际</text>
+        <text x="460" y="133" text-anchor="middle" class="t" font-size="12">轨迹</text>
+        <!-- forward arrows -->
+        <line x1="132" y1="120" x2="174" y2="120" class="s-faint" stroke-width="1.6" marker-end="url(#hm3)"/>
+        <line x1="268" y1="120" x2="310" y2="120" class="s-faint" stroke-width="1.6" marker-end="url(#hm3)"/>
+        <line x1="392" y1="120" x2="428" y2="120" class="s-faint" stroke-width="1.6" marker-end="url(#hm3)"/>
+        <!-- feedback -->
+        <path d="M460,144 V196 H222 V144" class="s-teal flow" stroke-width="2.5" marker-end="url(#hm3)"/>
+        <text x="250" y="216" text-anchor="middle" class="t teal">看到偏差 → 修正方向(反馈)</text>
+        <circle r="5.5" class="s-filla loopdot2" style="offset-path:path('M86,120 H222 H352 H460 V196 H222 Z')"/>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 原创动图</span> &nbsp;实际行驶是一个<b>闭环</b>:你想走的线 → <b>驾驶人</b>(眼看、脑判断、手打方向) → <b>车辆</b>响应 → 实际轨迹,偏差再<b class="teal">反馈</b>回你的眼睛。橙点绕圈跑——车好不好开,取决于<b>人和车这对搭档配不配</b>,而不只是车本身。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>把"人"建成模型:从 PID 到神经网络</h2>
+    <p>书里(8.2)把驾驶人的操作行为,用几类模型来描述,由简到繁:</p>
+    <ul>
+      <li><strong>PID 型</strong>(式8-1/8-2):最基础——驾驶人根据偏差的大小(P)、累积(I)、变化趋势(D)来打方向,还带一段<strong>反应滞后</strong>(人不是瞬间反应的);</li>
+      <li><strong>预瞄模型</strong>:更贴近真实——人会<strong>提前看向前方</strong>,预判道路走向再操作(下一节细讲);</li>
+      <li><strong>模糊模型 / 神经网络模型</strong>:用来刻画熟练驾驶人那种"说不清、但很准"的经验判断。</li>
+    </ul>
+    <p>贯穿所有模型的共同点是两个人固有的参数:<strong>反应滞后 τ</strong>(看到到动手之间的延迟)和<strong>操作增益 K</strong>(偏差多大、方向打多狠)。它们和车速 V、车辆本身的响应一起,决定闭环稳不稳。</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>开车的核心秘密:预瞄</h2>
+    <p>书里(8.2)特别看重<strong>预瞄(preview)</strong>——你不是等偏差发生了才反应,而是<strong>盯着前方某个"注视点"、提前把弯道信息拿进来</strong>。书里给出两个经典模型:近藤模型(可近似成<strong>伪一阶</strong>系统)和吉本模型(<strong>伪二阶</strong>,更细腻)。</p>
+    <p>其中最好懂的一个量是<strong>预瞄时间 T</strong>:</p>
+    <div class="formula">T = 注视距离 / 车速　　（常规行驶 ≈ 2 秒;转弯时 ≈ 1 秒）</div>
+    <p>注意它是个<strong>时间</strong>而不是距离——车速越快,同样的 2 秒你就得看得<strong>越远</strong>。这正好解释了教练那句"<strong>眼睛看远一点</strong>":看得远 = 预瞄时间足,你的修正就从容、不慌张;只顾眼前 = 预瞄时间太短,永远在追着偏差手忙脚乱。</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 260" role="img" aria-label="预瞄:驾驶人望向前方注视点,注视距离÷车速=预瞄时间">
+        <!-- road -->
+        <path d="M60,220 C160,220 240,150 460,120" class="s-grid" stroke-width="2" fill="none"/>
+        <path d="M60,244 C170,244 250,180 470,150" class="s-grid" stroke-width="2" fill="none"/>
+        <!-- car -->
+        <rect x="72" y="214" width="46" height="26" rx="7" class="s-fillsurface s-ink"/>
+        <text x="95" y="232" text-anchor="middle" class="t mut" font-size="10">你</text>
+        <!-- gaze ray to preview point -->
+        <line x1="118" y1="220" x2="380" y2="140" class="s-teal s-dash gazeray" stroke-width="1.6"/>
+        <!-- moving preview point -->
+        <g class="gaze"><circle cx="360" cy="146" r="7" class="s-filla stabdot"/></g>
+        <text x="348" y="132" class="t acc" font-size="12">注视点</text>
+        <text x="150" y="196" class="t teal" font-size="12">注视距离</text>
+        <text x="150" y="176" class="t mut" font-size="11">预瞄时间 T = 注视距离 ÷ 车速</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 原创动图</span> &nbsp;你的视线投向前方<b class="acc">注视点</b>,提前把弯道信息拿进来。<b class="teal">注视距离 ÷ 车速 = 预瞄时间 T</b>(常规≈2 秒、转弯≈1 秒)。车越快越要看得远——这就是"眼睛看远一点"的科学版本。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>人和车配不配:闭环稳定性与"稳定极限速度"</h2>
+    <p>书里(8.3)最终把问题收在这里:<strong>这套人—车闭环,到底稳不稳?</strong>答案取决于四个量的搭配——<strong>预瞄时间 T、操作增益 K、反应滞后 τ、车速 V</strong>。它们配得好,闭环稳、开着轻松;配不好,就会<strong>发散振荡</strong>(越修越晃)。</p>
+    <p>书里用<strong>稳定极限速度</strong>来量化:在给定的人参数下,车最高能稳到多少速度。书里(对应图8-22)给出一个很有意思的结论:</p>
+    <div class="thesis">稳定极限速度并不是"预瞄时间越长越好"——它在某个<strong>适中的预瞄时间(约 0.5 秒附近)</strong>取到<strong>峰值</strong>。预瞄太短(只盯眼前)会慌、太长(看得过远、反而忽略近处)也未必更稳。<strong>人要找到和这台车匹配的预瞄节奏。</strong></div>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 270" role="img" aria-label="稳定极限速度随预瞄时间变化:在适中预瞄时间处出现峰值">
+        <line x1="64" y1="20" x2="64" y2="230" class="s-axis"/>
+        <line x1="64" y1="230" x2="500" y2="230" class="s-axis"/>
+        <text x="18" y="34" class="t mut" font-size="11">稳定极限速度</text>
+        <text x="380" y="256" class="t mut" font-size="12">预瞄时间 T →</text>
+        <path d="M64,196 C120,150 150,74 210,74 C300,74 360,150 500,196"
+              class="s-curve anim-draw" style="--dash:640;--dur:2.4s"/>
+        <!-- peak -->
+        <line x1="205" y1="74" x2="205" y2="230" class="s-acc s-dash stabdot" stroke-width="1.4"/>
+        <circle cx="205" cy="74" r="5.5" class="s-filla stabdot"/>
+        <text x="150" y="62" class="t acc" font-size="12">峰值:适中预瞄(≈0.5s)</text>
+        <text x="86" y="216" class="t mut" font-size="11">太短:慌</text>
+        <text x="430" y="214" class="t mut" font-size="11">太长:未必更稳</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;书里(图8-22)显示:<b>稳定极限速度</b>在一个<b class="acc">适中的预瞄时间</b>处取到峰值,而不是单调上升。开车这件事,是人去<b>匹配</b>车的响应节奏——这也是"好开"的真正含义:一台车让人<b>容易找到那个节奏</b>,它就是好开的车。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>回到最初的问题:这台车,好不好开?</h2>
+    <p>七节课走到这里,我们终于能回答第 1 课的那个问题了。把整条链串起来:</p>
+    <div class="chainbox">
+      <div class="chain">
+        <div class="node"><span class="stage">力源</span><div class="ch">轮胎</div><div class="sub">唯一力源,受摩擦圆约束(第1课)</div></div>
+        <div class="sep">→</div>
+        <div class="node"><span class="stage">响应</span><div class="ch">二自由度</div><div class="sub">力怎么变成横摆+侧移(第2·3课)</div></div>
+        <div class="sep">→</div>
+        <div class="node"><span class="stage">旋钮</span><div class="ch">转向·悬架·4WS·力分配</div><div class="sub">调节这个响应(第4–6课)</div></div>
+        <div class="sep">→</div>
+        <div class="node big"><span class="stage">闭环</span><div class="ch">人—车—环境</div><div class="sub">最终在人手里检验(第7课)</div></div>
+      </div>
+    </div>
+    <p>所以书给出的"好开"答案,不是某个单一指标,而是一句话:<strong>一台车,如果它的响应又快又不晃(第3课)、路感清楚地告诉你极限在哪(第4课)、脾气被调得中性可控(第5·6课),那么人就容易和它形成稳定的闭环——这样的车,就是好开的车。</strong>前 7 章在造车,第 8 章把车交给你;而你手上的方向盘,才是这整本书的最后一环。</p>
+    <div class="hook teal">
+      <span class="k">课程到这里</span>
+      <p>七课讲完了。你现在手里有一整套语言,能把"过弯发飘、急刹点头、高速变道心里发慌"这些身体感觉,一一对上书里的概念。下次开车,你不只是在开车——你在<strong>读这台车</strong>。</p>
+    </div>
+  </section>
+
+  <div class="take">
+    <h2>一课一收:你现在能说的三句话</h2>
+    <ol>
+      <li>真正的系统是<strong>人—车—环境闭环</strong>;"好不好开"取决于人和车<strong>配不配</strong>,不只看车本身;</li>
+      <li>人可用 <strong>PID/预瞄/模糊/神经网络</strong>建模,核心参数是<strong>预瞄时间 T、增益 K、滞后 τ</strong>;"眼睛看远"= 预瞄时间足;</li>
+      <li><strong>稳定极限速度</strong>在<strong>适中预瞄时间</strong>处最高;好开的车,就是让人<strong>容易找到匹配节奏</strong>的车。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 开车验证题(毕业题)</span>
+    <p>下次开一段熟路,刻意<strong>把视线放远</strong>一点(在安全前提下),感受修正方向是不是变得<strong>更从容、车更稳</strong>——那就是预瞄时间在起作用。然后试着用这七课的语言,给你的车下一个判断:它的响应<strong>快不快</strong>?路感<strong>清不清</strong>?脾气<strong>偏 US 还是 OS</strong>?你和它<strong>配不配</strong>?——恭喜,你已经会读一台车了。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">✓</span>
+    <div>
+      <div class="lbl">全部课程完成</div>
+      <div class="ti">七课已讲完 · 回到起点再看一遍</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">建议回<a href="../framework.html">全书框架</a>重走一遍那条"人—车—环境"运动链,你会发现每个环节现在都有了具体的内容。或从<a href="lesson-01-tires.html">第 1 课</a>重读,感受层层搭台的连贯。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　第 7 课 / 共 7 课 · 全课程完</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘/动画</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-06-active.html">← 第 6 课</a></p>
+  </footer>
+</div>
+</body>
+</html>

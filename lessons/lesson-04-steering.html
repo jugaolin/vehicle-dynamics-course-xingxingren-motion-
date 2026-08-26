@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 4 课 · 你的手和车之间</title>
+<meta name="description" content="汽车运动性能第四课:转向系统的两件事、路感(转向反作用力)从哪来、方向盘为什么会自动回正、理想转向响应与阿克曼几何(含动态原创插图)。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+@media (prefers-reduced-motion:no-preference){
+  /* 反馈回路:信号点绕环流动 */
+  .loopdot{animation:travel 4.6s linear infinite}
+  /* 方向盘自动回正:轮子转过后弹回正中 */
+  .selfalign{transform-box:view-box; transform-origin:230px 118px; animation:selfalign 3.8s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes selfalign{0%,10%{transform:rotate(0deg)}22%,46%{transform:rotate(20deg)}78%,100%{transform:rotate(0deg)}}
+  .restore{animation:pulse 1.9s ease-in-out infinite}
+  /* 阿克曼:内外前轮转到不同角度 */
+  .ack-in{transform-box:view-box; transform-origin:175px 120px; animation:ackin 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  .ack-out{transform-box:view-box; transform-origin:315px 120px; animation:ackout 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes ackin{0%,12%{transform:rotate(0deg)}30%,70%{transform:rotate(-42deg)}88%,100%{transform:rotate(0deg)}}
+  @keyframes ackout{0%,12%{transform:rotate(0deg)}30%,70%{transform:rotate(-26deg)}88%,100%{transform:rotate(0deg)}}
+  .ackray{animation:pulse 2.2s ease-in-out infinite}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">第 4 课 · 第四章 转向系统与车辆运动性能</p>
+    <h1>你的手,和车之间</h1>
+    <p class="lede">前三课都在讲"车自己怎么动"。从这一课起进入<strong>调车的旋钮</strong>——第一个旋钮就是方向盘。它不只是把你的意图送给前轮;它同时<strong>把车和路的状态,顺着这只手反馈回来</strong>。所谓"路感",就在这里。</p>
+    <div class="meta">
+      <span>面向零基础驾驶者</span><span>约 11 分钟</span><span>KEYWORDS&nbsp;&nbsp;路感 · 回正 · 主销 · 阿克曼</span>
+    </div>
+
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step"><span class="n">01</span>轮胎</div>
+      <div class="step"><span class="n">02</span>如何响应</div>
+      <div class="step"><span class="n">03</span>各种工况</div>
+      <div class="step here"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step"><span class="n">08</span>人来闭环</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先问你一个手上的感觉</span>
+    <p>出弯时松一点手,方向盘会<strong>自己往回转、找正</strong>;而当你压着轮胎快滑的极限打方向,手上会突然<strong>发虚、发轻(像"脱了一下")</strong>。这两种手感都不是错觉——这一课告诉你它们从哪来、书里管它们叫什么。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>转向系统其实在做两件事</h2>
+    <p>书里(第 4 章开篇)把转向系统的功能讲得很干脆——它同时承担<strong>两件事</strong>:</p>
+    <ul>
+      <li><strong>把意图变成前轮转角</strong>:按你的操作决定前轮转多少,从而控制车怎么走;</li>
+      <li><strong>把状态反馈回你的手</strong>:以<strong>转向反作用力</strong>的形式,把"轮胎和车现在什么状态"传回来。</li>
+    </ul>
+    <p>所以书里明确说:转向系统是<strong>"人—车系统"里的一段反馈回路</strong>。你不是单向地命令车,你和车是一个闭着的圈:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 260" role="img" aria-label="转向作为人车反馈回路:手→方向盘→前轮→轮胎力→车辆运动,再以转向反作用力回到手">
+        <defs>
+          <marker id="hm" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillmut"/></marker>
+          <marker id="ht" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillt"/></marker>
+          <path id="loop" d="M70,80 H210 H350 H450 V180 H310 H170 H70 Z" fill="none"/>
+        </defs>
+        <!-- top row boxes -->
+        <g class="node-fig">
+          <rect x="44" y="58" width="80" height="44" rx="9" class="s-fillsurface s-ink"/>
+          <text x="84" y="85" text-anchor="middle" class="t">你的手</text>
+          <rect x="150" y="58" width="90" height="44" rx="9" class="s-fillsurface s-ink"/>
+          <text x="195" y="79" text-anchor="middle" class="t" font-size="13">方向盘</text>
+          <text x="195" y="94" text-anchor="middle" class="t mut" font-size="11">转向系统</text>
+          <rect x="266" y="58" width="80" height="44" rx="9" class="s-fillsurface s-ink"/>
+          <text x="306" y="85" text-anchor="middle" class="t">前轮转角</text>
+          <rect x="372" y="58" width="104" height="44" rx="9" class="s-fillsurface s-ink"/>
+          <text x="424" y="79" text-anchor="middle" class="t" font-size="13">轮胎侧向力</text>
+          <text x="424" y="94" text-anchor="middle" class="t mut" font-size="11">→ 车辆运动</text>
+        </g>
+        <!-- forward arrows -->
+        <line x1="124" y1="80" x2="148" y2="80" class="s-faint" stroke-width="1.6" marker-end="url(#hm)"/>
+        <line x1="240" y1="80" x2="264" y2="80" class="s-faint" stroke-width="1.6" marker-end="url(#hm)"/>
+        <line x1="346" y1="80" x2="370" y2="80" class="s-faint" stroke-width="1.6" marker-end="url(#hm)"/>
+        <!-- feedback path -->
+        <path d="M424,102 V150 H84 V102" class="s-teal flow" stroke-width="2.5" marker-end="url(#ht)"/>
+        <text x="250" y="170" text-anchor="middle" class="t teal">转向反作用力(回正力矩)把状态送回你的手</text>
+        <!-- traveling signal dot -->
+        <circle r="5.5" class="s-filla loopdot" style="offset-path:path('M84,80 H195 H306 H424 V150 H84 Z')"/>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 原创动图</span> &nbsp;上排是"你→车"的前向通路(手打方向 → 前轮转角 → 轮胎侧向力 → 车动起来);下面那条青色回路,是车把状态<b>反馈回你手上</b>的<b>转向反作用力</b>。橙点绕着这个圈跑——你和车,始终是一个闭环。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>"路感"从哪来:回正,与那一下"脱落感"</h2>
+    <p>你手上感到的转向反作用力,书里(4.1.3)说主要来自三处:<strong>①横拉杆/齿条的输入(轮胎的回正力矩)、②动力转向的助力特性、③转向柱的摩擦与惯性</strong>。其中最能解释"手感"的,是第①项里的<strong>回正力矩</strong>。</p>
+    <p>为什么方向盘会自己回正?关键在<strong>主销后倾</strong>——前轮绕着"主销轴线"转,而这根轴线在地面上的落点,<strong>比轮胎实际接地点靠前一小段</strong>,这段距离叫<strong>后倾拖距 rτ</strong>。于是转弯时轮胎产生的侧向力,作用点落在主销之后,就像被"拖着走",自然把轮子<strong>拽回正中</strong>:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 460 300" role="img" aria-label="主销后倾拖距产生回正力矩:前轮被打偏后自动回到正中">
+        <defs>
+          <marker id="ha2" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-filla"/></marker>
+        </defs>
+        <text x="230" y="28" text-anchor="middle" class="t mut">俯视:一只前轮(车头朝上)</text>
+        <!-- steering axis ground point S (fixed) -->
+        <line x1="120" y1="118" x2="340" y2="118" class="s-grid s-dash"/>
+        <circle cx="230" cy="118" r="4.5" class="s-fillmut"/>
+        <text x="238" y="112" class="t mut" font-size="12">主销着地点 S(转动中心)</text>
+        <!-- rotating wheel group -->
+        <g class="selfalign">
+          <!-- trail line S->C -->
+          <line x1="230" y1="118" x2="230" y2="188" class="s-faint" stroke-width="1.4"/>
+          <text x="236" y="160" class="t mono mut" font-size="12">拖距 rτ</text>
+          <!-- tire -->
+          <rect x="216" y="70" width="28" height="120" rx="9" class="s-tirefill" opacity="0.85"/>
+          <!-- contact point C -->
+          <circle cx="230" cy="180" r="4" class="s-filla"/>
+          <!-- lateral force at C -->
+          <line x1="230" y1="180" x2="150" y2="180" class="s-acc restore" stroke-width="3" marker-end="url(#ha2)"/>
+          <text x="120" y="200" class="t acc" font-size="12">侧向力 Fy</text>
+          <!-- restoring moment arc about S -->
+          <path d="M262,132 A46,46 0 0,1 250,168" class="s-acc restore" fill="none" marker-end="url(#ha2)"/>
+        </g>
+        <text x="300" y="245" class="t acc">回正力矩</text>
+        <text x="120" y="270" class="t mut" font-size="12.5">Fy 作用点在 S 之后 → 把轮子往正中"拽" → 松手自动回正</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 原创动图</span> &nbsp;轮子被打偏后,侧向力 <b>Fy</b> 作用在主销着地点 <b>S</b> 的<b>后方</b>(相距<b>后倾拖距 rτ</b>),于是绕 S 形成一个<b>回正力矩</b>,把轮子拽回正中——这就是松手方向盘自己回正的来源。看它转过去后自己弹回来。</figcaption>
+    </figure>
+
+    <p>书里(式 4-7)把这个绕主销的回正力矩概算成:</p>
+    <div class="formula">Ts = ( rτ + tp ) · Fy　　（tp:轮胎自身的侧抗拖距）</div>
+    <p>你握方向盘时手上那点<strong>沉重,就由 Ts 支配</strong>。后倾拖距越长,高速直行越稳、但转向越沉。而书里点出一个很妙的细节:轮胎快到极限时,侧抗拖距 tp 会缩小甚至变负,<strong>Ts 随之骤减</strong>——于是你手上突然"发虚、脱了一下"。那一下<strong>"脱落感",正是轮胎在告诉你它到极限了</strong>。工程师会特意把后倾拖距设小一点,好让这个信号更清楚地传到你手上。</p>
+    <div class="hook">
+      <span class="k">接上第 1 课</span>
+      <p>第 1 课说轮胎侧向力到<strong>非线性区</strong>会饱和。这一课补上另一半:轮胎接近极限时,不只是"力给不动了",连它绕主销的<strong>回正手感也会变虚</strong>——车其实在用<strong>两个渠道</strong>同时向你报警。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>好开的方向盘:轻与沉之间的权衡</h2>
+    <p>书里(4.1.2)讲"理想的转向响应"时,反复在两头找平衡:</p>
+    <ul>
+      <li><strong>低速</strong>要<strong>轻</strong>、要好停(挪车、掉头省力),而且要有低速回正性;</li>
+      <li><strong>高速、直行</strong>要<strong>稳</strong>:直行性好、转向中心清晰、路面干扰被适度<strong>挡掉</strong>一部分(而不是原样传到手上);</li>
+      <li><strong>转弯</strong>时,手上的转向力最好能<strong>线性地</strong>反映车的侧向加速度——你才"感觉得到"车正承受多大的横向。</li>
+    </ul>
+    <p>所以助力不是越轻越好。书里用一组曲线(图 4-1)说明:力若<strong>始终线性上升(高侧向加速度还很沉)</strong>会太累;若<strong>太轻</strong>又没了路感;工程师把助力设成<strong>随侧向加速度趋于"饱和"</strong>的那条——低速轻快,高负荷时手上留住恰当的沉,让你读得到车。</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 300" role="img" aria-label="侧向加速度-转向力特性:太沉、饱和型(理想)、太轻三条曲线">
+        <line x1="66" y1="24" x2="66" y2="256" class="s-axis"/>
+        <line x1="66" y1="254" x2="500" y2="254" class="s-axis"/>
+        <text x="20" y="40" class="t mut" font-size="12">转向力</text>
+        <text x="400" y="284" class="t mut" font-size="12">侧向加速度 →</text>
+        <!-- 太沉:一直线性上升 -->
+        <path d="M66,254 L470,50" class="s-faint anim-draw" style="--dash:520;--dur:2s" stroke-width="2"/>
+        <text x="474" y="52" class="t mut" font-size="12">太沉</text>
+        <!-- 理想:饱和型 -->
+        <path d="M66,254 C200,120 330,96 490,90" class="s-curve anim-draw" style="--dash:640;--dur:2.4s;--delay:.3s"/>
+        <text x="360" y="112" class="t acc" font-size="12.5">理想:趋于饱和</text>
+        <!-- 太轻 -->
+        <path d="M66,254 C220,214 360,196 490,190" class="s-teal anim-draw" style="--dash:600;--dur:2.4s;--delay:.5s" stroke-width="2.5"/>
+        <text x="452" y="182" class="t teal" font-size="12">太轻</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;三条"转向力随侧向加速度"的曲线依次画出:<b>太沉</b>(一直线性,高负荷时累)、<b>太轻</b>(高负荷没了路感)、以及工程师选的<b class="mono">理想·饱和型</b>——低速轻、高负荷仍留住恰当的沉,让你读得到车的极限。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>低速掉头的小秘密:阿克曼</h2>
+    <p>转弯时,<strong>四个轮子绕的是同一个圆心</strong>(书里叫瞬心 O)。可内圈轮子走的圆更小、外圈的更大——要让每个轮子都"顺着自己的圆滚、不拖着侧滑",<strong>内轮就必须比外轮转得更多</strong>。这个"内轮转角 > 外轮转角"的安排,书里(4.3.1)叫<strong>阿克曼几何</strong>:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 320" role="img" aria-label="阿克曼转向:左转时内侧前轮比外侧前轮转角更大,两前轮都垂直于到瞬心O的连线">
+        <defs>
+          <marker id="hf" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillmut"/></marker>
+        </defs>
+        <!-- instant center O -->
+        <circle cx="48" cy="250" r="5" class="s-fillt"/>
+        <text x="34" y="242" class="t teal" font-size="12">瞬心 O</text>
+        <!-- rear axle line through O -->
+        <line x1="48" y1="250" x2="360" y2="250" class="s-grid s-dash"/>
+        <!-- car body -->
+        <rect x="150" y="96" width="180" height="176" rx="20" class="s-fillsurface s-ink"/>
+        <text x="240" y="190" text-anchor="middle" class="t mut" font-size="12">车头朝上</text>
+        <!-- rear wheels (fixed, vertical) -->
+        <rect x="165" y="234" width="18" height="42" rx="5" class="s-tirefill"/>
+        <rect x="297" y="234" width="18" height="42" rx="5" class="s-tirefill"/>
+        <!-- radius lines O -> front wheels -->
+        <line x1="48" y1="250" x2="175" y2="120" class="s-teal s-dash ackray" stroke-width="1.4"/>
+        <line x1="48" y1="250" x2="315" y2="120" class="s-teal s-dash ackray" stroke-width="1.4"/>
+        <!-- inner (left) front wheel: turns MORE -->
+        <g class="ack-in">
+          <rect x="166" y="99" width="18" height="42" rx="5" class="s-filla"/>
+        </g>
+        <text x="150" y="86" class="t acc" font-size="12">内轮 α(大)</text>
+        <!-- outer (right) front wheel: turns LESS -->
+        <g class="ack-out">
+          <rect x="306" y="99" width="18" height="42" rx="5" class="s-filla"/>
+        </g>
+        <text x="300" y="86" class="t acc" font-size="12">外轮 β(小)</text>
+        <text x="120" y="306" class="t mut" font-size="12.5">内外前轮都垂直于各自到 O 的连线 → 内轮转角 α &gt; 外轮转角 β</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 原创动图</span> &nbsp;左转时,两只前轮转向不同角度:<b>内侧(左)前轮转得多(α)</b>,<b>外侧(右)前轮转得少(β)</b>,各自都垂直于到瞬心 <b>O</b> 的连线,才不会拖着轮胎侧滑。乘用车通常按阿克曼原理取内外轮差值的 <b>50%~70%</b>。</figcaption>
+    </figure>
+
+    <p class="lead-line">最后一个旋钮藏在看不见的地方:主销的角度。</p>
+    <p>书里(4.3.2)讲了一组<strong>主销参数</strong>,其中和你最有关的是<strong>主销后倾角 τ</strong>:它越大,<strong>直行性越好</strong>(方向越"定"),而且转弯时会给外轮一点有利的负外倾、提升过弯极限;代价是低速转向更沉。前面图 2 那段"后倾拖距",正是主销后倾带来的。乘用车的主销后倾角一般在 <span class="mono">2°~9°</span>。</p>
+  </section>
+
+  <div class="take">
+    <h2>一课一收:你现在能说的三句话</h2>
+    <ol>
+      <li>转向系统做<strong>两件事</strong>:把你的意图送给前轮,又把车与路的状态以<strong>转向反作用力</strong>反馈回你的手——你和车是一个<strong>闭环</strong>;</li>
+      <li>方向盘会<strong>自动回正</strong>,是因为<strong>主销后倾拖距</strong>让侧向力落在转动中心之后,形成<strong>回正力矩 Ts</strong>;轮胎快到极限时手感会"脱一下",那是车在报警;</li>
+      <li>好开的方向盘在<strong>轻与沉之间权衡</strong>(理想是随侧向加速度趋于饱和);低速掉头靠<strong>阿克曼</strong>(内轮转得比外轮多),直行稳靠<strong>主销后倾角</strong>。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 开车验证题</span>
+    <p>低速出弯时,轻轻<strong>托着</strong>方向盘(别使劲扶正),感受它<strong>自己往回转、找正</strong>的力道——那就是回正力矩。再留意:车速越高时,同样的直行,方向盘是不是<strong>更"定"、更不容易被路面带偏</strong>?那是主销后倾角在起作用。(全程低速、注意安全。)</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">第 5 课 · 四个轮子怎么装</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">方向盘之后,第二个大旋钮是<strong>悬架</strong>。它决定轮子在跳动、侧倾、加减速时怎么"歪、怎么摆"——束角、外倾、侧倾中心、点头后仰,都会悄悄改写这台车的 US/OS 脾气。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　第 4 课 / 共 7 课</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘/动画</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-03-response.html">← 第 3 课</a></p>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 5 课 · 四个轮子怎么装</title>
+<meta name="description" content="汽车运动性能第五课:悬架的三大功能、束角/外倾变化与侧倾转向、柔性转向、等效侧抗刚度、侧倾中心与侧倾轴、侧倾刚度前后分配如何改 US/OS、抗前俯/抗上浮、主动悬架 Skyhook。含动态原创插图。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+@media (prefers-reduced-motion:no-preference){
+  /* 车身侧倾:整个车身绕侧倾中心摆 */
+  .rollbody{transform-box:view-box; transform-origin:260px 210px; animation:rollb 4.6s ease-in-out infinite}
+  @keyframes rollb{0%,12%{transform:rotate(0deg)}44%,64%{transform:rotate(6deg)}92%,100%{transform:rotate(0deg)}}
+  /* 后轮束角随悬架行程改变(侧倾转向) */
+  .toein{transform-box:view-box; transform-origin:250px 150px; animation:toein 4.6s ease-in-out infinite}
+  @keyframes toein{0%,12%{transform:rotate(0deg)}44%,64%{transform:rotate(7deg)}92%,100%{transform:rotate(0deg)}}
+  .rollmark{animation:pulse 2.2s ease-in-out infinite}
+  /* 天棚阻尼:车身被"钩住"减小起伏 */
+  .sky{animation:skybob 3.4s ease-in-out infinite}
+  @keyframes skybob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .skyhook{animation:pulse 1.8s ease-in-out infinite}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">第 5 课 · 第五章 悬架与车辆运动性能</p>
+    <h1>四个轮子,怎么装</h1>
+    <p class="lede">方向盘之后,第二个大旋钮是<strong>悬架</strong>。它管的是:轮子在<strong>跳动、侧倾、加减速</strong>时,相对车身怎么"歪、怎么摆、怎么让"。这些看不见的小动作,会悄悄改写第 2 课那台车的 US/OS 脾气——甚至比换轮胎还管用。</p>
+    <div class="meta">
+      <span>面向零基础驾驶者</span><span>约 13 分钟</span><span>KEYWORDS&nbsp;&nbsp;束角 · 侧倾中心 · 分配 · 主动悬架</span>
+    </div>
+
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step"><span class="n">01</span>轮胎</div>
+      <div class="step"><span class="n">02–03</span>如何响应</div>
+      <div class="step here"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step"><span class="n">08</span>人来闭环</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先想一个画面</span>
+    <p>过弯时车身会往外侧<strong>倾</strong>一下——这大家都知道。但你可能没意识到:就在车身侧倾的同时,<strong>四个轮子相对车身也在悄悄改变角度</strong>。轮子朝哪、歪多少,直接决定它给不给得出第 1 课那份侧向力。悬架,就是设计这些"小动作"的地方。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>悬架其实在管三件事</h2>
+    <p>书里(第 5 章开篇)把悬架的功能归成三类,一句话就能记住:</p>
+    <ul>
+      <li><strong>缓冲</strong>:隔开路面颠簸,保住乘坐舒适和轮胎的持续接地;</li>
+      <li><strong>导向</strong>:决定车轮在上下跳动时,<strong>相对车身的姿态怎么变</strong>(束角、外倾、接地点);</li>
+      <li><strong>传力</strong>:把轮胎的<strong>侧向力、纵向力、回正力矩</strong>可靠地传给车身。</li>
+    </ul>
+    <p>第 1、4 课谈的是"轮胎/前轮本身";这一课谈的是<strong>轮子被怎么"装"上去的</strong>——同样的轮胎,装法不同,车的脾气可以差很远。书里反复强调:悬架对运动性能的影响,<strong>主要就体现在"轮子姿态随行程怎么变"上。</strong></p>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>侧倾转向:车身一歪,后轮自己"转"了一点</h2>
+    <p>这是全章最重要、也最反直觉的一招。书里(5.2 系列)指出:车身侧倾时,由于悬架的几何,<strong>车轮的束角会随之改变</strong>——效果等同于这根轴"自己转了一个小角度",书里叫<strong>侧倾转向(roll steer)</strong>。</p>
+    <p>关键在于方向:如果<strong>后轴</strong>在侧倾时朝"<strong>前束增大(toe-in)</strong>"的方向变,就相当于后轮帮着往弯里带一点——增强<strong>不足转向(US)</strong>、让车更稳;反过来朝前束减小(toe-out)则偏向 OS、更灵活但更神经质。所以书里给出的理想倾向是:<strong>后轮设成弱前束、前轮可用负前束</strong>,来得到合适的等效侧抗刚度。</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 300" role="img" aria-label="侧倾转向:车身侧倾时后轮束角改变,相当于后轴自己转了一个小角度">
+        <text x="260" y="26" text-anchor="middle" class="t mut">后视 · 车身往外侧倾时,看后轮束角怎么变</text>
+        <!-- ground -->
+        <line x1="40" y1="250" x2="480" y2="250" class="s-axis"/>
+        <!-- roll center marker -->
+        <circle cx="260" cy="210" r="4.5" class="s-fillt rollmark"/>
+        <text x="270" y="206" class="t teal" font-size="12">侧倾中心</text>
+        <!-- rolling body -->
+        <g class="rollbody">
+          <rect x="150" y="120" width="220" height="80" rx="14" class="s-fillsurface s-ink"/>
+          <text x="260" y="166" text-anchor="middle" class="t mut" font-size="12">车身</text>
+        </g>
+        <!-- wheels: left compresses, shows toe change -->
+        <g class="toein">
+          <rect x="120" y="214" width="20" height="54" rx="6" class="s-filla"/>
+        </g>
+        <rect x="380" y="214" width="20" height="54" rx="6" class="s-tirefill"/>
+        <text x="92" y="292" class="t acc" font-size="12">外侧后轮:束角变了 → 相当于后轴"转"了一点</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 原创动图</span> &nbsp;车身绕<b class="teal">侧倾中心</b>往外倾时,悬架几何让<b class="acc">外侧后轮的束角</b>跟着改变——效果等于后轴自己转了个小角度,这就是<b>侧倾转向</b>。若后轴朝<b>前束增大</b>方向变,就增强 US、让车更稳。</figcaption>
+    </figure>
+
+    <div class="hook teal">
+      <span class="k">和第 3 课接上</span>
+      <p>第 3 课说"想又快又稳,先做大<strong>后轮等效侧抗刚度</strong>"。这一课就给出了具体的旋钮:<strong>侧倾转向的方向、柔性转向、外倾变化</strong>——它们叠加起来,决定了这根轴"等效"上有多咬地。悬架调校,本质就是在调这个等效刚度。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>还有一种"转向":被力压出来的——柔性转向</h2>
+    <p>悬架不是刚体,它有橡胶衬套、有连杆,会<strong>被力压得微微变形</strong>。书里(5.3)把这种"因受力而产生的束角/位置变化"叫<strong>柔性转向(compliance steer)</strong>,分两种来源:</p>
+    <ul>
+      <li><strong>侧向力柔性转向</strong>:过弯时轮胎侧向力把悬架推得变形,束角随之变;</li>
+      <li><strong>纵向力柔性转向</strong>:刹车/驱动的前后向力,也会把轮子"顶"出一点束角变化。</li>
+    </ul>
+    <p>这解释了一件事:为什么<strong>急刹或收油入弯</strong>时,车的转向感会变。因为纵向力正在通过柔性转向,悄悄改写后轴的束角。工程师把"侧倾转向 + 柔性转向 + 外倾变化"合并,折算成那根轴的<strong>等效侧抗刚度</strong>——这是把复杂悬架塞回第 2 课二自由度模型的桥梁。</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>车绕着哪条线倾?侧倾中心与侧倾轴</h2>
+    <p>车身侧倾不是绕地面转,而是绕一条虚拟的线。书里(5.4)定义:每根轴有一个由悬架几何决定的<strong>侧倾中心</strong>,前后侧倾中心的连线就是<strong>侧倾轴</strong>——车身正是绕这条轴倾斜的。</p>
+    <p>侧倾中心的<strong>高低</strong>很关键:它越高,过弯时车身侧倾越小(力臂短),但接地点横向位移等副作用增大;越低则相反。更妙的是它牵动重量转移——这就引出全章最实用的一招:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 260" role="img" aria-label="侧倾轴:前后侧倾中心连成一条线,车身绕它侧倾">
+        <text x="260" y="26" text-anchor="middle" class="t mut">侧视 · 车头在左</text>
+        <line x1="40" y1="210" x2="480" y2="210" class="s-axis"/>
+        <!-- body -->
+        <rect x="90" y="70" width="340" height="86" rx="16" class="s-fillsurface s-ink"/>
+        <!-- front & rear roll centers -->
+        <circle cx="150" cy="150" r="5" class="s-fillt"/>
+        <text x="120" y="176" class="t teal" font-size="11">前侧倾中心</text>
+        <circle cx="380" cy="128" r="5" class="s-fillt"/>
+        <text x="352" y="120" class="t teal" font-size="11">后侧倾中心</text>
+        <!-- roll axis -->
+        <line x1="150" y1="150" x2="380" y2="128" class="s-teal s-dash" stroke-width="2"/>
+        <text x="228" y="128" class="t teal" font-size="12">侧倾轴</text>
+        <!-- CG -->
+        <circle cx="265" cy="96" r="6" class="s-filla"/>
+        <text x="276" y="92" class="t acc" font-size="12">质心</text>
+        <line x1="265" y1="96" x2="265" y2="139" class="s-acc s-dash rollmark"/>
+        <text x="272" y="122" class="t mut mono" font-size="11">力臂</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 原创动图</span> &nbsp;前后<b class="teal">侧倾中心</b>连成<b class="teal">侧倾轴</b>,车身绕它侧倾。<b class="acc">质心</b>到侧倾轴的距离(力臂,闪动那段)越大,同样的侧向力压出的侧倾就越大。抬高侧倾中心能压小侧倾,但有副作用。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>最实用的一招:用侧倾刚度分配改 US/OS</h2>
+    <p>过弯时车身侧倾,会把重量<strong>从内侧轮转移到外侧轮</strong>。而第 1 课讲过:轮胎侧向力对垂直载荷是<strong>非线性</strong>的——载荷转移越猛,这根轴的<strong>总侧向力反而越"亏"</strong>。于是书里(5.4~5.5)给出一个极其好用的结论:</p>
+    <div class="thesis"><strong>哪根轴分担的侧倾(载荷转移)更多,哪根轴就更"亏"侧向力。</strong>加大<strong>前轴</strong>侧倾刚度 → 前轴更亏 → 增强<strong>不足转向(US)</strong>;加大<strong>后轴</strong>侧倾刚度 → 后轴更亏 → 偏向<strong>过度转向(OS)</strong>。</div>
+    <p>这就是为什么调校师傅换一根<strong>防倾杆(稳定杆)</strong>就能改车的脾气:防倾杆改变的正是那根轴的侧倾刚度、进而改变它分担的载荷转移比例。<strong>不用动轮胎、不用动重量分布,只调前后侧倾刚度的比例,就能把一台推头的车调得更中性。</strong></p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 250" role="img" aria-label="侧倾刚度分配:加大前轴侧倾刚度增强不足转向,加大后轴则偏向过度转向">
+        <!-- axis -->
+        <line x1="60" y1="200" x2="470" y2="200" class="s-axis"/>
+        <line x1="265" y1="40" x2="265" y2="210" class="s-grid s-dash"/>
+        <text x="180" y="230" text-anchor="middle" class="t acc" font-size="12">← 前轴刚度↑:更 US(稳)</text>
+        <text x="360" y="230" text-anchor="middle" class="t teal" font-size="12">后轴刚度↑:更 OS(灵) →</text>
+        <!-- balance beam pivots -->
+        <circle cx="265" cy="120" r="6" class="s-fillmut"/>
+        <line x1="120" y1="150" x2="410" y2="90" class="s-acc rollmark" stroke-width="3"/>
+        <circle cx="120" cy="150" r="9" class="s-filla"/>
+        <text x="96" y="140" class="t acc" font-size="11">前</text>
+        <circle cx="410" cy="90" r="9" class="s-fillt"/>
+        <text x="404" y="82" class="t teal" font-size="11">后</text>
+        <text x="200" y="60" class="t mut" font-size="12">调前后侧倾刚度的"跷跷板",就能调 US/OS 平衡</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;把 US/OS 想成一个<b>跷跷板</b>:加大<b class="acc">前轴</b>侧倾刚度,车更偏<b>不足转向</b>(稳);加大<b class="teal">后轴</b>侧倾刚度,车更偏<b>过度转向</b>(灵)。防倾杆就是拧这个平衡的旋钮——不碰轮胎也能改脾气。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">06</span>点头与后仰:抗前俯、抗上浮</h2>
+    <p>加减速时车会<strong>点头、后仰</strong>,这也是悬架几何能管的。书里(5.5)用两个"率"来量化悬架抵抗这种姿态变化的本事:</p>
+    <ul>
+      <li><strong>抗前俯率(anti-dive)</strong>(式5-22):刹车时抵抗车头下扎的能力;</li>
+      <li><strong>抗上浮/抗后仰率(anti-lift/anti-squat)</strong>(式5-23):加速时抵抗车尾下沉、车头上抬的能力。</li>
+    </ul>
+    <p>它们不是越大越好:抗前俯率过高会让刹车时路感变生硬、冲击直传车身。工程师要在"姿态稳"和"滤震柔"之间取平衡——这又回到悬架的第一个功能:<strong>缓冲</strong>。</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">07</span>让悬架"活"起来:主动悬架与天棚阻尼</h2>
+    <p>前面的旋钮都是<strong>被动</strong>的——装好就固定了。书里(5.6)最后讲<strong>主动悬架</strong>:用作动器实时给车身施力,主动压制侧倾、点头和起伏。其中最经典的控制律是<strong>天棚阻尼(Skyhook)</strong>控制(式5-31~5-34):</p>
+    <p>它的想象很美——<strong>仿佛在车身和"天上一个固定点"之间挂了一根阻尼器</strong>,专门吸收车身的上下起伏,却不把路面的高频颠簸硬传进来。于是车身像被天空温柔地"钩住"一样平稳,同时轮胎还能贴地。这是"缓冲"和"操控"难题的一个漂亮解法:</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 280" role="img" aria-label="天棚阻尼:车身仿佛被天上的固定点用阻尼器钩住,起伏被抑制">
+        <!-- sky anchor -->
+        <line x1="80" y1="40" x2="440" y2="40" class="s-teal" stroke-width="2"/>
+        <text x="210" y="30" class="t teal" font-size="12">想象中的"天棚"(惯性参考)</text>
+        <!-- skyhook damper -->
+        <line x1="260" y1="40" x2="260" y2="120" class="s-teal skyhook" stroke-width="2.5" stroke-dasharray="4 5"/>
+        <text x="268" y="86" class="t teal" font-size="11">天棚阻尼器</text>
+        <!-- body (bobbing, but gently) -->
+        <g class="sky">
+          <rect x="170" y="120" width="180" height="60" rx="12" class="s-fillsurface s-ink"/>
+          <text x="260" y="156" text-anchor="middle" class="t mut" font-size="12">车身:平稳</text>
+          <!-- suspension springs to wheels -->
+          <path d="M200,180 l0,20 l-8,6 l16,8 l-16,8 l8,6 l0,14" class="s-acc" fill="none" stroke-width="2"/>
+          <path d="M320,180 l0,20 l-8,6 l16,8 l-16,8 l8,6 l0,14" class="s-acc" fill="none" stroke-width="2"/>
+        </g>
+        <!-- wheels + bumpy road -->
+        <circle cx="200" cy="250" r="10" class="s-tirefill"/>
+        <circle cx="320" cy="250" r="10" class="s-tirefill"/>
+        <path d="M120,266 q20,-12 40,0 t40,0 t40,0 t40,0 t40,0 t40,0" class="s-faint" fill="none"/>
+        <text x="360" y="262" class="t mut" font-size="11">颠簸路面</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 原创动图</span> &nbsp;天棚阻尼(Skyhook)把车身想象成被<b class="teal">天上的固定点</b>用阻尼器<b>钩住</b>:车身起伏被吸掉、走得平稳,而轮胎仍能跟着路面上下贴地。这是主动悬架里最经典的控制思路(式5-31~5-34)。</figcaption>
+    </figure>
+  </section>
+
+  <div class="take">
+    <h2>一课一收:你现在能说的三句话</h2>
+    <ol>
+      <li>悬架管<strong>缓冲、导向、传力</strong>三件事;对操控最要紧的是"轮子姿态随行程怎么变";</li>
+      <li>车身一侧倾,后轮会因<strong>侧倾转向 / 柔性转向</strong>悄悄改束角——把它们折成<strong>等效侧抗刚度</strong>,就接回了第 2 课的模型;</li>
+      <li>不碰轮胎也能改脾气:<strong>加大前轴侧倾刚度→更 US,加大后轴→更 OS</strong>;主动悬架用<strong>天棚阻尼</strong>兼顾平稳与贴地。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 开车验证题</span>
+    <p>找一段熟悉的匝道匀速过弯,留意车身<strong>侧倾</strong>的大小和"稳不稳";再体会<strong>刹车点头、起步后仰</strong>的幅度——这就是抗前俯/抗上浮在起作用。若你的车能选运动模式(常收紧悬架),对比一下侧倾和点头是不是明显变小了。(全程注意安全。)</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">第 6 课 · 让车更听话的主动技术</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">被动的悬架旋钮拧到头之后,还能怎么办?让<strong>后轮也会转(4WS)</strong>、让<strong>四个轮子的驱动/制动力各管各的(DYC)</strong>——直接给车"发"一个横摆力矩。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　第 5 课 / 共 7 课</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘/动画</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-04-steering.html">← 第 4 课</a>&nbsp;·&nbsp;<a href="lesson-06-active.html">第 6 课 →</a></p>
+  </footer>
+</div>
+</body>
+</html>

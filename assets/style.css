@@ -140,12 +140,44 @@ figcaption b{color:var(--ink)}
 .s-acc{stroke:var(--accent); fill:none}
 .s-dash{stroke-dasharray:5 5}
 .s-fillt{fill:var(--teal)} .s-filla{fill:var(--accent)} .s-tirefill{fill:var(--ink)}
+.s-fillmut{fill:var(--muted)} .s-fillpaper{fill:var(--paper)} .s-fillsurface{fill:var(--surface)}
+.s-fillsoft{fill:var(--accent-soft)} .s-filltsoft{fill:var(--teal-soft)}
+.s-ink{stroke:var(--ink); fill:none} .s-faint{stroke:var(--faint); fill:none}
 .t{font-family:"Noto Sans SC",sans-serif; fill:var(--ink); font-size:14px}
 .t.mono{font-family:"JetBrains Mono",monospace; font-size:13px}
 .t.mut{fill:var(--muted); font-size:13px}
 .t.acc{fill:var(--accent); font-weight:700}
 .t.teal{fill:var(--teal); font-weight:700}
 .band{fill:var(--accent-soft)}
+
+/* ===== 动态图:动画原语(统一尊重"减少动态效果") ===== */
+.figanim{position:relative}
+.playtag{position:absolute; top:12px; right:14px; font-family:"JetBrains Mono",monospace;
+  font-size:10px; letter-spacing:.1em; color:var(--faint); text-transform:uppercase;
+  border:1px solid var(--hair); border-radius:999px; padding:2px 9px; background:var(--paper)}
+.playtag::before{content:"● "; color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){
+  /* 曲线自动描出:元素设 --dash 为略大于路径长度 */
+  .anim-draw{stroke-dasharray:var(--dash,1600); stroke-dashoffset:var(--dash,1600);
+    animation:draw var(--dur,2.4s) cubic-bezier(.3,.6,.3,1) var(--delay,0s) forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  /* 沿路径行进的点/物:在元素 style 里设 offset-path:path('...') */
+  .travel{animation:travel var(--dur,4s) linear infinite; offset-rotate:0deg}
+  .travel.rot{offset-rotate:auto}
+  @keyframes travel{from{offset-distance:0%}to{offset-distance:100%}}
+  /* 流动虚线:表现方向/流向 */
+  .flow{stroke-dasharray:6 8; animation:flow 1s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-28}}
+  /* 脉冲强调 */
+  .pulse{animation:pulse 1.9s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+  .playtag::before{animation:blink 1.4s steps(1) infinite}
+  @keyframes blink{50%{opacity:.25}}
+}
+@media (prefers-reduced-motion:reduce){
+  .anim-draw{stroke-dasharray:none; stroke-dashoffset:0}
+  .playtag{display:none}
+}
 
 /* ===== 收尾块 ===== */
 .take{background:var(--accent-soft); border-radius:12px; padding:22px 24px; margin:30px 0}

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 6 课 · 让车更听话的主动技术</title>
+<meta name="description" content="汽车运动性能第六课:四轮转向 4WS(低速逆相位、高速同相位、零侧偏角控制)与驱动/制动力控制(前后分配=间接横摆、左右分配=DYC 直接横摆力矩、LSD、摩擦圆约束)。含动态原创插图。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+@media (prefers-reduced-motion:no-preference){
+  /* 后轮逆相位:与前轮反向转 */
+  .rear-opp{transform-box:view-box; transform-origin:180px 250px; animation:ropp 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes ropp{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(26deg)}90%,100%{transform:rotate(0deg)}}
+  .front-turn{transform-box:view-box; transform-origin:180px 90px; animation:fturn 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes fturn{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-26deg)}90%,100%{transform:rotate(0deg)}}
+  /* 后轮同相位 */
+  .rear-same{transform-box:view-box; transform-origin:360px 250px; animation:rsame 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes rsame{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-14deg)}90%,100%{transform:rotate(0deg)}}
+  .front-same{transform-box:view-box; transform-origin:360px 90px; animation:fsame 4.4s cubic-bezier(.5,0,.3,1) infinite}
+  @keyframes fsame{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-14deg)}90%,100%{transform:rotate(0deg)}}
+  /* DYC:车身被直接施加横摆力矩而转头 */
+  .yaw{transform-box:view-box; transform-origin:260px 160px; animation:yaw 4.2s cubic-bezier(.45,0,.4,1) infinite}
+  @keyframes yaw{0%,14%{transform:rotate(0deg)}50%,72%{transform:rotate(-16deg)}92%,100%{transform:rotate(0deg)}}
+  .bigforce{animation:pulse 1.6s ease-in-out infinite}
+  .momarc{animation:pulse 2s ease-in-out infinite}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">第 6 课 · 第六、七章 四轮转向与驱动/制动力控制</p>
+    <h1>让车更听话的主动技术</h1>
+    <p class="lede">被动的转向、悬架旋钮都拧到头之后,工程师还有两张王牌:让<strong>后轮也会转(4WS)</strong>,以及让<strong>四个轮子的驱动/制动力各管各的</strong>。它们能<strong>直接给车"发"一个横摆力矩</strong>,不再只靠前轮那点侧向力。</p>
+    <div class="meta">
+      <span>面向零基础驾驶者</span><span>约 13 分钟</span><span>KEYWORDS&nbsp;&nbsp;4WS · 零侧偏 · 力分配 · DYC</span>
+    </div>
+
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step"><span class="n">01</span>轮胎</div>
+      <div class="step"><span class="n">02–03</span>如何响应</div>
+      <div class="step here"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step"><span class="n">08</span>人来闭环</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先问你两个矛盾的愿望</span>
+    <p>你希望车在<strong>低速掉头时转弯半径小</strong>(好停好掉头),又希望它在<strong>高速变道时又快又不甩</strong>。这俩要求其实互相打架。前面几课的旋钮很难同时满足——直到工程师让<strong>后轮也动起来</strong>。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>让后轮也会转:4WS 的两副面孔</h2>
+    <p>书里(第 6 章)讲<strong>四轮转向(4WS)</strong>的核心洞察是:后轮该往哪转,<strong>取决于车速</strong>。同一套硬件,低速和高速要做完全相反的事:</p>
+    <ul>
+      <li><strong>低速 · 逆相位</strong>:后轮转向与前轮<strong>相反</strong>。车像"横着蹭"进弯,<strong>转弯半径大幅缩小</strong>——窄路掉头、泊车轻松;</li>
+      <li><strong>高速 · 同相位</strong>:后轮转向与前轮<strong>相同</strong>(一个小角度)。四个轮子几乎一起侧向使劲,车<strong>侧向响应更快、车身侧偏角更小</strong>,变道又稳又跟手。</li>
+    </ul>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 320" role="img" aria-label="4WS两种模式:左低速后轮逆相位缩小转弯半径,右高速后轮同相位减小车身侧偏角">
+        <!-- LEFT: low speed opposite phase -->
+        <text x="180" y="26" text-anchor="middle" class="t acc" font-size="12.5">低速 · 逆相位</text>
+        <rect x="150" y="70" width="60" height="180" rx="16" class="s-fillsurface s-ink"/>
+        <!-- front wheel turns left -->
+        <g class="front-turn"><rect x="171" y="66" width="18" height="42" rx="5" class="s-filla"/></g>
+        <!-- rear wheel turns opposite (right) -->
+        <g class="rear-opp"><rect x="171" y="228" width="18" height="42" rx="5" class="s-fillt"/></g>
+        <text x="216" y="86" class="t acc" font-size="10">前</text>
+        <text x="216" y="262" class="t teal" font-size="10">后(反向)</text>
+        <text x="120" y="300" class="t mut" font-size="11">前后反打 → 转弯半径大幅变小</text>
+
+        <line x1="266" y1="46" x2="266" y2="300" class="s-grid"/>
+
+        <!-- RIGHT: high speed same phase -->
+        <text x="380" y="26" text-anchor="middle" class="t teal" font-size="12.5">高速 · 同相位</text>
+        <rect x="330" y="70" width="60" height="180" rx="16" class="s-fillsurface s-ink"/>
+        <g class="front-same"><rect x="351" y="66" width="18" height="42" rx="5" class="s-filla"/></g>
+        <g class="rear-same"><rect x="351" y="228" width="18" height="42" rx="5" class="s-filla"/></g>
+        <text x="396" y="86" class="t acc" font-size="10">前</text>
+        <text x="396" y="262" class="t acc" font-size="10">后(同向)</text>
+        <text x="300" y="300" class="t mut" font-size="11">前后同向 → 侧偏角小、响应快</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 原创动图</span> &nbsp;同一套 4WS,两副面孔:<b class="acc">低速逆相位</b>(后轮反着打)让转弯半径大幅缩小,窄路好掉头;<b class="teal">高速同相位</b>(后轮跟着小幅同向)让车身侧偏角变小、侧向响应更快,高速变道又快又稳。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>4WS 怎么"想":前馈、反馈,与"零侧偏角"</h2>
+    <p>书里把 4WS 的控制方式分成几类,越往后越聪明:</p>
+    <ul>
+      <li><strong>前馈型</strong>:后轮转角直接由前轮转角决定,δ<sub>r</sub> = k·δ<sub>f</sub>(<strong>车速感应型</strong>:比例系数 k 随车速变,低速取负=逆相位、高速取正=同相位);</li>
+      <li><strong>反馈型</strong>:让后轮转角跟踪某个车辆状态(如横摆率 δ<sub>r</sub> = p·r),实时纠偏;</li>
+      <li><strong>零侧偏角控制</strong>(式6-18):最漂亮的目标——让<strong>车身侧偏角 β 恒为 0</strong>。这意味着车头<strong>始终指着它前进的方向</strong>,车"贴着"轨迹走,不再有"车头朝里、车往外飘"的错位感。</li>
+    </ul>
+    <div class="hook teal">
+      <span class="k">为什么"零侧偏角"值得追求</span>
+      <p>回想第 2 课:普通车高速过弯时,车身其实是<strong>斜着</strong>走的(有侧偏角 β),车头并不完全指向前进方向。零侧偏角控制让 β≈0——车身姿态和运动方向对齐,驾驶者最容易预判、最不容易被"甩出去的错觉"吓到。这是 4WS 在<strong>动态品质</strong>上的高级形态。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>换个思路:不动方向,靠"力的分配"转弯</h2>
+    <p>第 7 章换了个完全不同的旋钮:<strong>不改任何轮子的转角,只调四个轮子上驱动/制动力的大小</strong>,照样能改变车的转弯。书里把它分成两层:</p>
+
+    <h3>前后分配 = 间接横摆</h3>
+    <p>把驱动或制动力<strong>在前后轴之间</strong>重新分配,会通过第 1 课的<strong>摩擦圆</strong>间接影响转弯:某根轴的纵向力用得多,它留给侧向力的余量就少(圆就那么大)。书里(7 章)的经验结论:</p>
+    <div class="thesis"><strong>过弯中加速</strong> → 更多力压在<strong>驱动轴</strong>、侧向余量变少 → 偏向<strong>不足转向(推头)</strong>;<br><strong>过弯中收油/轻刹</strong> → 载荷与力前移 → 偏向<strong>过度转向(尾巴发活)</strong>。</div>
+    <p>这正是老司机说的"油门也能转向"——它是通过摩擦圆<strong>间接</strong>改变前后轴的侧向力平衡实现的,所以叫<strong>间接横摆力矩</strong>。</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 250" role="img" aria-label="摩擦圆:纵向力用得多,侧向力余量就少">
+        <text x="130" y="26" text-anchor="middle" class="t mut">小油门:侧向余量足</text>
+        <text x="390" y="26" text-anchor="middle" class="t mut">大油门:侧向余量被挤</text>
+        <!-- circle A -->
+        <circle cx="130" cy="140" r="72" class="s-teal" stroke-width="2" fill="none"/>
+        <line x1="130" y1="140" x2="130" y2="96" class="s-acc" stroke-width="3"/>
+        <text x="136" y="112" class="t acc" font-size="10">纵向</text>
+        <line x1="130" y1="140" x2="190" y2="140" class="s-teal" stroke-width="3"/>
+        <text x="150" y="158" class="t teal" font-size="10">侧向(大)</text>
+        <!-- circle B -->
+        <circle cx="390" cy="140" r="72" class="s-teal" stroke-width="2" fill="none"/>
+        <line x1="390" y1="140" x2="390" y2="74" class="s-acc bigforce" stroke-width="4"/>
+        <text x="396" y="100" class="t acc" font-size="10">纵向(大)</text>
+        <line x1="390" y1="140" x2="418" y2="140" class="s-teal" stroke-width="3"/>
+        <text x="404" y="160" class="t teal" font-size="10">侧向(小)</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 原创动图</span> &nbsp;摩擦圆的半径就那么大:<b class="acc">纵向力</b>(油门/刹车)用得多,留给<b class="teal">侧向力</b>的余量就被挤小。过弯中加大油门,驱动轴侧向力变亏 → 车更推头。这就是"油门间接改转向"。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>王牌:左右分配 = 直接横摆力矩(DYC)</h2>
+    <p>最强的一招在<strong>左右之间</strong>分配力。书里(7 章,对应图7-14 一带)指出:如果给<strong>外侧车轮更大的驱动力、内侧更小(或制动)</strong>,左右两侧就出现一个<strong>力差</strong>,乘以轮距 T<sub>r</sub>,直接在车上生成一个<strong>横摆力矩</strong>:</p>
+    <div class="formula">M = ( F<sub>右</sub> − F<sub>左</sub> ) × ( T<sub>r</sub> / 2 )　　（T<sub>r</sub>:轮距）</div>
+    <p>这叫<strong>直接横摆力矩控制(DYC)</strong>。它<strong>不依赖轮胎侧偏、不靠转向</strong>,直接"拧"着车头转——所以哪怕在<strong>冰雪、极限</strong>等侧向力快用尽的场合,它依然能帮车修正姿态。这正是第 3 课末尾提到的<strong>车身稳定控制系统</strong>的核心武器:它通常用<strong>单侧轻点刹车</strong>来制造这个力差,把打转的车拽回来。</p>
+
+    <figure class="figanim">
+      <span class="playtag">动态</span>
+      <svg viewBox="0 0 520 300" role="img" aria-label="直接横摆力矩DYC:左右车轮力差在车上产生一个使车头转向的力矩">
+        <text x="260" y="26" text-anchor="middle" class="t mut">俯视 · 左右力差 → 直接把车头"拧"过去</text>
+        <g class="yaw">
+          <rect x="210" y="70" width="100" height="180" rx="20" class="s-fillsurface s-ink"/>
+          <text x="260" y="166" text-anchor="middle" class="t mut" font-size="12">车头朝上</text>
+          <!-- right wheel big drive force -->
+          <rect x="196" y="96" width="16" height="40" rx="4" class="s-tirefill"/>
+          <rect x="308" y="96" width="16" height="40" rx="4" class="s-tirefill"/>
+          <rect x="196" y="196" width="16" height="40" rx="4" class="s-tirefill"/>
+          <rect x="308" y="196" width="16" height="40" rx="4" class="s-tirefill"/>
+          <!-- forces -->
+          <line x1="316" y1="216" x2="316" y2="150" class="s-acc bigforce" stroke-width="5" marker-end="url(#af)"/>
+          <line x1="204" y1="216" x2="204" y2="188" class="s-teal" stroke-width="2.5" marker-end="url(#af)"/>
+          <defs><marker id="af" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-filla"/></marker></defs>
+          <text x="322" y="182" class="t acc" font-size="11">右轮力大</text>
+          <text x="150" y="182" class="t teal" font-size="11">左轮力小</text>
+        </g>
+        <!-- moment arc -->
+        <path d="M330,150 A70,70 0 0,1 300,220" class="s-acc momarc" fill="none" stroke-width="3" marker-end="url(#af)"/>
+        <text x="342" y="200" class="t acc" font-size="12">横摆力矩 M</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;给<b class="acc">右侧车轮更大的力</b>、左侧更小,左右<b>力差 × 轮距</b>就在车上生成一个<b class="acc">横摆力矩 M</b>,直接把车头拧向转弯方向。这就是 DYC——不靠转向、不靠轮胎侧偏,冰雪极限下也能救车。</figcaption>
+    </figure>
+
+    <div class="hook">
+      <span class="k">还有一个老实的机械件:LSD</span>
+      <p>书里也讲了<strong>限滑差速器(LSD)</strong>:它在左右驱动轮之间限制转速差,间接影响左右驱动力的分配,从而给出一点横摆力矩的效果——可以看成 DYC 的一种<strong>纯机械、被动</strong>的雏形。电控 DYC 则把这件事做得又快又准。所有这些的共同天花板,始终是第 1 课那个<strong>摩擦圆</strong>:力再怎么分配,也不能超过每个轮胎能给的总量。</p>
+    </div>
+  </section>
+
+  <div class="take">
+    <h2>一课一收:你现在能说的三句话</h2>
+    <ol>
+      <li><strong>4WS</strong> 让后轮也会转:低速<strong>逆相位</strong>缩小转弯半径,高速<strong>同相位</strong>减小侧偏角;最高级的是<strong>零侧偏角控制</strong>(车头始终对着前进方向);</li>
+      <li>不动转角也能改转弯:<strong>前后分配</strong>通过摩擦圆<strong>间接</strong>影响 US/OS(加速推头、收油发活);</li>
+      <li><strong>左右分配</strong>产生<strong>直接横摆力矩 M = 力差 × 轮距(DYC)</strong>,不靠侧偏、冰雪极限下也能拧正车头;LSD 是它的机械雏形,天花板永远是摩擦圆。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 开车验证题</span>
+    <p>在<strong>安全、空旷</strong>的环境里,匀速过一个大弯时<strong>极轻微</strong>地收一点油,体会车头是不是"往弯里多带了一点"(偏 OS);再轻加一点油,感受它"往外推"一点(偏 US)。这就是前后力分配的间接横摆。<strong>务必小幅、低速、留足余量</strong>——真正的极限操作请交给车上的稳定控制系统。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告 · 收尾</div>
+      <div class="ti">第 7 课 · 最后一环,是你</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">前六课把车造好了、调到最听话。可再好的车,也要交到<strong>人</strong>手里才算数。最后一课讲<strong>人—车闭环</strong>:驾驶人模型、预瞄、以及"这台车到底好不好开"的最终答案。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　第 6 课 / 共 7 课</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘/动画</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-05-suspension.html">← 第 5 课</a>&nbsp;·&nbsp;<a href="lesson-07-human.html">第 7 课 →</a></p>
+  </footer>
+</div>
+</body>
+</html>
