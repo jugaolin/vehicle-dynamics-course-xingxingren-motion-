@@ -11,7 +11,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ASSETS_DIR = join(__dirname, '..', 'assets');
 
 /* ===== 中文分词 ===== */
-const STOP = '的了是在有和与或但而也都不这就我你他她它们被把让给从到对于及等所能会可以应该需要因为所以如果虽然但是可以已经正在'.split('');
+const STOP = '的了是在有和与或但而也都不这就我你他她它们被把让给从到对于及等所能会可以应该需要因为所以如果虽然但是可以已经正在什么为什么怎么怎样如何'.split('');
 
 function tokenize(text) {
   const clean = text.toLowerCase()
@@ -20,9 +20,9 @@ function tokenize(text) {
   const chars = clean.split('').filter(c => c.trim());
   const tokens = [];
   for (let i = 0; i < chars.length; i++) {
-    if (STOP.indexOf(chars[i]) === -1) tokens.push(chars[i]);
-    if (i < chars.length - 1) tokens.push(chars[i] + chars[i + 1]);
-    if (i < chars.length - 2) tokens.push(chars[i] + chars[i + 1] + chars[i + 2]);
+    if (STOP.indexOf(chars[i]) === -1) tokens.push(chars[i]); // unigram
+    if (i < chars.length - 1 && STOP.indexOf(chars[i]) === -1 && STOP.indexOf(chars[i+1]) === -1) tokens.push(chars[i] + chars[i + 1]); // bigram (skip if either char is stop)
+    if (i < chars.length - 2 && STOP.indexOf(chars[i]) === -1 && STOP.indexOf(chars[i+1]) === -1 && STOP.indexOf(chars[i+2]) === -1) tokens.push(chars[i] + chars[i + 1] + chars[i + 2]); // trigram (skip if any char is stop)
   }
   const enWords = text.toLowerCase().match(/[a-z][a-z0-9]+/g) || [];
   tokens.push(...enWords);

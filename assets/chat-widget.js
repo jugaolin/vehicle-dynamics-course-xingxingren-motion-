@@ -233,7 +233,7 @@
 
   /* ========== TF-IDF 语义搜索 ========== */
   var _kbData = null, _idf = null, _vectors = null;
-  var _STOP = '的了是在有和与或但而也都不这就我你他她它们被把让给从到对于及等所能会可以应该需要因为所以如果虽然但是可以已经正在'.split('');
+  var _STOP = '的了是在有和与或但而也都不这就我你他她它们被把让给从到对于及等所能会可以应该需要因为所以如果虽然但是可以已经正在什么为什么怎么怎样如何'.split('');
 
   // 加载知识库 + TF-IDF 索引(后台异步)
   function loadIndex(){
@@ -264,8 +264,8 @@
     var tokens = [];
     for(var i=0; i<chars.length; i++){
       if(_STOP.indexOf(chars[i])===-1) tokens.push(chars[i]); // unigram
-      if(i<chars.length-1) tokens.push(chars[i]+chars[i+1]); // bigram
-      if(i<chars.length-2) tokens.push(chars[i]+chars[i+1]+chars[i+2]); // trigram
+      if(i<chars.length-1 && _STOP.indexOf(chars[i])===-1 && _STOP.indexOf(chars[i+1])===-1) tokens.push(chars[i]+chars[i+1]); // bigram (skip if either char is stop)
+      if(i<chars.length-2 && _STOP.indexOf(chars[i])===-1 && _STOP.indexOf(chars[i+1])===-1 && _STOP.indexOf(chars[i+2])===-1) tokens.push(chars[i]+chars[i+1]+chars[i+2]); // trigram (skip if any char is stop)
     }
     var enWords = text.toLowerCase().match(/[a-z][a-z0-9]+/g) || [];
     tokens.push.apply(tokens, enWords);
