@@ -299,7 +299,7 @@
     return dot;
   }
 
-  // TF-IDF 搜索:返回 top 个最相关文本块
+  // TF-IDF 搜索:返回 top 个最相关问答
   function tfidfSearch(q, topN){
     if(!_vectors || !_kbData) return [];
     var qv = queryVec(q);
@@ -308,16 +308,16 @@
     for(var i=0; i<_vectors.length; i++){
       var s = cosine(qv, _vectors[i]);
       if(s > 0.05){
-        // 如果用户问公式,包含"公式:"的段落加分
-        if(wantFormula && _kbData[i].text.indexOf('公式:') !== -1) s *= 1.5;
+        // 如果用户问公式,包含公式的条目加分
+        if(wantFormula && _kbData[i].a && _kbData[i].a.indexOf('公式') !== -1) s *= 1.5;
         scores.push({ idx: i, score: s });
       }
     }
     scores.sort(function(a,b){ return b.score - a.score; });
     var results = [];
     for(var i=0; i<Math.min(topN||3, scores.length); i++){
-      var chunk = _kbData[scores[i].idx];
-      results.push({ text: chunk.text, lesson: chunk.lesson, section: chunk.sectionTitle, score: scores[i].score });
+      var item = _kbData[scores[i].idx];
+      results.push({ q: item.q, a: item.a, lesson: item.lesson, score: scores[i].score });
     }
     return results;
   }
@@ -326,18 +326,9 @@
   function formatReply(results){
     if(results.length === 0) return null;
     var best = results[0];
-    // 优先提取包含公式的部分
-    var text = best.text;
-    var formulaIdx = text.indexOf('公式:');
-    if(formulaIdx > 50) {
-      // 公式在中间,从公式前50字开始截取
-      text = '...' + text.substring(Math.max(0, formulaIdx - 50));
-    }
-    // 截取到600字
-    if(text.length > 600) text = text.substring(0, 600) + '...';
-    var reply = '<div class="ai-reply-source">📖 《汽车运动性能技术》第' + best.lesson + '课 · ' + best.section + '</div>'
-      + '<p>' + text + '</p>';
-    // 如果有多个相关结果,附加其他来源
+    var reply = '<div class="ai-reply-source">📖 《汽车运动性能技术》第' + best.lesson + '课</div>'
+      + '<p>' + best.a + '</p>';
+    // 如果有多个相关结果,附加来源
     if(results.length > 1){
       reply += '<div class="ai-reply-more">相关还有: ';
       for(var i=1; i<results.length; i++){
