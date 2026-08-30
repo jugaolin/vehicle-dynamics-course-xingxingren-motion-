@@ -1,27 +1,27 @@
-<!doctype html>
+ï»¿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>µÚ 6 ¿Î ¡¤ ÈÃ³µ¸üÌý»°µÄÖ÷¶¯¼¼Êõ</title>
-<meta name="description" content="Æû³µÔË¶¯ÐÔÄÜµÚÁù¿Î:ËÄÂÖ×ªÏò 4WS(µÍËÙÄæÏàÎ»¡¢¸ßËÙÍ¬ÏàÎ»¡¢Áã²àÆ«½Ç¿ØÖÆ)ÓëÇý¶¯/ÖÆ¶¯Á¦¿ØÖÆ(Ç°ºó·ÖÅä=¼ä½Óºá°Ú¡¢×óÓÒ·ÖÅä=DYC Ö±½Óºá°ÚÁ¦¾Ø¡¢LSD¡¢Ä¦²ÁÔ²Ô¼Êø)¡£º¬¶¯Ì¬Ô­´´²åÍ¼¡£">
+<title>ç¬¬ 6 è¯¾ Â· è®©è½¦æ›´å¬è¯çš„ä¸»åŠ¨æŠ€æœ¯</title>
+<meta name="description" content="æ±½è½¦è¿åŠ¨æ€§èƒ½ç¬¬å…­è¯¾:å››è½®è½¬å‘ 4WS(ä½Žé€Ÿé€†ç›¸ä½ã€é«˜é€ŸåŒç›¸ä½ã€é›¶ä¾§åè§’æŽ§åˆ¶)ä¸Žé©±åŠ¨/åˆ¶åŠ¨åŠ›æŽ§åˆ¶(å‰åŽåˆ†é…=é—´æŽ¥æ¨ªæ‘†ã€å·¦å³åˆ†é…=DYC ç›´æŽ¥æ¨ªæ‘†åŠ›çŸ©ã€LSDã€æ‘©æ“¦åœ†çº¦æŸ)ã€‚å«åŠ¨æ€åŽŸåˆ›æ’å›¾ã€‚">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <style>
 @media (prefers-reduced-motion:no-preference){
-  /* ºóÂÖÄæÏàÎ»:ÓëÇ°ÂÖ·´Ïò×ª */
+  /* åŽè½®é€†ç›¸ä½:ä¸Žå‰è½®åå‘è½¬ */
   .rear-opp{transform-box:view-box; transform-origin:180px 250px; animation:ropp 4.4s cubic-bezier(.5,0,.3,1) infinite}
   @keyframes ropp{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(26deg)}90%,100%{transform:rotate(0deg)}}
   .front-turn{transform-box:view-box; transform-origin:180px 90px; animation:fturn 4.4s cubic-bezier(.5,0,.3,1) infinite}
   @keyframes fturn{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-26deg)}90%,100%{transform:rotate(0deg)}}
-  /* ºóÂÖÍ¬ÏàÎ» */
+  /* åŽè½®åŒç›¸ä½ */
   .rear-same{transform-box:view-box; transform-origin:360px 250px; animation:rsame 4.4s cubic-bezier(.5,0,.3,1) infinite}
   @keyframes rsame{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-14deg)}90%,100%{transform:rotate(0deg)}}
   .front-same{transform-box:view-box; transform-origin:360px 90px; animation:fsame 4.4s cubic-bezier(.5,0,.3,1) infinite}
   @keyframes fsame{0%,12%{transform:rotate(0deg)}34%,70%{transform:rotate(-14deg)}90%,100%{transform:rotate(0deg)}}
-  /* DYC:³µÉí±»Ö±½ÓÊ©¼Óºá°ÚÁ¦¾Ø¶ø×ªÍ· */
+  /* DYC:è½¦èº«è¢«ç›´æŽ¥æ–½åŠ æ¨ªæ‘†åŠ›çŸ©è€Œè½¬å¤´ */
   .yaw{transform-box:view-box; transform-origin:260px 160px; animation:yaw 4.2s cubic-bezier(.45,0,.4,1) infinite}
   @keyframes yaw{0%,14%{transform:rotate(0deg)}50%,72%{transform:rotate(-16deg)}92%,100%{transform:rotate(0deg)}}
   .bigforce{animation:pulse 1.6s ease-in-out infinite}
@@ -32,132 +32,134 @@
 <body>
 
 <nav class="nav"><div class="nav-in">
-  <a class="brand" href="../index.html">ÐÇÐÇÈË<span class="dot">¡¤</span>½²ÔË¶¯Ñ§</a>
+  <a class="brand" href="../">æ˜Ÿæ˜Ÿäºº<span class="dot">Â·</span>è®²è¿åŠ¨å­¦</a>
   <div class="nav-links">
-    <a href="../index.html">Ê×Ò³</a>
-    <a href="../framework.html">È«Êé¿ò¼Ü</a>
-    <a href="../syllabus.html">¿Î³Ì±í</a>
+    <a href="../">é¦–é¡µ</a>
+    <a href="index.html">é›¶åŸºç¡€è¯¾ç¨‹</a>
+    <a href="../advanced/" style="color:var(--teal)">è¿›é˜¶è¯¾ç¨‹</a>
+    <a href="../framework.html">å…¨ä¹¦æ¡†æž¶</a>
+    <a href="../syllabus.html">è¯¾ç¨‹è¡¨</a>
   </div>
-  <button class="anim-toggle" id="animToggle" aria-label="ÇÐ»»¶¯»­">&#9654; ¶¯Í¼</button>
+  <button class="anim-toggle" id="animToggle" aria-label="åˆ‡æ¢åŠ¨ç”»">&#9654; åŠ¨å›¾</button>
 </div></nav>
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">µÚ 6 ¿Î ¡¤ µÚÁù¡¢ÆßÕÂ ËÄÂÖ×ªÏòÓëÇý¶¯/ÖÆ¶¯Á¦¿ØÖÆ</p>
-    <h1>ÈÃ³µ¸üÌý»°µÄÖ÷¶¯¼¼Êõ</h1>
-    <p class="lede">±»¶¯µÄ×ªÏò¡¢Ðü¼ÜÐýÅ¥¶¼Å¡µ½Í·Ö®ºó,¹¤³ÌÊ¦»¹ÓÐÁ½ÕÅÍõÅÆ:ÈÃ<strong>ºóÂÖÒ²»á×ª(4WS)</strong>,ÒÔ¼°ÈÃ<strong>ËÄ¸öÂÖ×ÓµÄÇý¶¯/ÖÆ¶¯Á¦¸÷¹Ü¸÷µÄ</strong>¡£ËüÃÇÄÜ<strong>Ö±½Ó¸ø³µ"·¢"Ò»¸öºá°ÚÁ¦¾Ø</strong>,²»ÔÙÖ»¿¿Ç°ÂÖÄÇµã²àÏòÁ¦¡£</p>
+    <p class="eyebrow">ç¬¬ 6 è¯¾ Â· ç¬¬å…­ã€ä¸ƒç«  å››è½®è½¬å‘ä¸Žé©±åŠ¨/åˆ¶åŠ¨åŠ›æŽ§åˆ¶</p>
+    <h1>è®©è½¦æ›´å¬è¯çš„ä¸»åŠ¨æŠ€æœ¯</h1>
+    <p class="lede">è¢«åŠ¨çš„è½¬å‘ã€æ‚¬æž¶æ—‹é’®éƒ½æ‹§åˆ°å¤´ä¹‹åŽ,å·¥ç¨‹å¸ˆè¿˜æœ‰ä¸¤å¼ çŽ‹ç‰Œ:è®©<strong>åŽè½®ä¹Ÿä¼šè½¬(4WS)</strong>,ä»¥åŠè®©<strong>å››ä¸ªè½®å­çš„é©±åŠ¨/åˆ¶åŠ¨åŠ›å„ç®¡å„çš„</strong>ã€‚å®ƒä»¬èƒ½<strong>ç›´æŽ¥ç»™è½¦"å‘"ä¸€ä¸ªæ¨ªæ‘†åŠ›çŸ©</strong>,ä¸å†åªé å‰è½®é‚£ç‚¹ä¾§å‘åŠ›ã€‚</p>
     <div class="meta">
-      <span>ÃæÏòÁã»ù´¡¼ÝÊ»Õß</span><span>Ô¼ 13 ·ÖÖÓ</span><span>KEYWORDS&nbsp;&nbsp;4WS ¡¤ Áã²àÆ« ¡¤ Á¦·ÖÅä ¡¤ DYC</span>
+      <span>é¢å‘é›¶åŸºç¡€é©¾é©¶è€…</span><span>çº¦ 13 åˆ†é’Ÿ</span><span>KEYWORDS&nbsp;&nbsp;4WS Â· é›¶ä¾§å Â· åŠ›åˆ†é… Â· DYC</span>
     </div>
 
-    <div class="map" aria-label="±¾¿ÎÔÚÈ«ÊéµÄÎ»ÖÃ">
-      <div class="step"><span class="n">01</span>ÂÖÌ¥</div>
-      <div class="step"><span class="n">02¨C03</span>ÈçºÎÏìÓ¦</div>
-      <div class="step here"><span class="n">04¨C07</span>µ÷½ÚÐýÅ¥</div>
-      <div class="step"><span class="n">08</span>ÈËÀ´±Õ»·</div>
+    <div class="map" aria-label="æœ¬è¯¾åœ¨å…¨ä¹¦çš„ä½ç½®">
+      <div class="step"><span class="n">01</span>è½®èƒŽ</div>
+      <div class="step"><span class="n">02â€“03</span>å¦‚ä½•å“åº”</div>
+      <div class="step here"><span class="n">04â€“07</span>è°ƒèŠ‚æ—‹é’®</div>
+      <div class="step"><span class="n">08</span>äººæ¥é—­çŽ¯</div>
     </div>
   </header>
 
   <div class="hook">
-    <span class="k">ÏÈÎÊÄãÁ½¸öÃ¬¶ÜµÄÔ¸Íû</span>
-    <p>ÄãÏ£Íû³µÔÚ<strong>µÍËÙµôÍ·Ê±×ªÍä°ë¾¶Ð¡</strong>(ºÃÍ£ºÃµôÍ·),ÓÖÏ£ÍûËüÔÚ<strong>¸ßËÙ±äµÀÊ±ÓÖ¿ìÓÖ²»Ë¦</strong>¡£ÕâÁ©ÒªÇóÆäÊµ»¥Ïà´ò¼Ü¡£Ç°Ãæ¼¸¿ÎµÄÐýÅ¥ºÜÄÑÍ¬Ê±Âú×ã¡ª¡ªÖ±µ½¹¤³ÌÊ¦ÈÃ<strong>ºóÂÖÒ²¶¯ÆðÀ´</strong>¡£</p>
+    <span class="k">å…ˆé—®ä½ ä¸¤ä¸ªçŸ›ç›¾çš„æ„¿æœ›</span>
+    <p>ä½ å¸Œæœ›è½¦åœ¨<strong>ä½Žé€ŸæŽ‰å¤´æ—¶è½¬å¼¯åŠå¾„å°</strong>(å¥½åœå¥½æŽ‰å¤´),åˆå¸Œæœ›å®ƒåœ¨<strong>é«˜é€Ÿå˜é“æ—¶åˆå¿«åˆä¸ç”©</strong>ã€‚è¿™ä¿©è¦æ±‚å…¶å®žäº’ç›¸æ‰“æž¶ã€‚å‰é¢å‡ è¯¾çš„æ—‹é’®å¾ˆéš¾åŒæ—¶æ»¡è¶³â€”â€”ç›´åˆ°å·¥ç¨‹å¸ˆè®©<strong>åŽè½®ä¹ŸåŠ¨èµ·æ¥</strong>ã€‚</p>
   </div>
 
   <section>
-    <h2><span class="idx">01</span>ÈÃºóÂÖÒ²»á×ª:4WS µÄÁ½¸±Ãæ¿×</h2>
-    <p>ÊéÀï(µÚ 6 ÕÂ)½²<strong>ËÄÂÖ×ªÏò(4WS)</strong>µÄºËÐÄ¶´²ìÊÇ:ºóÂÖ¸ÃÍùÄÄ×ª,<strong>È¡¾öÓÚ³µËÙ</strong>¡£Í¬Ò»Ì×Ó²¼þ,µÍËÙºÍ¸ßËÙÒª×öÍêÈ«Ïà·´µÄÊÂ:</p>
+    <h2><span class="idx">01</span>è®©åŽè½®ä¹Ÿä¼šè½¬:4WS çš„ä¸¤å‰¯é¢å­”</h2>
+    <p>ä¹¦é‡Œ(ç¬¬ 6 ç« )è®²<strong>å››è½®è½¬å‘(4WS)</strong>çš„æ ¸å¿ƒæ´žå¯Ÿæ˜¯:åŽè½®è¯¥å¾€å“ªè½¬,<strong>å–å†³äºŽè½¦é€Ÿ</strong>ã€‚åŒä¸€å¥—ç¡¬ä»¶,ä½Žé€Ÿå’Œé«˜é€Ÿè¦åšå®Œå…¨ç›¸åçš„äº‹:</p>
     <ul>
-      <li><strong>µÍËÙ ¡¤ ÄæÏàÎ»</strong>:ºóÂÖ×ªÏòÓëÇ°ÂÖ<strong>Ïà·´</strong>¡£³µÏñ"ºá×Å²ä"½øÍä,<strong>×ªÍä°ë¾¶´ó·ùËõÐ¡</strong>¡ª¡ªÕ­Â·µôÍ·¡¢²´³µÇáËÉ;</li>
-      <li><strong>¸ßËÙ ¡¤ Í¬ÏàÎ»</strong>:ºóÂÖ×ªÏòÓëÇ°ÂÖ<strong>ÏàÍ¬</strong>(Ò»¸öÐ¡½Ç¶È)¡£ËÄ¸öÂÖ×Ó¼¸ºõÒ»Æð²àÏòÊ¹¾¢,³µ<strong>²àÏòÏìÓ¦¸ü¿ì¡¢³µÉí²àÆ«½Ç¸üÐ¡</strong>,±äµÀÓÖÎÈÓÖ¸úÊÖ¡£</li>
+      <li><strong>ä½Žé€Ÿ Â· é€†ç›¸ä½</strong>:åŽè½®è½¬å‘ä¸Žå‰è½®<strong>ç›¸å</strong>ã€‚è½¦åƒ"æ¨ªç€è¹­"è¿›å¼¯,<strong>è½¬å¼¯åŠå¾„å¤§å¹…ç¼©å°</strong>â€”â€”çª„è·¯æŽ‰å¤´ã€æ³Šè½¦è½»æ¾;</li>
+      <li><strong>é«˜é€Ÿ Â· åŒç›¸ä½</strong>:åŽè½®è½¬å‘ä¸Žå‰è½®<strong>ç›¸åŒ</strong>(ä¸€ä¸ªå°è§’åº¦)ã€‚å››ä¸ªè½®å­å‡ ä¹Žä¸€èµ·ä¾§å‘ä½¿åŠ²,è½¦<strong>ä¾§å‘å“åº”æ›´å¿«ã€è½¦èº«ä¾§åè§’æ›´å°</strong>,å˜é“åˆç¨³åˆè·Ÿæ‰‹ã€‚</li>
     </ul>
 
     <figure class="figanim">
-      <span class="playtag">¶¯Ì¬</span>
-      <svg viewBox="0 0 520 320" role="img" aria-label="4WSÁ½ÖÖÄ£Ê½:×óµÍËÙºóÂÖÄæÏàÎ»ËõÐ¡×ªÍä°ë¾¶,ÓÒ¸ßËÙºóÂÖÍ¬ÏàÎ»¼õÐ¡³µÉí²àÆ«½Ç">
+      <span class="playtag">åŠ¨æ€</span>
+      <svg viewBox="0 0 520 320" role="img" aria-label="4WSä¸¤ç§æ¨¡å¼:å·¦ä½Žé€ŸåŽè½®é€†ç›¸ä½ç¼©å°è½¬å¼¯åŠå¾„,å³é«˜é€ŸåŽè½®åŒç›¸ä½å‡å°è½¦èº«ä¾§åè§’">
         <!-- LEFT: low speed opposite phase -->
-        <text x="180" y="26" text-anchor="middle" class="t acc" font-size="12.5">µÍËÙ ¡¤ ÄæÏàÎ»</text>
+        <text x="180" y="26" text-anchor="middle" class="t acc" font-size="12.5">ä½Žé€Ÿ Â· é€†ç›¸ä½</text>
         <rect x="150" y="70" width="60" height="180" rx="16" class="s-fillsurface s-ink"/>
         <!-- front wheel turns left -->
         <g class="front-turn"><rect x="171" y="66" width="18" height="42" rx="5" class="s-filla"/></g>
         <!-- rear wheel turns opposite (right) -->
         <g class="rear-opp"><rect x="171" y="228" width="18" height="42" rx="5" class="s-fillt"/></g>
-        <text x="216" y="86" class="t acc" font-size="10">Ç°</text>
-        <text x="216" y="262" class="t teal" font-size="10">ºó(·´Ïò)</text>
-        <text x="120" y="300" class="t mut" font-size="11">Ç°ºó·´´ò ¡ú ×ªÍä°ë¾¶´ó·ù±äÐ¡</text>
+        <text x="216" y="86" class="t acc" font-size="10">å‰</text>
+        <text x="216" y="262" class="t teal" font-size="10">åŽ(åå‘)</text>
+        <text x="120" y="300" class="t mut" font-size="11">å‰åŽåæ‰“ â†’ è½¬å¼¯åŠå¾„å¤§å¹…å˜å°</text>
 
         <line x1="266" y1="46" x2="266" y2="300" class="s-grid"/>
 
         <!-- RIGHT: high speed same phase -->
-        <text x="380" y="26" text-anchor="middle" class="t teal" font-size="12.5">¸ßËÙ ¡¤ Í¬ÏàÎ»</text>
+        <text x="380" y="26" text-anchor="middle" class="t teal" font-size="12.5">é«˜é€Ÿ Â· åŒç›¸ä½</text>
         <rect x="330" y="70" width="60" height="180" rx="16" class="s-fillsurface s-ink"/>
         <g class="front-same"><rect x="351" y="66" width="18" height="42" rx="5" class="s-filla"/></g>
         <g class="rear-same"><rect x="351" y="228" width="18" height="42" rx="5" class="s-filla"/></g>
-        <text x="396" y="86" class="t acc" font-size="10">Ç°</text>
-        <text x="396" y="262" class="t acc" font-size="10">ºó(Í¬Ïò)</text>
-        <text x="300" y="300" class="t mut" font-size="11">Ç°ºóÍ¬Ïò ¡ú ²àÆ«½ÇÐ¡¡¢ÏìÓ¦¿ì</text>
+        <text x="396" y="86" class="t acc" font-size="10">å‰</text>
+        <text x="396" y="262" class="t acc" font-size="10">åŽ(åŒå‘)</text>
+        <text x="300" y="300" class="t mut" font-size="11">å‰åŽåŒå‘ â†’ ä¾§åè§’å°ã€å“åº”å¿«</text>
       </svg>
-      <figcaption><span class="figtag">Í¼ 1 ¡¤ Ô­´´¶¯Í¼</span> &nbsp;Í¬Ò»Ì× 4WS,Á½¸±Ãæ¿×:<b class="acc">µÍËÙÄæÏàÎ»</b>(ºóÂÖ·´×Å´ò)ÈÃ×ªÍä°ë¾¶´ó·ùËõÐ¡,Õ­Â·ºÃµôÍ·;<b class="teal">¸ßËÙÍ¬ÏàÎ»</b>(ºóÂÖ¸ú×ÅÐ¡·ùÍ¬Ïò)ÈÃ³µÉí²àÆ«½Ç±äÐ¡¡¢²àÏòÏìÓ¦¸ü¿ì,¸ßËÙ±äµÀÓÖ¿ìÓÖÎÈ¡£</figcaption>
+      <figcaption><span class="figtag">å›¾ 1 Â· åŽŸåˆ›åŠ¨å›¾</span> &nbsp;åŒä¸€å¥— 4WS,ä¸¤å‰¯é¢å­”:<b class="acc">ä½Žé€Ÿé€†ç›¸ä½</b>(åŽè½®åç€æ‰“)è®©è½¬å¼¯åŠå¾„å¤§å¹…ç¼©å°,çª„è·¯å¥½æŽ‰å¤´;<b class="teal">é«˜é€ŸåŒç›¸ä½</b>(åŽè½®è·Ÿç€å°å¹…åŒå‘)è®©è½¦èº«ä¾§åè§’å˜å°ã€ä¾§å‘å“åº”æ›´å¿«,é«˜é€Ÿå˜é“åˆå¿«åˆç¨³ã€‚</figcaption>
     </figure>
   </section>
 
   <section>
-    <h2><span class="idx">02</span>4WS ÔõÃ´"Ïë":Ç°À¡¡¢·´À¡,Óë"Áã²àÆ«½Ç"</h2>
-    <p>ÊéÀï°Ñ 4WS µÄ¿ØÖÆ·½Ê½·Ö³É¼¸Àà,Ô½ÍùºóÔ½´ÏÃ÷:</p>
+    <h2><span class="idx">02</span>4WS æ€Žä¹ˆ"æƒ³":å‰é¦ˆã€åé¦ˆ,ä¸Ž"é›¶ä¾§åè§’"</h2>
+    <p>ä¹¦é‡ŒæŠŠ 4WS çš„æŽ§åˆ¶æ–¹å¼åˆ†æˆå‡ ç±»,è¶Šå¾€åŽè¶Šèªæ˜Ž:</p>
     <ul>
-      <li><strong>Ç°À¡ÐÍ</strong>:ºóÂÖ×ª½ÇÖ±½ÓÓÉÇ°ÂÖ×ª½Ç¾ö¶¨,¦Ä<sub>r</sub> = k¡¤¦Ä<sub>f</sub>(<strong>³µËÙ¸ÐÓ¦ÐÍ</strong>:±ÈÀýÏµÊý k Ëæ³µËÙ±ä,µÍËÙÈ¡¸º=ÄæÏàÎ»¡¢¸ßËÙÈ¡Õý=Í¬ÏàÎ»);</li>
-      <li><strong>·´À¡ÐÍ</strong>:ÈÃºóÂÖ×ª½Ç¸ú×ÙÄ³¸ö³µÁ¾×´Ì¬(Èçºá°ÚÂÊ ¦Ä<sub>r</sub> = p¡¤r),ÊµÊ±¾ÀÆ«;</li>
-      <li><strong>Áã²àÆ«½Ç¿ØÖÆ</strong>(Ê½6-18):×îÆ¯ÁÁµÄÄ¿±ê¡ª¡ªÈÃ<strong>³µÉí²àÆ«½Ç ¦Â ºãÎª 0</strong>¡£ÕâÒâÎ¶×Å³µÍ·<strong>Ê¼ÖÕÖ¸×ÅËüÇ°½øµÄ·½Ïò</strong>,³µ"Ìù×Å"¹ì¼£×ß,²»ÔÙÓÐ"³µÍ·³¯Àï¡¢³µÍùÍâÆ®"µÄ´íÎ»¸Ð¡£</li>
+      <li><strong>å‰é¦ˆåž‹</strong>:åŽè½®è½¬è§’ç›´æŽ¥ç”±å‰è½®è½¬è§’å†³å®š,Î´<sub>r</sub> = kÂ·Î´<sub>f</sub>(<strong>è½¦é€Ÿæ„Ÿåº”åž‹</strong>:æ¯”ä¾‹ç³»æ•° k éšè½¦é€Ÿå˜,ä½Žé€Ÿå–è´Ÿ=é€†ç›¸ä½ã€é«˜é€Ÿå–æ­£=åŒç›¸ä½);</li>
+      <li><strong>åé¦ˆåž‹</strong>:è®©åŽè½®è½¬è§’è·Ÿè¸ªæŸä¸ªè½¦è¾†çŠ¶æ€(å¦‚æ¨ªæ‘†çŽ‡ Î´<sub>r</sub> = pÂ·r),å®žæ—¶çº å;</li>
+      <li><strong>é›¶ä¾§åè§’æŽ§åˆ¶</strong>(å¼6-18):æœ€æ¼‚äº®çš„ç›®æ ‡â€”â€”è®©<strong>è½¦èº«ä¾§åè§’ Î² æ’ä¸º 0</strong>ã€‚è¿™æ„å‘³ç€è½¦å¤´<strong>å§‹ç»ˆæŒ‡ç€å®ƒå‰è¿›çš„æ–¹å‘</strong>,è½¦"è´´ç€"è½¨è¿¹èµ°,ä¸å†æœ‰"è½¦å¤´æœé‡Œã€è½¦å¾€å¤–é£˜"çš„é”™ä½æ„Ÿã€‚</li>
     </ul>
     <div class="hook teal">
-      <span class="k">ÎªÊ²Ã´"Áã²àÆ«½Ç"ÖµµÃ×·Çó</span>
-      <p>»ØÏëµÚ 2 ¿Î:ÆÕÍ¨³µ¸ßËÙ¹ýÍäÊ±,³µÉíÆäÊµÊÇ<strong>Ð±×Å</strong>×ßµÄ(ÓÐ²àÆ«½Ç ¦Â),³µÍ·²¢²»ÍêÈ«Ö¸ÏòÇ°½ø·½Ïò¡£Áã²àÆ«½Ç¿ØÖÆÈÃ ¦Â¡Ö0¡ª¡ª³µÉí×ËÌ¬ºÍÔË¶¯·½Ïò¶ÔÆë,¼ÝÊ»Õß×îÈÝÒ×Ô¤ÅÐ¡¢×î²»ÈÝÒ×±»"Ë¦³öÈ¥µÄ´í¾õ"ÏÅµ½¡£ÕâÊÇ 4WS ÔÚ<strong>¶¯Ì¬Æ·ÖÊ</strong>ÉÏµÄ¸ß¼¶ÐÎÌ¬¡£</p>
+      <span class="k">ä¸ºä»€ä¹ˆ"é›¶ä¾§åè§’"å€¼å¾—è¿½æ±‚</span>
+      <p>å›žæƒ³ç¬¬ 2 è¯¾:æ™®é€šè½¦é«˜é€Ÿè¿‡å¼¯æ—¶,è½¦èº«å…¶å®žæ˜¯<strong>æ–œç€</strong>èµ°çš„(æœ‰ä¾§åè§’ Î²),è½¦å¤´å¹¶ä¸å®Œå…¨æŒ‡å‘å‰è¿›æ–¹å‘ã€‚é›¶ä¾§åè§’æŽ§åˆ¶è®© Î²â‰ˆ0â€”â€”è½¦èº«å§¿æ€å’Œè¿åŠ¨æ–¹å‘å¯¹é½,é©¾é©¶è€…æœ€å®¹æ˜“é¢„åˆ¤ã€æœ€ä¸å®¹æ˜“è¢«"ç”©å‡ºåŽ»çš„é”™è§‰"å“åˆ°ã€‚è¿™æ˜¯ 4WS åœ¨<strong>åŠ¨æ€å“è´¨</strong>ä¸Šçš„é«˜çº§å½¢æ€ã€‚</p>
     </div>
   </section>
 
   <section>
-    <h2><span class="idx">03</span>»»¸öË¼Â·:²»¶¯·½Ïò,¿¿"Á¦µÄ·ÖÅä"×ªÍä</h2>
-    <p>µÚ 7 ÕÂ»»ÁË¸öÍêÈ«²»Í¬µÄÐýÅ¥:<strong>²»¸ÄÈÎºÎÂÖ×ÓµÄ×ª½Ç,Ö»µ÷ËÄ¸öÂÖ×ÓÉÏÇý¶¯/ÖÆ¶¯Á¦µÄ´óÐ¡</strong>,ÕÕÑùÄÜ¸Ä±ä³µµÄ×ªÍä¡£ÊéÀï°ÑËü·Ö³ÉÁ½²ã:</p>
+    <h2><span class="idx">03</span>æ¢ä¸ªæ€è·¯:ä¸åŠ¨æ–¹å‘,é "åŠ›çš„åˆ†é…"è½¬å¼¯</h2>
+    <p>ç¬¬ 7 ç« æ¢äº†ä¸ªå®Œå…¨ä¸åŒçš„æ—‹é’®:<strong>ä¸æ”¹ä»»ä½•è½®å­çš„è½¬è§’,åªè°ƒå››ä¸ªè½®å­ä¸Šé©±åŠ¨/åˆ¶åŠ¨åŠ›çš„å¤§å°</strong>,ç…§æ ·èƒ½æ”¹å˜è½¦çš„è½¬å¼¯ã€‚ä¹¦é‡ŒæŠŠå®ƒåˆ†æˆä¸¤å±‚:</p>
 
-    <h3>Ç°ºó·ÖÅä = ¼ä½Óºá°Ú</h3>
-    <p>°ÑÇý¶¯»òÖÆ¶¯Á¦<strong>ÔÚÇ°ºóÖáÖ®¼ä</strong>ÖØÐÂ·ÖÅä,»áÍ¨¹ýµÚ 1 ¿ÎµÄ<strong>Ä¦²ÁÔ²</strong>¼ä½ÓÓ°Ïì×ªÍä:Ä³¸ùÖáµÄ×ÝÏòÁ¦ÓÃµÃ¶à,ËüÁô¸ø²àÏòÁ¦µÄÓàÁ¿¾ÍÉÙ(Ô²¾ÍÄÇÃ´´ó)¡£ÊéÀï(7 ÕÂ)µÄ¾­Ñé½áÂÛ:</p>
-    <div class="thesis"><strong>¹ýÍäÖÐ¼ÓËÙ</strong> ¡ú ¸ü¶àÁ¦Ñ¹ÔÚ<strong>Çý¶¯Öá</strong>¡¢²àÏòÓàÁ¿±äÉÙ ¡ú Æ«Ïò<strong>²»×ã×ªÏò(ÍÆÍ·)</strong>;<br><strong>¹ýÍäÖÐÊÕÓÍ/ÇáÉ²</strong> ¡ú ÔØºÉÓëÁ¦Ç°ÒÆ ¡ú Æ«Ïò<strong>¹ý¶È×ªÏò(Î²°Í·¢»î)</strong>¡£</div>
-    <p>ÕâÕýÊÇÀÏË¾»úËµµÄ"ÓÍÃÅÒ²ÄÜ×ªÏò"¡ª¡ªËüÊÇÍ¨¹ýÄ¦²ÁÔ²<strong>¼ä½Ó</strong>¸Ä±äÇ°ºóÖáµÄ²àÏòÁ¦Æ½ºâÊµÏÖµÄ,ËùÒÔ½Ð<strong>¼ä½Óºá°ÚÁ¦¾Ø</strong>¡£</p>
+    <h3>å‰åŽåˆ†é… = é—´æŽ¥æ¨ªæ‘†</h3>
+    <p>æŠŠé©±åŠ¨æˆ–åˆ¶åŠ¨åŠ›<strong>åœ¨å‰åŽè½´ä¹‹é—´</strong>é‡æ–°åˆ†é…,ä¼šé€šè¿‡ç¬¬ 1 è¯¾çš„<strong>æ‘©æ“¦åœ†</strong>é—´æŽ¥å½±å“è½¬å¼¯:æŸæ ¹è½´çš„çºµå‘åŠ›ç”¨å¾—å¤š,å®ƒç•™ç»™ä¾§å‘åŠ›çš„ä½™é‡å°±å°‘(åœ†å°±é‚£ä¹ˆå¤§)ã€‚ä¹¦é‡Œ(7 ç« )çš„ç»éªŒç»“è®º:</p>
+    <div class="thesis"><strong>è¿‡å¼¯ä¸­åŠ é€Ÿ</strong> â†’ æ›´å¤šåŠ›åŽ‹åœ¨<strong>é©±åŠ¨è½´</strong>ã€ä¾§å‘ä½™é‡å˜å°‘ â†’ åå‘<strong>ä¸è¶³è½¬å‘(æŽ¨å¤´)</strong>;<br><strong>è¿‡å¼¯ä¸­æ”¶æ²¹/è½»åˆ¹</strong> â†’ è½½è·ä¸ŽåŠ›å‰ç§» â†’ åå‘<strong>è¿‡åº¦è½¬å‘(å°¾å·´å‘æ´»)</strong>ã€‚</div>
+    <p>è¿™æ­£æ˜¯è€å¸æœºè¯´çš„"æ²¹é—¨ä¹Ÿèƒ½è½¬å‘"â€”â€”å®ƒæ˜¯é€šè¿‡æ‘©æ“¦åœ†<strong>é—´æŽ¥</strong>æ”¹å˜å‰åŽè½´çš„ä¾§å‘åŠ›å¹³è¡¡å®žçŽ°çš„,æ‰€ä»¥å«<strong>é—´æŽ¥æ¨ªæ‘†åŠ›çŸ©</strong>ã€‚</p>
 
     <figure class="figanim">
-      <span class="playtag">¶¯Ì¬</span>
-      <svg viewBox="0 0 520 250" role="img" aria-label="Ä¦²ÁÔ²:×ÝÏòÁ¦ÓÃµÃ¶à,²àÏòÁ¦ÓàÁ¿¾ÍÉÙ">
-        <text x="130" y="26" text-anchor="middle" class="t mut">Ð¡ÓÍÃÅ:²àÏòÓàÁ¿×ã</text>
-        <text x="390" y="26" text-anchor="middle" class="t mut">´óÓÍÃÅ:²àÏòÓàÁ¿±»¼·</text>
+      <span class="playtag">åŠ¨æ€</span>
+      <svg viewBox="0 0 520 250" role="img" aria-label="æ‘©æ“¦åœ†:çºµå‘åŠ›ç”¨å¾—å¤š,ä¾§å‘åŠ›ä½™é‡å°±å°‘">
+        <text x="130" y="26" text-anchor="middle" class="t mut">å°æ²¹é—¨:ä¾§å‘ä½™é‡è¶³</text>
+        <text x="390" y="26" text-anchor="middle" class="t mut">å¤§æ²¹é—¨:ä¾§å‘ä½™é‡è¢«æŒ¤</text>
         <!-- circle A -->
         <circle cx="130" cy="140" r="72" class="s-teal" stroke-width="2" fill="none"/>
         <line x1="130" y1="140" x2="130" y2="96" class="s-acc" stroke-width="3"/>
-        <text x="136" y="112" class="t acc" font-size="10">×ÝÏò</text>
+        <text x="136" y="112" class="t acc" font-size="10">çºµå‘</text>
         <line x1="130" y1="140" x2="190" y2="140" class="s-teal" stroke-width="3"/>
-        <text x="150" y="158" class="t teal" font-size="10">²àÏò(´ó)</text>
+        <text x="150" y="158" class="t teal" font-size="10">ä¾§å‘(å¤§)</text>
         <!-- circle B -->
         <circle cx="390" cy="140" r="72" class="s-teal" stroke-width="2" fill="none"/>
         <line x1="390" y1="140" x2="390" y2="74" class="s-acc bigforce" stroke-width="4"/>
-        <text x="396" y="100" class="t acc" font-size="10">×ÝÏò(´ó)</text>
+        <text x="396" y="100" class="t acc" font-size="10">çºµå‘(å¤§)</text>
         <line x1="390" y1="140" x2="418" y2="140" class="s-teal" stroke-width="3"/>
-        <text x="404" y="160" class="t teal" font-size="10">²àÏò(Ð¡)</text>
+        <text x="404" y="160" class="t teal" font-size="10">ä¾§å‘(å°)</text>
       </svg>
-      <figcaption><span class="figtag">Í¼ 2 ¡¤ Ô­´´¶¯Í¼</span> &nbsp;Ä¦²ÁÔ²µÄ°ë¾¶¾ÍÄÇÃ´´ó:<b class="acc">×ÝÏòÁ¦</b>(ÓÍÃÅ/É²³µ)ÓÃµÃ¶à,Áô¸ø<b class="teal">²àÏòÁ¦</b>µÄÓàÁ¿¾Í±»¼·Ð¡¡£¹ýÍäÖÐ¼Ó´óÓÍÃÅ,Çý¶¯Öá²àÏòÁ¦±ä¿÷ ¡ú ³µ¸üÍÆÍ·¡£Õâ¾ÍÊÇ"ÓÍÃÅ¼ä½Ó¸Ä×ªÏò"¡£</figcaption>
+      <figcaption><span class="figtag">å›¾ 2 Â· åŽŸåˆ›åŠ¨å›¾</span> &nbsp;æ‘©æ“¦åœ†çš„åŠå¾„å°±é‚£ä¹ˆå¤§:<b class="acc">çºµå‘åŠ›</b>(æ²¹é—¨/åˆ¹è½¦)ç”¨å¾—å¤š,ç•™ç»™<b class="teal">ä¾§å‘åŠ›</b>çš„ä½™é‡å°±è¢«æŒ¤å°ã€‚è¿‡å¼¯ä¸­åŠ å¤§æ²¹é—¨,é©±åŠ¨è½´ä¾§å‘åŠ›å˜äº â†’ è½¦æ›´æŽ¨å¤´ã€‚è¿™å°±æ˜¯"æ²¹é—¨é—´æŽ¥æ”¹è½¬å‘"ã€‚</figcaption>
     </figure>
   </section>
 
   <section>
-    <h2><span class="idx">04</span>ÍõÅÆ:×óÓÒ·ÖÅä = Ö±½Óºá°ÚÁ¦¾Ø(DYC)</h2>
-    <p>×îÇ¿µÄÒ»ÕÐÔÚ<strong>×óÓÒÖ®¼ä</strong>·ÖÅäÁ¦¡£ÊéÀï(7 ÕÂ,¶ÔÓ¦Í¼7-14 Ò»´ø)Ö¸³ö:Èç¹û¸ø<strong>Íâ²à³µÂÖ¸ü´óµÄÇý¶¯Á¦¡¢ÄÚ²à¸üÐ¡(»òÖÆ¶¯)</strong>,×óÓÒÁ½²à¾Í³öÏÖÒ»¸ö<strong>Á¦²î</strong>,³ËÒÔÂÖ¾à T<sub>r</sub>,Ö±½ÓÔÚ³µÉÏÉú³ÉÒ»¸ö<strong>ºá°ÚÁ¦¾Ø</strong>:</p>
-    <div class="formula">M = ( F<sub>ÓÒ</sub> ? F<sub>×ó</sub> ) ¡Á ( T<sub>r</sub> / 2 )¡¡¡¡£¨T<sub>r</sub>:ÂÖ¾à£©</div>
-    <p>Õâ½Ð<strong>Ö±½Óºá°ÚÁ¦¾Ø¿ØÖÆ(DYC)</strong>¡£Ëü<strong>²»ÒÀÀµÂÖÌ¥²àÆ«¡¢²»¿¿×ªÏò</strong>,Ö±½Ó"Å¡"×Å³µÍ·×ª¡ª¡ªËùÒÔÄÄÅÂÔÚ<strong>±ùÑ©¡¢¼«ÏÞ</strong>µÈ²àÏòÁ¦¿ìÓÃ¾¡µÄ³¡ºÏ,ËüÒÀÈ»ÄÜ°ï³µÐÞÕý×ËÌ¬¡£ÕâÕýÊÇµÚ 3 ¿ÎÄ©Î²Ìáµ½µÄ<strong>³µÉíÎÈ¶¨¿ØÖÆÏµÍ³</strong>µÄºËÐÄÎäÆ÷:ËüÍ¨³£ÓÃ<strong>µ¥²àÇáµãÉ²³µ</strong>À´ÖÆÔìÕâ¸öÁ¦²î,°Ñ´ò×ªµÄ³µ×§»ØÀ´¡£</p>
+    <h2><span class="idx">04</span>çŽ‹ç‰Œ:å·¦å³åˆ†é… = ç›´æŽ¥æ¨ªæ‘†åŠ›çŸ©(DYC)</h2>
+    <p>æœ€å¼ºçš„ä¸€æ‹›åœ¨<strong>å·¦å³ä¹‹é—´</strong>åˆ†é…åŠ›ã€‚ä¹¦é‡Œ(7 ç« ,å¯¹åº”å›¾7-14 ä¸€å¸¦)æŒ‡å‡º:å¦‚æžœç»™<strong>å¤–ä¾§è½¦è½®æ›´å¤§çš„é©±åŠ¨åŠ›ã€å†…ä¾§æ›´å°(æˆ–åˆ¶åŠ¨)</strong>,å·¦å³ä¸¤ä¾§å°±å‡ºçŽ°ä¸€ä¸ª<strong>åŠ›å·®</strong>,ä¹˜ä»¥è½®è· T<sub>r</sub>,ç›´æŽ¥åœ¨è½¦ä¸Šç”Ÿæˆä¸€ä¸ª<strong>æ¨ªæ‘†åŠ›çŸ©</strong>:</p>
+    <div class="formula">M = ( F<sub>å³</sub> âˆ’ F<sub>å·¦</sub> ) Ã— ( T<sub>r</sub> / 2 )ã€€ã€€ï¼ˆT<sub>r</sub>:è½®è·ï¼‰</div>
+    <p>è¿™å«<strong>ç›´æŽ¥æ¨ªæ‘†åŠ›çŸ©æŽ§åˆ¶(DYC)</strong>ã€‚å®ƒ<strong>ä¸ä¾èµ–è½®èƒŽä¾§åã€ä¸é è½¬å‘</strong>,ç›´æŽ¥"æ‹§"ç€è½¦å¤´è½¬â€”â€”æ‰€ä»¥å“ªæ€•åœ¨<strong>å†°é›ªã€æžé™</strong>ç­‰ä¾§å‘åŠ›å¿«ç”¨å°½çš„åœºåˆ,å®ƒä¾ç„¶èƒ½å¸®è½¦ä¿®æ­£å§¿æ€ã€‚è¿™æ­£æ˜¯ç¬¬ 3 è¯¾æœ«å°¾æåˆ°çš„<strong>è½¦èº«ç¨³å®šæŽ§åˆ¶ç³»ç»Ÿ</strong>çš„æ ¸å¿ƒæ­¦å™¨:å®ƒé€šå¸¸ç”¨<strong>å•ä¾§è½»ç‚¹åˆ¹è½¦</strong>æ¥åˆ¶é€ è¿™ä¸ªåŠ›å·®,æŠŠæ‰“è½¬çš„è½¦æ‹½å›žæ¥ã€‚</p>
 
     <figure class="figanim">
-      <span class="playtag">¶¯Ì¬</span>
-      <svg viewBox="0 0 520 300" role="img" aria-label="Ö±½Óºá°ÚÁ¦¾ØDYC:×óÓÒ³µÂÖÁ¦²îÔÚ³µÉÏ²úÉúÒ»¸öÊ¹³µÍ·×ªÏòµÄÁ¦¾Ø">
-        <text x="260" y="26" text-anchor="middle" class="t mut">¸©ÊÓ ¡¤ ×óÓÒÁ¦²î ¡ú Ö±½Ó°Ñ³µÍ·"Å¡"¹ýÈ¥</text>
+      <span class="playtag">åŠ¨æ€</span>
+      <svg viewBox="0 0 520 300" role="img" aria-label="ç›´æŽ¥æ¨ªæ‘†åŠ›çŸ©DYC:å·¦å³è½¦è½®åŠ›å·®åœ¨è½¦ä¸Šäº§ç”Ÿä¸€ä¸ªä½¿è½¦å¤´è½¬å‘çš„åŠ›çŸ©">
+        <text x="260" y="26" text-anchor="middle" class="t mut">ä¿¯è§† Â· å·¦å³åŠ›å·® â†’ ç›´æŽ¥æŠŠè½¦å¤´"æ‹§"è¿‡åŽ»</text>
         <g class="yaw">
           <rect x="210" y="70" width="100" height="180" rx="20" class="s-fillsurface s-ink"/>
-          <text x="260" y="166" text-anchor="middle" class="t mut" font-size="12">³µÍ·³¯ÉÏ</text>
+          <text x="260" y="166" text-anchor="middle" class="t mut" font-size="12">è½¦å¤´æœä¸Š</text>
           <!-- right wheel big drive force -->
           <rect x="196" y="96" width="16" height="40" rx="4" class="s-tirefill"/>
           <rect x="308" y="96" width="16" height="40" rx="4" class="s-tirefill"/>
@@ -167,48 +169,48 @@
           <line x1="316" y1="216" x2="316" y2="150" class="s-acc bigforce" stroke-width="5" marker-end="url(#af)"/>
           <line x1="204" y1="216" x2="204" y2="188" class="s-teal" stroke-width="2.5" marker-end="url(#af)"/>
           <defs><marker id="af" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-filla"/></marker></defs>
-          <text x="322" y="182" class="t acc" font-size="11">ÓÒÂÖÁ¦´ó</text>
-          <text x="150" y="182" class="t teal" font-size="11">×óÂÖÁ¦Ð¡</text>
+          <text x="322" y="182" class="t acc" font-size="11">å³è½®åŠ›å¤§</text>
+          <text x="150" y="182" class="t teal" font-size="11">å·¦è½®åŠ›å°</text>
         </g>
         <!-- moment arc -->
         <path d="M330,150 A70,70 0 0,1 300,220" class="s-acc momarc" fill="none" stroke-width="3" marker-end="url(#af)"/>
-        <text x="342" y="200" class="t acc" font-size="12">ºá°ÚÁ¦¾Ø M</text>
+        <text x="342" y="200" class="t acc" font-size="12">æ¨ªæ‘†åŠ›çŸ© M</text>
       </svg>
-      <figcaption><span class="figtag">Í¼ 3 ¡¤ Ô­´´¶¯Í¼</span> &nbsp;¸ø<b class="acc">ÓÒ²à³µÂÖ¸ü´óµÄÁ¦</b>¡¢×ó²à¸üÐ¡,×óÓÒ<b>Á¦²î ¡Á ÂÖ¾à</b>¾ÍÔÚ³µÉÏÉú³ÉÒ»¸ö<b class="acc">ºá°ÚÁ¦¾Ø M</b>,Ö±½Ó°Ñ³µÍ·Å¡Ïò×ªÍä·½Ïò¡£Õâ¾ÍÊÇ DYC¡ª¡ª²»¿¿×ªÏò¡¢²»¿¿ÂÖÌ¥²àÆ«,±ùÑ©¼«ÏÞÏÂÒ²ÄÜ¾È³µ¡£</figcaption>
+      <figcaption><span class="figtag">å›¾ 3 Â· åŽŸåˆ›åŠ¨å›¾</span> &nbsp;ç»™<b class="acc">å³ä¾§è½¦è½®æ›´å¤§çš„åŠ›</b>ã€å·¦ä¾§æ›´å°,å·¦å³<b>åŠ›å·® Ã— è½®è·</b>å°±åœ¨è½¦ä¸Šç”Ÿæˆä¸€ä¸ª<b class="acc">æ¨ªæ‘†åŠ›çŸ© M</b>,ç›´æŽ¥æŠŠè½¦å¤´æ‹§å‘è½¬å¼¯æ–¹å‘ã€‚è¿™å°±æ˜¯ DYCâ€”â€”ä¸é è½¬å‘ã€ä¸é è½®èƒŽä¾§å,å†°é›ªæžé™ä¸‹ä¹Ÿèƒ½æ•‘è½¦ã€‚</figcaption>
     </figure>
 
     <div class="hook">
-      <span class="k">»¹ÓÐÒ»¸öÀÏÊµµÄ»úÐµ¼þ:LSD</span>
-      <p>ÊéÀïÒ²½²ÁË<strong>ÏÞ»¬²îËÙÆ÷(LSD)</strong>:ËüÔÚ×óÓÒÇý¶¯ÂÖÖ®¼äÏÞÖÆ×ªËÙ²î,¼ä½ÓÓ°Ïì×óÓÒÇý¶¯Á¦µÄ·ÖÅä,´Ó¶ø¸ø³öÒ»µãºá°ÚÁ¦¾ØµÄÐ§¹û¡ª¡ª¿ÉÒÔ¿´³É DYC µÄÒ»ÖÖ<strong>´¿»úÐµ¡¢±»¶¯</strong>µÄ³ûÐÎ¡£µç¿Ø DYC Ôò°ÑÕâ¼þÊÂ×öµÃÓÖ¿ìÓÖ×¼¡£ËùÓÐÕâÐ©µÄ¹²Í¬Ìì»¨°å,Ê¼ÖÕÊÇµÚ 1 ¿ÎÄÇ¸ö<strong>Ä¦²ÁÔ²</strong>:Á¦ÔÙÔõÃ´·ÖÅä,Ò²²»ÄÜ³¬¹ýÃ¿¸öÂÖÌ¥ÄÜ¸øµÄ×ÜÁ¿¡£</p>
+      <span class="k">è¿˜æœ‰ä¸€ä¸ªè€å®žçš„æœºæ¢°ä»¶:LSD</span>
+      <p>ä¹¦é‡Œä¹Ÿè®²äº†<strong>é™æ»‘å·®é€Ÿå™¨(LSD)</strong>:å®ƒåœ¨å·¦å³é©±åŠ¨è½®ä¹‹é—´é™åˆ¶è½¬é€Ÿå·®,é—´æŽ¥å½±å“å·¦å³é©±åŠ¨åŠ›çš„åˆ†é…,ä»Žè€Œç»™å‡ºä¸€ç‚¹æ¨ªæ‘†åŠ›çŸ©çš„æ•ˆæžœâ€”â€”å¯ä»¥çœ‹æˆ DYC çš„ä¸€ç§<strong>çº¯æœºæ¢°ã€è¢«åŠ¨</strong>çš„é›å½¢ã€‚ç”µæŽ§ DYC åˆ™æŠŠè¿™ä»¶äº‹åšå¾—åˆå¿«åˆå‡†ã€‚æ‰€æœ‰è¿™äº›çš„å…±åŒå¤©èŠ±æ¿,å§‹ç»ˆæ˜¯ç¬¬ 1 è¯¾é‚£ä¸ª<strong>æ‘©æ“¦åœ†</strong>:åŠ›å†æ€Žä¹ˆåˆ†é…,ä¹Ÿä¸èƒ½è¶…è¿‡æ¯ä¸ªè½®èƒŽèƒ½ç»™çš„æ€»é‡ã€‚</p>
     </div>
   </section>
 
   <div class="take">
-    <h2>Ò»¿ÎÒ»ÊÕ:ÄãÏÖÔÚÄÜËµµÄÈý¾ä»°</h2>
+    <h2>ä¸€è¯¾ä¸€æ”¶:ä½ çŽ°åœ¨èƒ½è¯´çš„ä¸‰å¥è¯</h2>
     <ol>
-      <li><strong>4WS</strong> ÈÃºóÂÖÒ²»á×ª:µÍËÙ<strong>ÄæÏàÎ»</strong>ËõÐ¡×ªÍä°ë¾¶,¸ßËÙ<strong>Í¬ÏàÎ»</strong>¼õÐ¡²àÆ«½Ç;×î¸ß¼¶µÄÊÇ<strong>Áã²àÆ«½Ç¿ØÖÆ</strong>(³µÍ·Ê¼ÖÕ¶Ô×ÅÇ°½ø·½Ïò);</li>
-      <li>²»¶¯×ª½ÇÒ²ÄÜ¸Ä×ªÍä:<strong>Ç°ºó·ÖÅä</strong>Í¨¹ýÄ¦²ÁÔ²<strong>¼ä½Ó</strong>Ó°Ïì US/OS(¼ÓËÙÍÆÍ·¡¢ÊÕÓÍ·¢»î);</li>
-      <li><strong>×óÓÒ·ÖÅä</strong>²úÉú<strong>Ö±½Óºá°ÚÁ¦¾Ø M = Á¦²î ¡Á ÂÖ¾à(DYC)</strong>,²»¿¿²àÆ«¡¢±ùÑ©¼«ÏÞÏÂÒ²ÄÜÅ¡Õý³µÍ·;LSD ÊÇËüµÄ»úÐµ³ûÐÎ,Ìì»¨°åÓÀÔ¶ÊÇÄ¦²ÁÔ²¡£</li>
+      <li><strong>4WS</strong> è®©åŽè½®ä¹Ÿä¼šè½¬:ä½Žé€Ÿ<strong>é€†ç›¸ä½</strong>ç¼©å°è½¬å¼¯åŠå¾„,é«˜é€Ÿ<strong>åŒç›¸ä½</strong>å‡å°ä¾§åè§’;æœ€é«˜çº§çš„æ˜¯<strong>é›¶ä¾§åè§’æŽ§åˆ¶</strong>(è½¦å¤´å§‹ç»ˆå¯¹ç€å‰è¿›æ–¹å‘);</li>
+      <li>ä¸åŠ¨è½¬è§’ä¹Ÿèƒ½æ”¹è½¬å¼¯:<strong>å‰åŽåˆ†é…</strong>é€šè¿‡æ‘©æ“¦åœ†<strong>é—´æŽ¥</strong>å½±å“ US/OS(åŠ é€ŸæŽ¨å¤´ã€æ”¶æ²¹å‘æ´»);</li>
+      <li><strong>å·¦å³åˆ†é…</strong>äº§ç”Ÿ<strong>ç›´æŽ¥æ¨ªæ‘†åŠ›çŸ© M = åŠ›å·® Ã— è½®è·(DYC)</strong>,ä¸é ä¾§åã€å†°é›ªæžé™ä¸‹ä¹Ÿèƒ½æ‹§æ­£è½¦å¤´;LSD æ˜¯å®ƒçš„æœºæ¢°é›å½¢,å¤©èŠ±æ¿æ°¸è¿œæ˜¯æ‘©æ“¦åœ†ã€‚</li>
     </ol>
   </div>
 
   <div class="quiz">
-    <span class="k">?? ¿ª³µÑéÖ¤Ìâ</span>
-    <p>ÔÚ<strong>°²È«¡¢¿Õ¿õ</strong>µÄ»·¾³Àï,ÔÈËÙ¹ýÒ»¸ö´óÍäÊ±<strong>¼«ÇáÎ¢</strong>µØÊÕÒ»µãÓÍ,Ìå»á³µÍ·ÊÇ²»ÊÇ"ÍùÍäÀï¶à´øÁËÒ»µã"(Æ« OS);ÔÙÇá¼ÓÒ»µãÓÍ,¸ÐÊÜËü"ÍùÍâÍÆ"Ò»µã(Æ« US)¡£Õâ¾ÍÊÇÇ°ºóÁ¦·ÖÅäµÄ¼ä½Óºá°Ú¡£<strong>Îñ±ØÐ¡·ù¡¢µÍËÙ¡¢Áô×ãÓàÁ¿</strong>¡ª¡ªÕæÕýµÄ¼«ÏÞ²Ù×÷Çë½»¸ø³µÉÏµÄÎÈ¶¨¿ØÖÆÏµÍ³¡£</p>
+    <span class="k">ðŸš— å¼€è½¦éªŒè¯é¢˜</span>
+    <p>åœ¨<strong>å®‰å…¨ã€ç©ºæ—·</strong>çš„çŽ¯å¢ƒé‡Œ,åŒ€é€Ÿè¿‡ä¸€ä¸ªå¤§å¼¯æ—¶<strong>æžè½»å¾®</strong>åœ°æ”¶ä¸€ç‚¹æ²¹,ä½“ä¼šè½¦å¤´æ˜¯ä¸æ˜¯"å¾€å¼¯é‡Œå¤šå¸¦äº†ä¸€ç‚¹"(å OS);å†è½»åŠ ä¸€ç‚¹æ²¹,æ„Ÿå—å®ƒ"å¾€å¤–æŽ¨"ä¸€ç‚¹(å US)ã€‚è¿™å°±æ˜¯å‰åŽåŠ›åˆ†é…çš„é—´æŽ¥æ¨ªæ‘†ã€‚<strong>åŠ¡å¿…å°å¹…ã€ä½Žé€Ÿã€ç•™è¶³ä½™é‡</strong>â€”â€”çœŸæ­£çš„æžé™æ“ä½œè¯·äº¤ç»™è½¦ä¸Šçš„ç¨³å®šæŽ§åˆ¶ç³»ç»Ÿã€‚</p>
   </div>
 
   <div class="next">
-    <span class="arrow">¡ú</span>
+    <span class="arrow">â†’</span>
     <div>
-      <div class="lbl">ÏÂÒ»¿ÎÔ¤¸æ ¡¤ ÊÕÎ²</div>
-      <div class="ti">µÚ 7 ¿Î ¡¤ ×îºóÒ»»·,ÊÇÄã</div>
-      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">Ç°Áù¿Î°Ñ³µÔìºÃÁË¡¢µ÷µ½×îÌý»°¡£¿ÉÔÙºÃµÄ³µ,Ò²Òª½»µ½<strong>ÈË</strong>ÊÖÀï²ÅËãÊý¡£×îºóÒ»¿Î½²<strong>ÈË¡ª³µ±Õ»·</strong>:¼ÝÊ»ÈËÄ£ÐÍ¡¢Ô¤Ãé¡¢ÒÔ¼°"ÕâÌ¨³µµ½µ×ºÃ²»ºÃ¿ª"µÄ×îÖÕ´ð°¸¡£</p>
+      <div class="lbl">ä¸‹ä¸€è¯¾é¢„å‘Š Â· æ”¶å°¾</div>
+      <div class="ti">ç¬¬ 7 è¯¾ Â· æœ€åŽä¸€çŽ¯,æ˜¯ä½ </div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">å‰å…­è¯¾æŠŠè½¦é€ å¥½äº†ã€è°ƒåˆ°æœ€å¬è¯ã€‚å¯å†å¥½çš„è½¦,ä¹Ÿè¦äº¤åˆ°<strong>äºº</strong>æ‰‹é‡Œæ‰ç®—æ•°ã€‚æœ€åŽä¸€è¯¾è®²<strong>äººâ€”è½¦é—­çŽ¯</strong>:é©¾é©¶äººæ¨¡åž‹ã€é¢„çž„ã€ä»¥åŠ"è¿™å°è½¦åˆ°åº•å¥½ä¸å¥½å¼€"çš„æœ€ç»ˆç­”æ¡ˆã€‚</p>
     </div>
   </div>
 
   <footer>
-    <p class="src">ÐÇÐÇÈË ¡¤ ½²ÔË¶¯Ñ§¡¡|¡¡µÚ 6 ¿Î / ¹² 7 ¿Î</p>
-    <p>±¾Ò³Îª¸öÈËÑ§Ï°½²Òå,ÄÚÈÝÒÀ¾Ý¡¶Æû³µÔË¶¯ÐÔÄÜ¼¼Êõ¡·(ÈÕ±¾Æû³µ¼¼ÊõÐ­»á¡¸Æû³µ¼¼Êõ¾­µäÊéÏµ¡¹µÚ 4 ·Ö²á,Ö÷±à °²²¿ÕýÈË¡¢´ó›gÑó)ÕûÀí½²½â,²»ÓëÍâ²¿×ÊÁÏ¶Ô±È¡¢²»À©Õ¹¡£ÎÄÖÐ²åÍ¼¾ùÎª°´ÊéÖÐ¸ÅÄî<b>Ô­´´ÖØ»æ/¶¯»­</b>,Î´¸´ÖÆÔ­ÊéÍ¼Æ¬»ò³É¶ÎÔ­ÎÄ¡£&nbsp;<a href="../index.html">¡û »ØÊ×Ò³</a>&nbsp;¡¤&nbsp;<a href="lesson-05-suspension.html">¡û µÚ 5 ¿Î</a>&nbsp;¡¤&nbsp;<a href="lesson-07-human.html">µÚ 7 ¿Î ¡ú</a></p>
+    <p class="src">æ˜Ÿæ˜Ÿäºº Â· è®²è¿åŠ¨å­¦ã€€|ã€€ç¬¬ 6 è¯¾ / å…± 7 è¯¾</p>
+    <p>æœ¬é¡µä¸ºä¸ªäººå­¦ä¹ è®²ä¹‰,å†…å®¹ä¾æ®ã€Šæ±½è½¦è¿åŠ¨æ€§èƒ½æŠ€æœ¯ã€‹(æ—¥æœ¬æ±½è½¦æŠ€æœ¯åä¼šã€Œæ±½è½¦æŠ€æœ¯ç»å…¸ä¹¦ç³»ã€ç¬¬ 4 åˆ†å†Œ,ä¸»ç¼– å®‰éƒ¨æ­£äººã€å¤§æ²¢æ´‹)æ•´ç†è®²è§£,ä¸ä¸Žå¤–éƒ¨èµ„æ–™å¯¹æ¯”ã€ä¸æ‰©å±•ã€‚æ–‡ä¸­æ’å›¾å‡ä¸ºæŒ‰ä¹¦ä¸­æ¦‚å¿µ<b>åŽŸåˆ›é‡ç»˜/åŠ¨ç”»</b>,æœªå¤åˆ¶åŽŸä¹¦å›¾ç‰‡æˆ–æˆæ®µåŽŸæ–‡ã€‚&nbsp;<a href="../index.html">â† å›žé¦–é¡µ</a>&nbsp;Â·&nbsp;<a href="lesson-05-suspension.html">â† ç¬¬ 5 è¯¾</a>&nbsp;Â·&nbsp;<a href="lesson-07-human.html">ç¬¬ 7 è¯¾ â†’</a></p>
   </footer>
 </div>
 <script src="../assets/anim-toggle.js"></script>

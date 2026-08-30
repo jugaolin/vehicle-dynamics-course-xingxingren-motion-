@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>�� 2 �� �� ������ôת���</title>
-<meta name="description" content="�����˶����ܵڶ���:ƽ������ɶ�ģ�͡�����/����/����ת���ȶ�ϵ�� K ���ٽ��ٶ�,�Լ�Ϊʲô��Ҫ��Ƴɲ���ת��(��ԭ����ͼ)��">
+<title>第 2 课 · 车是怎么转弯的</title>
+<meta name="description" content="汽车运动性能第二课:平面二自由度模型、不足/过度/中性转向、稳定系数 K 与临界速度,以及为什么车要设计成不足转向(含原创插图)。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -13,49 +13,51 @@
 <body>
 
 <nav class="nav"><div class="nav-in">
-  <a class="brand" href="../index.html">������<span class="dot">��</span>���˶�ѧ</a>
+  <a class="brand" href="../">星星人<span class="dot">·</span>讲运动学</a>
   <div class="nav-links">
-    <a href="../index.html">��ҳ</a>
-    <a href="../framework.html">ȫ����</a>
-    <a href="../syllabus.html">�γ̱�</a>
+    <a href="../">首页</a>
+    <a href="index.html">零基础课程</a>
+    <a href="../advanced/" style="color:var(--teal)">进阶课程</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
   </div>
-  <button class="anim-toggle" id="animToggle" aria-label="�л�����">&#9654; ��ͼ</button>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
 </div></nav>
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">�� 2 �� �� �ڶ��� �������˶���������</p>
-    <h1>������ôת���?</h1>
-    <p class="lede">��һ������֪��:�����Ŀ���������һ�ΰ���Щ��װ��һ��̨����,�����Ǻ�������ô�ó�ת�䡪������"��ͷ / ˦β"�����ʽ������,���ҳ�����һ̨��Ƣ������<strong>һ����</strong>��</p>
+    <p class="eyebrow">第 2 课 · 第二章 车辆的运动性能理论</p>
+    <h1>车是怎么转弯的?</h1>
+    <p class="lede">上一课我们知道:力从四块橡胶来。这一课把这些力装到一整台车上,看它们合起来怎么让车转弯——并给"推头 / 甩尾"起个正式的名字,再找出决定一台车脾气的那<strong>一个数</strong>。</p>
     <div class="meta">
-      <span>�����������ʻ��</span><span>Լ 10 ����</span><span>KEYWORDS&nbsp;&nbsp;�����ɶ� �� �ȶ�ϵ�� �� US/OS/NS</span>
+      <span>面向零基础驾驶者</span><span>约 10 分钟</span><span>KEYWORDS&nbsp;&nbsp;二自由度 · 稳定系数 · US/OS/NS</span>
     </div>
 
-    <div class="map" aria-label="������ȫ���λ��">
-      <div class="step"><span class="n">01</span>��̥</div>
-      <div class="step here"><span class="n">02</span>�����Ӧ</div>
-      <div class="step"><span class="n">03</span>���ֹ���</div>
-      <div class="step"><span class="n">04�C07</span>������ť</div>
-      <div class="step"><span class="n">08</span>�����ջ�</div>
+    <div class="map" aria-label="本课在全书的位置">
+      <div class="step"><span class="n">01</span>轮胎</div>
+      <div class="step here"><span class="n">02</span>如何响应</div>
+      <div class="step"><span class="n">03</span>各种工况</div>
+      <div class="step"><span class="n">04–07</span>调节旋钮</div>
+      <div class="step"><span class="n">08</span>人来闭环</div>
     </div>
   </header>
 
   <div class="hook">
-    <span class="k">�Ƚ���һ��</span>
-    <p>������������ֳ�:һ�ֽ���"�ȡ�������",Խ��ԽҪ�����;��һ��"���顢��˦β",�������﷢�š�<strong>Ϊʲôͬ������̥,����Ƣ������ô��?��һ�θ���𰸡������Ҵ���һ�����������������</strong></p>
+    <span class="k">先接上一课</span>
+    <p>你可能坐过两种车:一种进弯"稳、往外推",越快越要多打方向;另一种"贼灵、爱甩尾",快了心里发慌。<strong>为什么同样四条胎,车的脾气差这么多?这一课给你答案——而且答案是一个可以算出来的数。</strong></p>
   </div>
 
   <section>
-    <h2><span class="idx">01</span>�Ȱ��ĸ����Ӽ򻯳�"һ̨���г�"</h2>
-    <p>�����ĸ�����̫���ӡ�����(2.1.1 ��)����һ���ؼ���:<strong>���Գ����ĸ߶ȡ����㡢����,����̨���ı��ڵ�����</strong>,����һ��ƽ����ĸ��塣����,�����˶���ֻʣ<span class="u">��������������ɶ�</span>:</p>
+    <h2><span class="idx">01</span>先把四个轮子简化成"一台自行车"</h2>
+    <p>整车四个轮子太复杂。书里(2.1.1 节)先做一个关键简化:<strong>忽略车身的高度、侧倾、俯仰,把整台车拍扁在地面上</strong>,看成一个平面里的刚体。这样,车的运动就只剩<span class="u">两个有意义的自由度</span>:</p>
     <ul>
-      <li><strong>����</strong>������̨��������ƽ��(���ĺ���);</li>
-      <li><strong>���</strong>������ͷ������ת(ת����<strong>��ڽ��ٶ� r</strong>)��</li>
+      <li><strong>侧移</strong>——整台车往侧向平移(质心横向动);</li>
+      <li><strong>横摆</strong>——车头绕竖轴转(转多快叫<strong>横摆角速度 r</strong>)。</li>
     </ul>
-    <p>�����<strong>ƽ������ɶ�ģ��</strong>(�顤ͼ 2-1),ȫ���������"����ô��Ӧ"�ķ��������������档ǰ������̥һ��,����������һ̨���г�:</p>
+    <p>这就是<strong>平面二自由度模型</strong>(书·图 2-1),全书后面所有"车怎么响应"的分析都建在它上面。前后两条胎一简化,画出来就像一台自行车:</p>
 
     <figure>
-      <svg viewBox="0 0 520 300" role="img" aria-label="ƽ������ɶ�(���г�)ģ��:ǰ���֡����ġ����Ĳ�ƫ�Ǧ¡���ڽ��ٶ�r��ǰ��ʵת�Ǧ�f">
+      <svg viewBox="0 0 520 300" role="img" aria-label="平面二自由度(自行车)模型:前后轮、质心、质心侧偏角β、横摆角速度r、前轮实转角δf">
         <defs>
           <marker id="ha" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-filla"/></marker>
           <marker id="ht" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="s-fillt"/></marker>
@@ -70,59 +72,59 @@
         <line x1="120" y1="170" x2="430" y2="170" class="s-axis s-dash"/>
         <!-- rear wheel -->
         <rect x="150" y="162" width="40" height="16" rx="4" class="s-tirefill"/>
-        <text x="140" y="200" class="t mut">����</text>
+        <text x="140" y="200" class="t mut">后轮</text>
         <!-- front wheel (steered) -->
         <g transform="rotate(-17 390 170)"><rect x="370" y="162" width="40" height="16" rx="4" class="s-filla"/></g>
-        <text x="356" y="150" class="t acc">ǰ��(��ת��)</text>
+        <text x="356" y="150" class="t acc">前轮(可转向)</text>
         <!-- steer angle arc -->
         <path d="M424,170 A34,34 0 0,0 415,157" class="s-acc" fill="none"/>
-        <text x="430" y="176" class="t mono acc">��f ʵת��</text>
+        <text x="430" y="176" class="t mono acc">δf 实转角</text>
         <!-- CG -->
         <circle cx="270" cy="170" r="4.5" class="s-filla"/>
         <circle cx="270" cy="170" r="9" class="s-axis" fill="none"/>
-        <text x="250" y="215" class="t">P ����</text>
+        <text x="250" y="215" class="t">P 质心</text>
         <!-- velocity V with beta -->
         <line x1="270" y1="170" x2="350" y2="192" class="s-teal" stroke-width="2.5" marker-end="url(#ht)"/>
         <path d="M320,170 A50,50 0 0,0 316,181" class="s-teal" fill="none"/>
-        <text x="352" y="200" class="t teal">V �н�����</text>
-        <text x="300" y="188" class="t mono teal">��</text>
+        <text x="352" y="200" class="t teal">V 行进方向</text>
+        <text x="300" y="188" class="t mono teal">β</text>
         <!-- yaw rate -->
         <path d="M247,158 A18,18 0 1,1 253,186" class="s-acc" fill="none" marker-end="url(#ha)"/>
-        <text x="196" y="162" class="t mono acc">r ���</text>
+        <text x="196" y="162" class="t mono acc">r 横摆</text>
       </svg>
-      <figcaption><span class="figtag">ͼ 1 �� ԭ���ػ�</span> &nbsp;�ѳ��򻯳�ǰ���һ��̥��<b>P</b> ������;��ͷ���������ʵ���ߵķ���(<b>V</b>)����Ľǽ� <b>���Ĳ�ƫ�� ��</b>;��ͷת�ö��� <b>��ڽ��ٶ� r</b>;ǰ��ת���Ľǽ� <b>ʵת�� ��f</b>����̨�����˶� = <b>����</b> + <b>���</b> �����¡�</figcaption>
+      <figcaption><span class="figtag">图 1 · 原创重绘</span> &nbsp;把车简化成前后各一条胎。<b>P</b> 是质心;车头方向和质心实际走的方向(<b>V</b>)差出的角叫 <b>质心侧偏角 β</b>;车头转得多快叫 <b>横摆角速度 r</b>;前轮转过的角叫 <b>实转角 δf</b>。整台车的运动 = <b>侧移</b> + <b>横摆</b> 两件事。</figcaption>
     </figure>
   </section>
 
   <section>
-    <h2><span class="idx">02</span>���ٶ���תȦ:����Ƣ������"һ����"</h2>
-    <p>��ô��һ̨����Ƣ��?����(2.2.1 ��)�������صİ취:<strong>�ù̶��ķ����̽Ƕȡ��̶��ĳ���,�ó�����תȦ(���ٻ���)</strong>,����ת�����ĺ�ڽ��ٶȡ������������(ʽ 2-20):</p>
-    <div class="formula">r = [ 1 / (1 + K��V2) ] �� (V / l) �� ��f</div>
-    <p>ʽ�ӳ�,��ֻҪ��ס�Ǹ� <strong>K</strong>�������Ǿ���һ�е�<strong>�ȶ�ϵ��</strong>(ʽ 2-23),�ɳ�����������ࡢ����λ�ú�ǰ���ֲ࿹�ն����:</p>
-    <div class="formula">K = ?( m / 2l2 ) �� ( l_f��K_f ? l_r��K_r ) / ( K_f��K_r )</div>
-    <p>�㲻�û�������<strong>ֻҪ֪��:һ̨����ú�,K �ͻ�������,�������Ǹ���������,����������ȫ��ת��Ƣ����</strong></p>
+    <h2><span class="idx">02</span>定速定舵转圈:决定脾气的那"一个数"</h2>
+    <p>怎么量一台车的脾气?书里(2.2.1 节)用最朴素的办法:<strong>用固定的方向盘角度、固定的车速,让车匀速转圈(匀速环行)</strong>,看会转出多大的横摆角速度。算出来是这样(式 2-20):</p>
+    <div class="formula">r = [ 1 / (1 + K·V²) ] · (V / l) · δf</div>
+    <p>式子长,但只要盯住那个 <strong>K</strong>。它就是决定一切的<strong>稳定系数</strong>(式 2-23),由车的质量、轴距、质心位置和前后轮侧抗刚度算出:</p>
+    <div class="formula">K = −( m / 2l² ) · ( l_f·K_f − l_r·K_r ) / ( K_f·K_r )</div>
+    <p>你不用会算它。<strong>只要知道:一台车造好后,K 就基本定了,是正、是负、还是零,决定了它的全部转向脾气。</strong></p>
     <div class="hook teal">
-      <span class="k">ֱ����</span>
-      <p><b>K</b> ��������һ�仰:<strong>ǰ��ͺ���,˭��"������"(�ȵ���һ��˵��ץ�ؼ���)?</strong>������Ը��� �� β���Ȼ�;ǰ����Ը��� �� ��ͷ���ơ�K ���ǰ������ѹ���ɵ�һ������</p>
+      <span class="k">直觉版</span>
+      <p><b>K</b> 本质在问一句话:<strong>前轴和后轴,谁先"给不动"(先到上一课说的抓地极限)?</strong>后轴相对更弱 → 尾巴先滑;前轴相对更弱 → 车头先推。K 就是把这件事压缩成的一个数。</p>
     </div>
   </section>
 
   <section>
-    <h2><span class="idx">03</span>����Ƣ��:���� / ���� / ����ת��</h2>
-    <p>����(ʽ 2-23 �·�)�� K ������ֱ������������ת�����ԡ����������������˵����Щ�ʵ�<strong>��ʽ����</strong>:</p>
+    <h2><span class="idx">03</span>三种脾气:不足 / 中性 / 过度转向</h2>
+    <p>书里(式 2-23 下方)把 K 的正负直接命名成三种转向特性——这就是你天天听说的那些词的<strong>正式名字</strong>:</p>
     <ul>
-      <li><strong>K &gt; 0 �� ����ת��(US, Understeer)</strong>:����Խ��,��תͬ������,����Ҫ���<strong>Խ��</strong>���׳�"��ͷ"��</li>
-      <li><strong>K = 0 �� ����ת��(NS, Neutral)</strong>:�����̽ǶȺͳ����޹�,ʼ��һ������</li>
-      <li><strong>K &lt; 0 �� ����ת��(OS, Oversteer)</strong>:����Խ��,���򷴶�Ҫ<strong>��һ��</strong>,����ת��ͷ���׳�"˦β"��</li>
+      <li><strong>K &gt; 0 → 不足转向(US, Understeer)</strong>:车速越高,想转同样的弯,方向要打得<strong>越多</strong>。俗称"推头"。</li>
+      <li><strong>K = 0 → 中性转向(NS, Neutral)</strong>:方向盘角度和车速无关,始终一个量。</li>
+      <li><strong>K &lt; 0 → 过度转向(OS, Oversteer)</strong>:车速越高,方向反而要<strong>回一点</strong>,否则转过头。俗称"甩尾"。</li>
     </ul>
-    <p>��"����תȦ��Ҫ��ʵת�� ��f"��"���� V"������,�顤ͼ 2-5 һ�ۿ�������Ƣ��(�����߶��ӵ���ʱ�� <span class="mono">l/R</span> ����):</p>
+    <p>把"匀速转圈需要的实转角 δf"对"车速 V"画出来,书·图 2-5 一眼看清三种脾气(三条线都从低速时的 <span class="mono">l/R</span> 出发):</p>
 
     <figure>
-      <svg viewBox="0 0 520 320" role="img" aria-label="���ٻ��е�ת������:ʵת���泵�ٱ仯,US���̡�NSˮƽ��OS�������ٽ糵��">
+      <svg viewBox="0 0 520 320" role="img" aria-label="匀速环行的转向特性:实转角随车速变化,US上翘、NS水平、OS下弯至临界车速">
         <line x1="70" y1="30" x2="70" y2="272" class="s-axis"/>
         <line x1="70" y1="270" x2="500" y2="270" class="s-axis"/>
-        <text x="60" y="34" class="t mut">ʵת�� ��f</text>
-        <text x="392" y="300" class="t mut">��ʻ�ٶ� V ��</text>
+        <text x="60" y="34" class="t mut">实转角 δf</text>
+        <text x="392" y="300" class="t mut">行驶速度 V →</text>
         <!-- baseline l/R -->
         <line x1="66" y1="200" x2="70" y2="200" class="s-axis"/>
         <text x="40" y="204" class="t mono mut">l/R</text>
@@ -132,35 +134,35 @@
         <text x="455" y="192" class="t teal">NS</text>
         <!-- US -->
         <path d="M70,200 Q350,196 478,58" class="s-curve"/>
-        <text x="452" y="70" class="t acc">US �� K&gt;0</text>
+        <text x="452" y="70" class="t acc">US · K&gt;0</text>
         <!-- OS -->
         <path d="M70,200 Q300,205 440,270" class="s-acc s-dash" stroke-width="2.5"/>
-        <text x="360" y="256" class="t mut">OS �� K&lt;0</text>
+        <text x="360" y="256" class="t mut">OS · K&lt;0</text>
         <!-- Vc -->
         <line x1="440" y1="270" x2="440" y2="276" class="s-axis"/>
         <text x="426" y="292" class="t mono acc">Vc</text>
       </svg>
-      <figcaption><span class="figtag">ͼ 2 �� ԭ���ػ�</span> &nbsp;<b class="mono">US(����)</b>Խ��ԽҪ����෽��,ʼ��"Ҫ�ø���"������;<b class="mono">NS</b>�����ٶȱ�;<b class="mono">OS(����)</b>Խ��ԽҪ�����շ���,һֱ�嵽 <b>�ٽ糵�� Vc</b> ʱʵת�ǵ����㡪��<b>�ٿ��ת������ʧ����</b>��</figcaption>
+      <figcaption><span class="figtag">图 2 · 原创重绘</span> &nbsp;<b class="mono">US(橙线)</b>越快越要打更多方向,始终"要得更多"所以稳;<b class="mono">NS</b>不随速度变;<b class="mono">OS(虚线)</b>越快越要往回收方向,一直冲到 <b>临界车速 Vc</b> 时实转角掉到零——<b>再快就转不动、失控了</b>。</figcaption>
     </figure>
   </section>
 
   <section>
-    <h2><span class="idx">04</span>Ϊʲô��������Ƴ�"����ת��"?</h2>
-    <p>��ͼ 2-5 ������ OS ���߳��� <span class="mono">Vc</span>��������ǹؼ�������(ʽ 2-24)����:����ת��ĳ�����һ��<strong>�ٽ糵��</strong></p>
-    <div class="formula">Vc = ��( ?1 / K )����(���� K &lt; 0,�� OS ʱ����)</div>
-    <p>������˵:����ת��ʱ,<strong>����һ��������� Vc,�����˶��ͱ�ò��ȶ�</strong>(2.2.2 ��:��ʱ˲̬��Ӧ�� ��?2 �为)��Ҳ����˵,OS �ĳ������˻��Լ���ɢ��ʧ�ء�<strong>������ת��(US)û������ٽ��ٶ�</strong>����������������������Ƴ� US:����һ�����,����"Խ��Խ�ȡ��ɿ�"��</p>
+    <h2><span class="idx">04</span>为什么车都被设计成"不足转向"?</h2>
+    <p>看图 2-5 里那条 OS 虚线冲向 <span class="mono">Vc</span>——这就是关键。书里(式 2-24)给出:过度转向的车存在一个<strong>临界车速</strong></p>
+    <div class="formula">Vc = √( −1 / K )　　(仅当 K &lt; 0,即 OS 时存在)</div>
+    <p>书里明说:过度转向时,<strong>车速一旦超过这个 Vc,车辆运动就变得不稳定</strong>(2.2.2 节:此时瞬态响应的 ωₙ² 变负)。也就是说,OS 的车开快了会自己发散、失控。<strong>而不足转向(US)没有这个临界速度</strong>——所以量产车基本都设计成 US:牺牲一点灵活,换来"越快越稳、可控"。</p>
 
-    <p class="lead-line">�� US / OS ������ʲô����?�������һ�����ö��ļ��ν��͡�</p>
-    <p>����(2.2.3 ��)������һ�����<strong>����ת��� NSP</strong>,�ٶ���<strong>��̬���� SM</strong>(ʽ 2-37)�������ĵ� NSP �����λ��:</p>
-    <div class="formula">SM = ?( l_f��K_f ? l_r��K_r ) / ( l��(K_f + K_r) )</div>
+    <p class="lead-line">那 US / OS 到底由什么决定?书里给了一个更好懂的几何解释。</p>
+    <p>书里(2.2.3 节)定义了一个点叫<strong>中性转向点 NSP</strong>,再定义<strong>静态余量 SM</strong>(式 2-37)——质心到 NSP 的相对位置:</p>
+    <div class="formula">SM = −( l_f·K_f − l_r·K_r ) / ( l·(K_f + K_r) )</div>
     <ul>
-      <li><strong>������ NSP <u>֮ǰ</u>(������ͷ)�� SM Ϊ�� �� ����ת��</strong>;</li>
-      <li>������ NSP �غ� �� ����ת��;</li>
-      <li>������ NSP ֮��(������β)�� ����ת��</li>
+      <li><strong>质心在 NSP <u>之前</u>(更靠车头)→ SM 为正 → 不足转向</strong>;</li>
+      <li>质心与 NSP 重合 → 中性转向;</li>
+      <li>质心在 NSP 之后(更靠车尾)→ 过度转向。</li>
     </ul>
 
     <figure>
-      <svg viewBox="0 0 460 230" role="img" aria-label="����ת���NSP�뾲̬����SM:������NSP֮ǰΪ����ת��">
+      <svg viewBox="0 0 460 230" role="img" aria-label="中性转向点NSP与静态余量SM:质心在NSP之前为不足转向">
         <!-- body -->
         <rect x="95" y="72" width="270" height="76" rx="16" class="s-axis" fill="var(--paper)"/>
         <!-- wheels -->
@@ -168,53 +170,53 @@
         <rect x="115" y="150" width="30" height="10" rx="3" class="s-tirefill"/>
         <rect x="315" y="60" width="30" height="10" rx="3" class="s-tirefill"/>
         <rect x="315" y="150" width="30" height="10" rx="3" class="s-tirefill"/>
-        <text x="405" y="114" class="t mut">��ͷ��</text>
+        <text x="405" y="114" class="t mut">车头→</text>
         <!-- NSP (rear-ward) -->
         <circle cx="215" cy="110" r="5" class="s-fillt"/>
-        <text x="150" y="46" class="t teal">����ת��� NSP</text>
+        <text x="150" y="46" class="t teal">中性转向点 NSP</text>
         <line x1="215" y1="70" x2="215" y2="52" class="s-teal s-dash"/>
         <!-- CG (front-ward) -->
         <circle cx="278" cy="110" r="5" class="s-filla"/>
         <line x1="278" y1="110" x2="278" y2="110" class="s-acc"/>
         <path d="M270,102 l16,16 M286,102 l-16,16" class="s-acc" stroke-width="1.6"/>
-        <text x="286" y="188" class="t acc">���� CG</text>
+        <text x="286" y="188" class="t acc">质心 CG</text>
         <line x1="278" y1="130" x2="278" y2="172" class="s-acc s-dash"/>
         <!-- SM dim -->
         <line x1="215" y1="200" x2="278" y2="200" class="s-axis"/>
         <line x1="215" y1="194" x2="215" y2="206" class="s-axis"/>
         <line x1="278" y1="194" x2="278" y2="206" class="s-axis"/>
-        <text x="205" y="222" class="t mono">��̬���� SM</text>
+        <text x="205" y="222" class="t mono">静态余量 SM</text>
       </svg>
-      <figcaption><span class="figtag">ͼ 3 �� ԭ���ػ�</span> &nbsp;����(��)��������ת��� NSP(��)<b>֮ǰ��������ͷ</b>ʱ,��̬����Ϊ��,������<b>����ת��</b>������Ҳ��"��������ǰ������ѹǰ��"�ĳ�ͨ��ƫ�ȵ�ԭ��֮һ��</figcaption>
+      <figcaption><span class="figtag">图 3 · 原创重绘</span> &nbsp;质心(橙)落在中性转向点 NSP(青)<b>之前、更靠车头</b>时,静态余量为正,车就是<b>不足转向</b>——这也是"发动机在前、重量压前轴"的车通常偏稳的原因之一。</figcaption>
     </figure>
   </section>
 
   <div class="take">
-    <h2>һ��һ��:��������˵�����仰</h2>
+    <h2>一课一收:你现在能说的三句话</h2>
     <ol>
-      <li>��̨��ת��,���Լ򻯳�һ̨"���г�"(ƽ������ɶ�),ֻ��������:<strong>���� + ���</strong>;</li>
-      <li>һ̨����ת��Ƣ��,ѹ����һ��<strong>�ȶ�ϵ�� K</strong>:K&gt;0 ����ת��(��ͷ)��K=0 ���ԡ�K&lt;0 ����ת��(˦β);</li>
-      <li>����ת��ĳ��и�<strong>�ٽ糵��</strong>,������ʧ��;���Գ���������Ƴɲ���ת�򡪡���������<strong>������������ת���֮ǰ</strong>��</li>
+      <li>整台车转弯,可以简化成一台"自行车"(平面二自由度),只做两件事:<strong>侧移 + 横摆</strong>;</li>
+      <li>一台车的转向脾气,压缩成一个<strong>稳定系数 K</strong>:K&gt;0 不足转向(推头)、K=0 中性、K&lt;0 过度转向(甩尾);</li>
+      <li>过度转向的车有个<strong>临界车速</strong>,超过就失控;所以车基本都设计成不足转向——本质是让<strong>质心落在中性转向点之前</strong>。</li>
     </ol>
   </div>
 
   <div class="quiz">
-    <span class="k">?? ������֤��</span>
-    <p>��<strong>��ȫ�տ�</strong>�ĳ�������һ���̶���С��Բ,����Բ����,�����ѳ�������ȥ,����<strong>������Ҫ��ҪԽ��Խ��</strong>�����Խ��Խ�üӷ��򡪡���ϲ,��ĳ���<strong>����ת��</strong>,Ҳ���Ǿ���������ó���Ƣ����(ע��:ȫ�̵��١���������,��ȥ���ٽ硣)</p>
+    <span class="k">🚗 开车验证题</span>
+    <p>在<strong>安全空旷</strong>的场地里绕一个固定大小的圆,保持圆不变,慢慢把车速提上去,留意<strong>方向盘要不要越打越多</strong>。如果越快越得加方向——恭喜,你的车是<strong>不足转向</strong>,也就是绝大多数家用车的脾气。(注意:全程低速、留足余量,别去试临界。)</p>
   </div>
 
   <div class="next">
-    <span class="arrow">��</span>
+    <span class="arrow">→</span>
     <div>
-      <div class="lbl">��һ��Ԥ��</div>
-      <div class="ti">�� 3 �� �� ת������,���Ƿ�Ʈ������?</div>
-      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">��һ�ν�����"תȦ��̬"����һ�ο�<strong>�մ�����һ��</strong>����ô��Ӧ��������Ƶ�ʡ�����ȡ�����<strong>��ڽ��ٶȵ�Ƶ����Ӧ</strong>(�顤ͼ 2-7),���ý�����֮ǰ�ʵ�������Ƶ��ͼ��</p>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">第 3 课 · 转得利落,还是发飘、发晃?</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">这一课讲的是"转圈稳态"。下一课看<strong>刚打方向那一下</strong>车怎么响应——固有频率、阻尼比、还有<strong>横摆角速度的频率响应</strong>(书·图 2-7),正好接上你之前问的那两张频响图。</p>
     </div>
   </div>
 
   <footer>
-    <p class="src">������ �� ���˶�ѧ��|���� 2 �� / �� 7 ��</p>
-    <p>��ҳΪ����ѧϰ����,�������ݡ������˶����ܼ�����(�ձ���������Э�ᡸ��������������ϵ���� 4 �ֲ�,���� �������ˡ���g��)��������,�����ⲿ���϶Աȡ�����չ�����в�ͼ��Ϊ�����и���<b>ԭ���ػ�</b>,δ����ԭ��ͼƬ��ɶ�ԭ�ġ�&nbsp;<a href="../index.html">�� ����ҳ</a>&nbsp;��&nbsp;<a href="lesson-01-tires.html">�� �� 1 ��</a></p>
+    <p class="src">星星人 · 讲运动学　|　第 2 课 / 共 7 课</p>
+    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-01-tires.html">← 第 1 课</a></p>
   </footer>
 </div>
 <script src="../assets/anim-toggle.js"></script>
