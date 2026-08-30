@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -9,6 +9,101 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+.course-entry {
+  display: block;
+  background: var(--surface);
+  border: 2px solid var(--hair);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 20px 0;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.course-entry:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+}
+.course-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+.course-entry.basic::before {
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+}
+.course-entry.advanced::before {
+  background: linear-gradient(90deg, var(--teal), var(--accent));
+}
+.course-entry .tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+.course-entry.basic .tag {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.course-entry.advanced .tag {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+.course-entry h2 {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+.course-entry .desc {
+  font-size: 1rem;
+  color: var(--muted);
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+.course-entry .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--faint);
+}
+.course-entry .meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+}
+.compare-table th,
+.compare-table td {
+  padding: 12px 16px;
+  border: 1px solid var(--hair);
+  text-align: left;
+}
+.compare-table th {
+  background: var(--surface);
+  font-weight: 700;
+}
+.compare-table tr:nth-child(even) {
+  background: rgba(0,0,0,0.02);
+}
+</style>
 </head>
 <body>
 
@@ -18,34 +113,96 @@
     <a href="index.html" class="active">首页</a>
     <a href="framework.html">全书框架</a>
     <a href="syllabus.html">课程表</a>
-    <a href="advanced/A1-tire-reality.html" style="color:var(--accent)">进阶课程</a>
   </div>
   <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
 </div></nav>
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">汽车运动性能 · 零基础课程</p>
-    <h1>只会开车,也能真正读懂一台车怎么动</h1>
-    <p class="lede">这是一套面向"只会开车的小白"的课程——从你开车时的真实感觉出发,把《汽车运动性能技术》一整本书讲通。不引外部知识、不做扩展,只把这一本书讲清楚。</p>
+    <p class="eyebrow">汽车运动性能课程</p>
+    <h1>星星人 · 讲运动学</h1>
+    <p class="lede">面向"只会开车的小白"和"想深入理解操控"的驾驶者——从你开车时的真实感觉出发,把《汽车运动性能技术》一整本书讲通。</p>
     <div class="meta">
-      <span>共 7 课</span><span>已更新 7 课 · 全部完成</span><span>触发语&nbsp;&nbsp;星星人讲运动学</span>
+      <span>严格依据一本书</span><span>原创重绘插图</span><span>触发语&nbsp;&nbsp;星星人讲运动学</span>
     </div>
   </header>
 
   <section>
-    <h2><span class="idx">→</span>一句话总纲</h2>
-    <div class="thesis">
-      轮胎是唯一的力源(受<strong>摩擦圆</strong>约束)→ 前后/左右怎么<strong>分配这些力</strong>,决定了车的横摆与侧移响应(<strong>二自由度模型</strong>)→ 转向、悬架、4WS、驱动/制动控制都只是<strong>调节这个响应的旋钮</strong> → 最后必须把车交给"人",在<strong>人—车闭环</strong>里检验能不能开得稳。
-      <p style="margin:12px 0 0;color:var(--muted);font-size:.95rem">前 7 章造车,第 8 章把车交给人。全书永远在"高性能"与"好开/稳定"之间求平衡。</p>
-    </div>
+    <h2><span class="idx">→</span>选择你的学习路径</h2>
+
+    <a href="lessons/lesson-01-tires.html" class="course-entry basic">
+      <span class="tag">零基础课程</span>
+      <h2>只会开车,也能真正读懂一台车怎么动</h2>
+      <p class="desc">从零开始,用通俗的语言讲解汽车运动性能的核心概念。不需要任何专业背景,只要你会开车,就能理解轮胎、转弯、操控的物理本质。</p>
+      <div class="meta">
+        <span>📚 共 7 课</span>
+        <span>⏱️ 每课约 8-10 分钟</span>
+        <span>🎯 面向零基础驾驶者</span>
+        <span>✅ 全部完成</span>
+      </div>
+    </a>
+
+    <a href="advanced/A1-tire-reality.html" class="course-entry advanced">
+      <span class="tag">进阶课程</span>
+      <h2>深入理解:从 Magic Formula 到综合调校</h2>
+      <p class="desc">在零基础课程的基础上,深入学习轮胎数学模型、载荷管理、瞬态响应等高级主题。包含交互式仿真,让你"触摸"每个物理概念。</p>
+      <div class="meta">
+        <span>🚀 共 5 课</span>
+        <span>⏱️ 每课约 30 分钟</span>
+        <span>🎯 面向有基础的驾驶者</span>
+        <span>🎮 每课含交互仿真</span>
+        <span>🔄 持续更新中</span>
+      </div>
+    </a>
   </section>
 
   <section>
-    <h2><span class="idx">01</span>课程目录</h2>
-    <div style="margin-bottom:16px;padding:12px 16px;background:var(--accent-soft);border-radius:8px;border-left:4px solid var(--accent)">
-      <strong style="color:var(--accent)">📚 零基础课程</strong> — 从零开始,把《汽车运动性能技术》一本书讲通
-    </div>
+    <h2><span class="idx">→</span>两门课程有什么区别?</h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>零基础课程</th>
+          <th>进阶课程</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>目标受众</strong></td>
+          <td>只会开车,想了解原理</td>
+          <td>有基础,想深入理解</td>
+        </tr>
+        <tr>
+          <td><strong>内容深度</strong></td>
+          <td>概念讲解,定性分析</td>
+          <td>数学模型,定量分析</td>
+        </tr>
+        <tr>
+          <td><strong>每课时长</strong></td>
+          <td>8-10 分钟</td>
+          <td>30 分钟</td>
+        </tr>
+        <tr>
+          <td><strong>交互仿真</strong></td>
+          <td>无</td>
+          <td>每课配套</td>
+        </tr>
+        <tr>
+          <td><strong>数学公式</strong></td>
+          <td>尽量避免</td>
+          <td>LaTeX 渲染</td>
+        </tr>
+        <tr>
+          <td><strong>课程数量</strong></td>
+          <td>7 课 (已完成)</td>
+          <td>5 课 (更新中)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="idx">01</span>零基础课程目录</h2>
     <div class="cards">
       <a class="card" href="lessons/lesson-01-tires.html">
         <span class="n">LESSON 01</span>
@@ -90,15 +247,15 @@
         <span class="chip done">✓ 已更新</span>
       </a>
     </div>
+  </section>
 
-    <div style="margin:32px 0 16px;padding:12px 16px;background:var(--teal-soft);border-radius:8px;border-left:4px solid var(--teal)">
-      <strong style="color:var(--teal)">🚀 进阶课程</strong> — 深入轮胎建模、载荷管理、瞬态响应等高级主题
-    </div>
+  <section>
+    <h2><span class="idx">02</span>进阶课程目录</h2>
     <div class="cards">
       <a class="card" href="advanced/A1-tire-reality.html">
         <span class="n" style="color:var(--teal)">ADVANCED A1</span>
         <span class="ti">Magic Formula：轮胎的真实脾气</span>
-        <span class="de">四参数模型 · 摩擦圆精确表达 · 实测数据拟合</span>
+        <span class="de">四参数模型 · 摩擦圆精确表达 · 实测数据拟合 · 驾驶应用</span>
         <span class="chip" style="background:var(--teal-soft);color:var(--teal)">NEW</span>
       </a>
       <a class="card" href="advanced/A2-load-transfer.html">
@@ -107,11 +264,29 @@
         <span class="de">前后轮分配 · 重心高度影响 · 调校方法论</span>
         <span class="chip" style="background:var(--teal-soft);color:var(--teal)">NEW</span>
       </a>
+      <a class="card" style="opacity:0.5;pointer-events:none">
+        <span class="n" style="color:var(--teal)">ADVANCED A3</span>
+        <span class="ti">瞬态响应：轮胎不是开关</span>
+        <span class="de">侧偏角建立过程 · 响应延迟 · 赛车手的"线"</span>
+        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
+      </a>
+      <a class="card" style="opacity:0.5;pointer-events:none">
+        <span class="n" style="color:var(--teal)">ADVANCED A4</span>
+        <span class="ti">热管理：温度决定抓地力</span>
+        <span class="de">轮胎温度分布 · 热衰减 · 赛道策略</span>
+        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
+      </a>
+      <a class="card" style="opacity:0.5;pointer-events:none">
+        <span class="n" style="color:var(--teal)">ADVANCED A5</span>
+        <span class="ti">综合调校：参数的艺术</span>
+        <span class="de">整体平衡 · 赛道应用 · 案例分析</span>
+        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
+      </a>
     </div>
   </section>
 
   <section>
-    <h2><span class="idx">02</span>先从这两页开始</h2>
+    <h2><span class="idx">03</span>辅助页面</h2>
     <div class="cards">
       <a class="card" href="framework.html">
         <span class="n">MAP</span>
