@@ -85,17 +85,17 @@
         <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
         <line x1="80" y1="60" x2="560" y2="60" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
 
-        <!-- 不足转向曲线 (US) -->
-        <path d="M80,260 C180,230 280,180 400,120 C480,90 540,75 560,70" fill="none" stroke="#54B7C4" stroke-width="3"/>
-        <text x="480" y="60" fill="#54B7C4" font-size="12" font-weight="bold">不足转向 (US)</text>
+        <!-- 不足转向曲线 (US) - 从(80,270)到(560,60)，在坐标轴内 -->
+        <path d="M80,270 C180,240 280,180 400,110 C480,80 540,65 560,60" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="480" y="55" fill="#54B7C4" font-size="12" font-weight="bold">不足转向 (US)</text>
 
-        <!-- 中性转向曲线 (Neutral) -->
-        <line x1="80" y1="260" x2="560" y2="80" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6,3"/>
-        <text x="520" y="75" fill="var(--muted)" font-size="11">中性转向</text>
+        <!-- 中性转向曲线 (Neutral) - 从(80,270)到(560,70)的直线 -->
+        <line x1="80" y1="270" x2="560" y2="70" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="520" y="65" fill="var(--muted)" font-size="11">中性转向</text>
 
-        <!-- 过度转向曲线 (OS) -->
-        <path d="M80,260 C180,270 280,290 400,320 C480,340 540,350 560,355" fill="none" stroke="#EF7440" stroke-width="3"/>
-        <text x="480" y="340" fill="#EF7440" font-size="12" font-weight="bold">过度转向 (OS)</text>
+        <!-- 过度转向曲线 (OS) - 从(80,270)到(560,290)，在坐标轴内 -->
+        <path d="M80,270 C180,275 280,280 400,285 C480,288 540,290 560,292" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="480" y="300" fill="#EF7440" font-size="12" font-weight="bold">过度转向 (OS)</text>
 
         <!-- US/OS转换点 -->
         <circle cx="320" cy="170" r="6" fill="#FBBF24"/>
