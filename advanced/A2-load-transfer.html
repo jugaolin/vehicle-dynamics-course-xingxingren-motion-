@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进阶 A2 · 载荷转移：四轮的博弈</title>
+<meta name="description" content="进阶课第二课：深入理解载荷转移的物理本质、前后轮分配比例与操控的关系。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<!-- KaTeX LaTeX 渲染 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+<style>
+/* 进阶课特殊样式 */
+.adva-section {
+  background: linear-gradient(135deg, rgba(0,210,211,0.03) 0%, rgba(255,75,75,0.03) 100%);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+}
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.param-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.param-card h3 {
+  font-family: var(--mono);
+  font-size: 28px;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.param-card .desc {
+  font-size: 14px;
+  color: var(--muted);
+}
+.formula-box {
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+  font-family: var(--mono);
+  font-size: 18px;
+  text-align: center;
+  line-height: 2;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+.data-table th,
+.data-table td {
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.data-table th {
+  background: var(--accent);
+  color: var(--paper);
+}
+.data-table tr:nth-child(even) {
+  background: rgba(0,210,211,0.05);
+}
+.sim-entry {
+  display: block;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: var(--paper);
+  text-decoration: none;
+  padding: 24px 32px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.sim-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,210,211,0.3);
+}
+.sim-entry .icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+/* 载荷转移可视化 */
+.load-diagram {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">进阶课 A2 · 载荷管理</p>
+    <h1>载荷转移：四轮的博弈</h1>
+    <p class="lede">你的车有四个轮子，但它们并不是"平等"的。过弯时，外侧轮比内侧轮更"吃力"；加速时，后轮比前轮更"吃力"。理解这个"不公平"，是理解操控的关键。</p>
+    <div class="meta">
+      <span>面向有基础的驾驶者</span><span>约 30 分钟</span><span>KEYWORDS&nbsp;&nbsp;载荷转移 · 重心高度 · 轮距 · 前后分配</span>
+    </div>
+
+    <div class="map" aria-label="本课在进阶课的位置">
+      <div class="step"><span class="n">A1</span>Magic Formula</div>
+      <div class="step here"><span class="n">A2</span>载荷转移</div>
+      <div class="step"><span class="n">A3</span>瞬态响应</div>
+      <div class="step"><span class="n">A4</span>热管理</div>
+      <div class="step"><span class="n">A5</span>综合调校</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先问你一个开车的感觉</span>
+    <p>你有没有注意过：过弯时，车身会往弯道外侧"歪"？那不是车要翻了，而是重量在重新分配——<strong>外侧轮变重，内侧轮变轻</strong>。这个过程，叫做载荷转移。它直接决定了每个轮子能给多少抓地力。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>什么是载荷转移</h2>
+    <p>载荷转移的物理本质很简单：<strong>力要平衡</strong>。</p>
+
+    <p>当车过弯时，有一个离心力（其实是惯性）在把车往外推。这个力作用在重心上，但支撑力在轮胎上。为了平衡这个力矩，外侧轮必须承担更多重量，内侧轮承担更少。</p>
+
+    <div class="load-diagram">
+      <svg viewBox="0 0 600 300" role="img" aria-label="载荷转移示意图">
+        <!-- 地面 -->
+        <rect x="50" y="240" width="500" height="60" fill="#1a2030" rx="4"/>
+        <text x="300" y="275" fill="#8090a0" text-anchor="middle" font-size="14">地面</text>
+
+        <!-- 车身 -->
+        <rect x="150" y="100" width="300" height="120" fill="#2a3040" rx="8"/>
+        <text x="300" y="165" fill="#e8e8e8" text-anchor="middle" font-size="16" font-weight="bold">车身</text>
+
+        <!-- 重心 -->
+        <circle cx="300" cy="140" r="12" fill="#ff4b4b"/>
+        <text x="300" y="145" fill="white" text-anchor="middle" font-size="12" font-weight="bold">CG</text>
+        <text x="300" y="80" fill="#ff4b4b" text-anchor="middle" font-size="12">重心</text>
+
+        <!-- 离心力箭头 -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#ff4b4b"/>
+          </marker>
+        </defs>
+        <line x1="300" y1="140" x2="420" y2="140" stroke="#ff4b4b" stroke-width="3" marker-end="url(#arrowhead)"/>
+        <text x="440" y="145" fill="#ff4b4b" font-size="12">离心力 F_c</text>
+
+        <!-- 左轮（内侧） -->
+        <rect x="170" y="220" width="60" height="20" fill="#00d2d3" rx="4"/>
+        <text x="200" y="235" fill="white" text-anchor="middle" font-size="10">内侧轮</text>
+
+        <!-- 右轮（外侧） -->
+        <rect x="370" y="220" width="60" height="20" fill="#00d2d3" rx="4"/>
+        <text x="400" y="235" fill="white" text-anchor="middle" font-size="10">外侧轮</text>
+
+        <!-- 载荷箭头 - 内侧 -->
+        <line x1="200" y1="200" x2="200" y2="220" stroke="#8090a0" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="200" y="195" fill="#8090a0" text-anchor="middle" font-size="11">↓ 变轻</text>
+
+        <!-- 载荷箭头 - 外侧 -->
+        <line x1="400" y1="180" x2="400" y2="220" stroke="#00d2d3" stroke-width="4" marker-end="url(#arrowhead)"/>
+        <text x="400" y="175" fill="#00d2d3" text-anchor="middle" font-size="11">↓ 变重</text>
+
+        <!-- 轮距标注 -->
+        <line x1="200" y1="260" x2="400" y2="260" stroke="#8090a0" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="300" y="275" fill="#8090a0" text-anchor="middle" font-size="11">轮距 T</text>
+      </svg>
+    </div>
+
+    <p><strong>关键公式</strong>：载荷转移量 = 质量 × 侧向加速度 × 重心高度 ÷ 轮距</p>
+
+    <div class="formula-box">
+      $$\Delta F_z = m \cdot a_y \cdot h_{cg} / T$$
+    </div>
+
+    <p>其中：</p>
+    <ul>
+      <li>$\Delta F_z$：载荷转移量（一个轮子增加/减少的力）</li>
+      <li>$m$：车身质量</li>
+      <li>$a_y$：侧向加速度（转弯的"甩"劲）</li>
+      <li>$h_{cg}$：重心高度</li>
+      <li>$T$：轮距（左右轮之间的距离）</li>
+    </ul>
+
+    <div class="hook teal">
+      <span class="k">记住这个公式</span>
+      <p>载荷转移量与<strong>重心高度成正比</strong>，与<strong>轮距成反比</strong>。这就是为什么赛车要做得低（降低重心），SUV天生操控差（重心高）。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>侧向载荷转移：过弯时发生了什么</h2>
+    <p>过弯时，每个轮子的载荷都在变化。我们用一个具体例子来算：</p>
+
+    <div class="formula-box">
+      假设：车重 1500kg，重心高度 0.5m，轮距 1.6m，侧向加速度 0.8g（约 8m/s²）
+      <br><br>
+      载荷转移量 = 1500 × 0.8 × 9.8 × 0.5 ÷ 1.6 = <strong>3675 N</strong>
+    </div>
+
+    <p>这意味着：过弯时，外侧轮比内侧轮多承受约 <strong>3675N</strong>（相当于 375kg 的重量差）！</p>
+
+    <figure>
+      <svg viewBox="0 0 520 340" role="img" aria-label="侧向载荷转移与侧向加速度关系">
+        <rect x="70" y="40" width="46" height="250" class="band" opacity=".8"/>
+        <line x1="70" y1="90" x2="490" y2="90" class="s-grid"/>
+        <line x1="70" y1="165" x2="490" y2="165" class="s-grid"/>
+        <line x1="70" y1="240" x2="490" y2="240" class="s-grid"/>
+        <line x1="70" y1="30" x2="70" y2="292" class="s-axis"/>
+        <line x1="70" y1="290" x2="496" y2="290" class="s-axis"/>
+        <text x="16" y="60" class="t mut">载荷转移</text><text x="30" y="76" class="t mut">ΔF_z (N)</text>
+        <text x="404" y="312" class="t mut">侧向加速度 a_y (g)</text>
+        <!-- 载荷转移曲线 - 线性 -->
+        <path d="M70,290 L490,70" class="s-curve" stroke-width="2.5"/>
+        <text x="300" y="150" class="t teal">载荷转移 = m·a_y·h/T</text>
+        <text x="300" y="170" class="t acc" style="font-size:11px">（线性关系）</text>
+        <!-- 临界点标记 -->
+        <circle cx="420" cy="100" r="5" fill="#ff4b4b"/>
+        <text x="430" y="95" class="t acc" style="font-size:11px">临界：内侧轮即将离地</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 侧向载荷转移</span> &nbsp;载荷转移量与侧向加速度成<strong>正比</strong>。当加速度足够大时，内侧轮的载荷会趋近于零（即将离地）——这就是翻车的前兆。</figcaption>
+    </figure>
+  </section>
+
+  <section class="adva-section">
+    <h2><span class="idx">03</span>前后轮分配比例：为什么这么重要</h2>
+    <p>到目前为止，我们只说了"外侧轮变重"。但更关键的问题是：<strong>前轮和后轮，各自转移了多少？</strong></p>
+
+    <p>答案取决于<strong>重心的前后位置</strong>（前轴荷比）。</p>
+
+    <div class="formula-box">
+      前轮载荷转移 = 总载荷转移 × 前轴荷比
+      <br>
+      后轮载荷转移 = 总载荷转移 × 后轴荷比
+    </div>
+
+    <p>更精确的公式：</p>
+
+    <div class="formula-box">
+      $$\Delta F_{z,front} = \frac{m \cdot a_y \cdot h_{cg}}{T} \cdot \frac{L_{rear}}{L}$$
+      <br>
+      $$\Delta F_{z,rear} = \frac{m \cdot a_y \cdot h_{cg}}{T} \cdot \frac{L_{front}}{L}$$
+    </div>
+
+    <p>其中 $L_{front}$ 和 $L_{rear}$ 是前后轴到重心的距离。</p>
+
+    <p><strong>这意味着什么？</strong></p>
+
+    <div class="param-grid">
+      <div class="param-card">
+        <h3>前驱车</h3>
+        <p class="desc">重心靠前，前轮承担更多载荷转移 → 前轮更容易饱和 → <strong>推头</strong>倾向</p>
+      </div>
+      <div class="param-card">
+        <h3>后驱车</h3>
+        <p class="desc">重心靠后，后轮承担更多载荷转移 → 后轮更容易饱和 → <strong>甩尾</strong>倾向</p>
+      </div>
+      <div class="param-card">
+        <h3>中置引擎</h3>
+        <p class="desc">重心居中，前后轮载荷转移均衡 → 理论上操控最平衡</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>载荷转移与操控：临界状态</h2>
+    <p>载荷转移的真正影响在于：它改变了每个轮胎的 <strong>Magic Formula 参数</strong>。</p>
+
+    <p>回忆 A1 课的内容：轮胎的峰值力 $D = \mu \cdot F_z$。当外侧轮变重（$F_z$ 增加），它的峰值力增加；但内侧轮变轻（$F_z$ 减少），峰值力减少。</p>
+
+    <div class="formula-box">
+      关键洞察：载荷转移是"零和游戏"
+      <br><br>
+      外侧轮增加的抓地力 < 内侧轮减少的抓地力
+      <br><br>
+      所以：载荷转移越大，总可用抓地力越少！
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 400 300" role="img" aria-label="载荷转移与总抓地力关系">
+        <rect x="70" y="40" width="46" height="200" class="band" opacity=".8"/>
+        <line x1="70" y1="90" x2="380" y2="90" class="s-grid"/>
+        <line x1="70" y1="140" x2="380" y2="140" class="s-grid"/>
+        <line x1="70" y1="190" x2="380" y2="190" class="s-grid"/>
+        <line x1="70" y1="30" x2="70" y2="252" class="s-axis"/>
+        <line x1="70" y1="250" x2="386" y2="250" class="s-axis"/>
+        <text x="16" y="60" class="t mut">总抓地力</text>
+        <text x="250" y="272" class="t mut">载荷转移量</text>
+        <!-- 无转移时的水平线 -->
+        <line x1="70" y1="70" x2="380" y2="70" stroke="#8090a0" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="385" y="65" class="t mut" style="font-size:10px">无转移</text>
+        <!-- 有转移时的下降曲线 -->
+        <path d="M70,70 C150,75 300,120 380,200" class="s-curve" stroke-width="2.5"/>
+        <text x="250" y="150" class="t acc">实际总抓地力</text>
+        <text x="250" y="170" class="t acc" style="font-size:11px">（随转移增加而下降）</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 载荷转移与总抓地力</span> &nbsp;理想情况下（无转移），总抓地力是四个轮子的简单相加。但实际有载荷转移时，由于轮胎的非线性特性，<strong>总抓地力会下降</strong>。转移越大，下降越多。</figcaption>
+    </figure>
+
+    <div class="hook teal">
+      <span class="k">这就是为什么赛车要低</span>
+      <p>降低重心高度 $h_{cg}$，直接减少载荷转移量，让四个轮子更"平等"地工作，总可用抓地力更高。这就是赛车设计的核心逻辑之一。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>调校方法论：怎么"管理"载荷转移</h2>
+    <p>既然载荷转移不可避免，调校的目标就是<strong>管理它</strong>——让它按我们希望的方式分配。</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>调校手段</th>
+          <th>影响</th>
+          <th>效果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>降低重心</td>
+          <td>减少总载荷转移</td>
+          <td>总抓地力增加，操控更稳定</td>
+        </tr>
+        <tr>
+          <td>加宽轮距</td>
+          <td>减少总载荷转移</td>
+          <td>同上，但有空间限制</td>
+        </tr>
+        <tr>
+          <td>调整前后防倾杆</td>
+          <td>改变前后轮载荷转移比例</td>
+          <td>影响不足/过度转向倾向</td>
+        </tr>
+        <tr>
+          <td>调整弹簧硬度</td>
+          <td>影响车身侧倾和载荷转移速度</td>
+          <td>影响瞬态响应</td>
+        </tr>
+        <tr>
+          <td>调整前后轴荷</td>
+          <td>改变前后轮载荷转移分配</td>
+          <td>改变操控平衡</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>防倾杆的原理</strong>：它连接左右轮，当车身侧倾时，它会"拉住"内侧轮，减少载荷转移。前后防倾杆的刚度分配，决定了前后轮各自承担多少载荷转移。</p>
+
+    <ul>
+      <li><strong>前防倾杆更硬</strong>：前轮载荷转移减少 → 前轮抓地力增加 → 推头倾向减少</li>
+      <li><strong>后防倾杆更硬</strong>：后轮载荷转移减少 → 后轮抓地力增加 → 甩尾倾向减少</li>
+    </ul>
+
+    <div class="formula">
+      调校的本质：通过机械手段，重新分配前后轮的载荷转移比例，从而控制车辆的转向特性。
+    </div>
+  </section>
+
+  <section class="adva-section">
+    <h2><span class="idx">06</span>交互仿真入口</h2>
+    <p>理论讲完了，让我们用仿真来"触摸"载荷转移。调整重心高度、轮距、侧向加速度，实时观察四轮载荷如何变化：</p>
+
+    <a href="../sim/load-transfer.html" class="sim-entry">
+      <span class="icon">🚗</span>
+      打开 载荷转移 交互仿真
+      <br><small style="font-weight:400;opacity:0.9">调整重心高度、轮距、侧向加速度，观察四轮载荷的实时变化</small>
+    </a>
+
+    <p style="margin-top:20px;text-align:center;color:var(--muted);font-size:14px">仿真包含：车辆俯视图载荷可视化、前后轮分配比例、与Magic Formula的耦合效果</p>
+  </section>
+
+  <div class="take">
+    <h2>进阶二课一收：你现在掌握的</h2>
+    <ol>
+      <li>载荷转移是过弯时重量重新分配的物理现象，由离心力引起；</li>
+      <li>载荷转移量与重心高度成正比，与轮距成反比；</li>
+      <li>前后轮的载荷转移分配取决于重心的前后位置；</li>
+      <li>载荷转移是"零和游戏"，总可用抓地力会下降；</li>
+      <li>调校的本质是管理载荷转移的分配，控制车辆的转向特性。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 思考题</span>
+    <p>你的前驱车有明显的推头倾向。如果把后防倾杆换得更硬，会发生什么？为什么？</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">进阶 A3 · 瞬态响应：轮胎不是开关</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">轮胎的力不是"瞬间"产生的——侧偏角需要时间建立，力需要时间传递。这个"延迟"如何影响操控？为什么赛车手的"线"看起来那么流畅？</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　进阶课 A2 / 共 5 课</p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a></p>
+  </footer>
+</div>
+<script src="../assets/anim-toggle.js"></script>
+<script src="../assets/chat-widget.js"></script>
+</body>
+</html>

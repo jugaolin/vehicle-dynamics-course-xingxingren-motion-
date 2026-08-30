@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magic Formula 交互仿真</title>
+<meta name="description" content="交互式Magic Formula轮胎模型仿真：调整B、C、D、E参数，实时观察轮胎力学曲线变化。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- KaTeX LaTeX 渲染 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+<style>
+:root {
+  /* 与 style.css 保持一致的颜色变量（深色模式） */
+  --paper: #13161B;
+  --surface: #1B1F26;
+  --ink: #EDE7DA;
+  --muted: #A7AFBC;
+  --faint: #6D7581;
+  --hair: #2A303A;
+  --accent: #EF7440;
+  --teal: #54B7C4;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 34px rgba(0,0,0,.35);
+  --font: "Noto Sans SC", system-ui, sans-serif;
+  --mono: "JetBrains Mono", monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hair);
+}
+
+h1 {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+  font-size: clamp(2.1rem, 6vw, 3.2rem);
+  line-height: 1.16;
+  margin: 0 0 18px;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 1.12rem;
+  margin: 0;
+}
+
+.formula-display {
+  background: var(--surface);
+  border: 2px solid var(--teal);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.formula-display .formula {
+  font-size: 20px;
+  color: var(--teal);
+  margin: 12px 0;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.controls {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.controls h2 {
+  font-size: 16px;
+  color: var(--teal);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.param-group {
+  margin-bottom: 20px;
+}
+
+.param-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.param-name {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.param-value {
+  font-family: var(--mono);
+  color: var(--ink);
+  background: var(--paper);
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.param-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: var(--hair);
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--teal);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.param-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.viz-area {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.viz-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.viz-tab {
+  flex: 1;
+  padding: 10px 16px;
+  background: var(--paper);
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.viz-tab:hover {
+  border-color: var(--teal);
+  color: var(--ink);
+}
+
+.viz-tab.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--paper);
+  font-weight: 500;
+}
+
+canvas {
+  width: 100%;
+  border-radius: 8px;
+  background: var(--paper);
+}
+
+.info-panel {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.info-panel strong {
+  color: var(--teal);
+}
+
+.presets {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hair);
+}
+
+.presets h3 {
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.preset-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: var(--paper);
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  border-color: var(--teal);
+  background: rgba(84,183,196,0.1);
+}
+
+.preset-btn .preset-name {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.preset-btn .preset-params {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+footer {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hair);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+footer a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <p style="margin-bottom:16px"><a href="../advanced/A1-tire-reality.html" style="color:var(--teal)">← 返回课程：进阶 A1 · Magic Formula</a></p>
+    <h1>Magic Formula 交互仿真</h1>
+    <p class="subtitle">调整四个参数，实时观察轮胎力学曲线如何变化</p>
+  </header>
+
+  <div class="formula-display">
+    <div>Pacejka Magic Formula</div>
+    <div class="formula">$$y = D \cdot \sin\left[ C \cdot \arctan\left( B \cdot x - E \cdot \left( B \cdot x - \arctan(B \cdot x) \right) \right) \right]$$</div>
+    <div style="font-size:13px;color:var(--muted)">$x$ = 侧偏角 $\alpha$ 或纵向滑移率 $\kappa$</div>
+  </div>
+
+  <div class="main-grid">
+    <div class="controls">
+      <h2>参数控制</h2>
+
+      <div class="param-group">
+        <div class="param-header">
+          <span class="param-name">B — 刚度因子</span>
+          <span class="param-value" id="bValue">10</span>
+        </div>
+        <div class="param-desc">控制初始斜率，B越大响应越硬</div>
+        <input type="range" id="sliderB" min="5" max="20" step="0.5" value="10">
+        <div class="param-range"><span>5 (软)</span><span>20 (硬)</span></div>
+      </div>
+
+      <div class="param-group">
+        <div class="param-header">
+          <span class="param-name">C — 形状因子</span>
+          <span class="param-value" id="cValue">1.65</span>
+        </div>
+        <div class="param-desc">决定曲线形状，典型值1.65</div>
+        <input type="range" id="sliderC" min="1.0" max="2.5" step="0.05" value="1.65">
+        <div class="param-range"><span>1.0 (平)</span><span>2.5 (尖)</span></div>
+      </div>
+
+      <div class="param-group">
+        <div class="param-header">
+          <span class="param-name">D — 峰值因子</span>
+          <span class="param-value" id="dValue">1.0</span>
+        </div>
+        <div class="param-desc">最大摩擦力 = $\mu \cdot F_z$</div>
+        <input type="range" id="sliderD" min="0.5" max="1.5" step="0.05" value="1.0">
+        <div class="param-range"><span>0.5 (湿地)</span><span>1.5 (热熔胎)</span></div>
+      </div>
+
+      <div class="param-group">
+        <div class="param-header">
+          <span class="param-name">E — 曲率因子</span>
+          <span class="param-value" id="eValue">0.0</span>
+        </div>
+        <div class="param-desc">控制峰值附近的曲率</div>
+        <input type="range" id="sliderE" min="-0.5" max="0.5" step="0.05" value="0.0">
+        <div class="param-range"><span>-0.5 (尖锐)</span><span>0.5 (平缓)</span></div>
+      </div>
+
+      <div class="presets">
+        <h3>典型工况预设</h3>
+        <button class="preset-btn" onclick="setPreset(12, 1.65, 1.0, 0.0)">
+          <div class="preset-name">🏎️ 干地高性能胎</div>
+          <div class="preset-params">B=12, C=1.65, D=1.0, E=0.0</div>
+        </button>
+        <button class="preset-btn" onclick="setPreset(8, 1.65, 0.6, 0.1)">
+          <div class="preset-name">🌧️ 湿地轮胎</div>
+          <div class="preset-params">B=8, C=1.65, D=0.6, E=0.1</div>
+        </button>
+        <button class="preset-btn" onclick="setPreset(15, 1.65, 1.2, -0.2)">
+          <div class="preset-name">🔥 热熔胎（峰值后衰减快）</div>
+          <div class="preset-params">B=15, C=1.65, D=1.2, E=-0.2</div>
+        </button>
+        <button class="preset-btn" onclick="setPreset(6, 1.8, 0.8, 0.3)">
+          <div class="preset-name">🚗 磨损公路胎</div>
+          <div class="preset-params">B=6, C=1.8, D=0.8, E=0.3</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="viz-area">
+      <div class="viz-tabs">
+        <button class="viz-tab active" onclick="switchTab('lateral')">侧偏特性 F_y(α)</button>
+        <button class="viz-tab" onclick="switchTab('longitudinal')">纵向特性 F_x(κ)</button>
+        <button class="viz-tab" onclick="switchTab('friction')">摩擦圆</button>
+      </div>
+
+      <canvas id="mainCanvas" width="800" height="500"></canvas>
+
+      <div class="info-panel" id="infoPanel">
+        <strong>当前工况</strong>：调整左侧参数，曲线会实时更新。鼠标悬停曲线可查看具体数值。
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>进阶课 A1 配套仿真　|　<a href="../advanced/A1-tire-reality.html">← 返回课程</a>　|　<a href="../index.html">首页</a></p>
+    <p style="margin-top:8px">基于 Pacejka Magic Formula 模型，仅供学习参考</p>
+  </footer>
+</div>
+
+<script>
+// Magic Formula 核心计算
+function magicFormula(x, B, C, D, E) {
+  const Bx = B * x;
+  return D * Math.sin(C * Math.atan(Bx - E * (Bx - Math.atan(Bx))));
+}
+
+// 参数状态
+let params = { B: 10, C: 1.65, D: 1.0, E: 0.0 };
+let currentTab = 'lateral';
+
+// Canvas 上下文
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+
+// 初始化滑块事件
+function initSliders() {
+  const sliders = ['B', 'C', 'D', 'E'];
+  sliders.forEach(param => {
+    const slider = document.getElementById(`slider${param}`);
+    const display = document.getElementById(`${param.toLowerCase()}Value`);
+
+    slider.addEventListener('input', () => {
+      params[param] = parseFloat(slider.value);
+      display.textContent = params[param].toFixed(param === 'C' || param === 'E' ? 2 : 1);
+      draw();
+    });
+  });
+}
+
+// 设置预设
+function setPreset(b, c, d, e) {
+  params = { B: b, C: c, D: d, E: e };
+
+  document.getElementById('sliderB').value = b;
+  document.getElementById('sliderC').value = c;
+  document.getElementById('sliderD').value = d;
+  document.getElementById('sliderE').value = e;
+
+  document.getElementById('bValue').textContent = b.toFixed(1);
+  document.getElementById('cValue').textContent = c.toFixed(2);
+  document.getElementById('dValue').textContent = d.toFixed(2);
+  document.getElementById('eValue').textContent = e.toFixed(2);
+
+  draw();
+}
+
+// 切换标签页
+function switchTab(tab) {
+  currentTab = tab;
+
+  document.querySelectorAll('.viz-tab').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  draw();
+}
+
+// 绘制主函数
+function draw() {
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // 高清屏适配
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+
+  const w = rect.width;
+  const h = rect.height;
+
+  // 清空
+  ctx.fillStyle = '#13161B';
+  ctx.fillRect(0, 0, w, h);
+
+  // 绘制边距
+  const margin = { top: 40, right: 40, bottom: 60, left: 70 };
+  const plotW = w - margin.left - margin.right;
+  const plotH = h - margin.top - margin.bottom;
+
+  // 绘制坐标轴
+  drawAxes(margin, plotW, plotH);
+
+  if (currentTab === 'lateral') {
+    drawLateralCurve(margin, plotW, plotH);
+  } else if (currentTab === 'longitudinal') {
+    drawLongitudinalCurve(margin, plotW, plotH);
+  } else {
+    drawFrictionCircle(margin, plotW, plotH);
+  }
+}
+
+// 绘制坐标轴
+function drawAxes(margin, plotW, plotH) {
+  ctx.strokeStyle = '#2A303A';
+  ctx.lineWidth = 1;
+
+  // X轴
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top + plotH);
+  ctx.lineTo(margin.left + plotW, margin.top + plotH);
+  ctx.stroke();
+
+  // Y轴
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, margin.top + plotH);
+  ctx.stroke();
+
+  // 网格线
+  ctx.strokeStyle = '#2A303A';
+  ctx.lineWidth = 0.5;
+
+  for (let i = 1; i < 5; i++) {
+    const x = margin.left + (plotW / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(x, margin.top);
+    ctx.lineTo(x, margin.top + plotH);
+    ctx.stroke();
+  }
+
+  for (let i = 1; i < 4; i++) {
+    const y = margin.top + (plotH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, y);
+    ctx.lineTo(margin.left + plotW, y);
+    ctx.stroke();
+  }
+}
+
+// 绘制侧偏特性曲线
+function drawLateralCurve(margin, plotW, plotH) {
+  const maxX = 20; // 最大侧偏角
+  const maxY = params.D * 1.2; // 最大力的1.2倍
+
+  // 绘制曲线
+  ctx.strokeStyle = '#54B7C4';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+
+  for (let i = 0; i <= 200; i++) {
+    const alpha = (i / 200) * maxX;
+    const Fy = magicFormula(alpha, params.B, params.C, params.D, params.E);
+
+    const x = margin.left + (alpha / maxX) * plotW;
+    const y = margin.top + plotH - (Fy / maxY) * plotH;
+
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+
+  // 绘制峰值标记
+  const peakAlpha = findPeakAlpha();
+  const peakFy = magicFormula(peakAlpha, params.B, params.C, params.D, params.E);
+  const peakX = margin.left + (peakAlpha / maxX) * plotW;
+  const peakY = margin.top + plotH - (peakFy / maxY) * plotH;
+
+  ctx.fillStyle = '#EF7440';
+  ctx.beginPath();
+  ctx.arc(peakX, peakY, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 标注峰值
+  ctx.fillStyle = '#EF7440';
+  ctx.font = '12px JetBrains Mono';
+  ctx.fillText(`峰值: ${peakFy.toFixed(2)}N @ ${peakAlpha.toFixed(1)}°`, peakX + 12, peakY - 8);
+
+  // 标注轴
+  ctx.fillStyle = '#A7AFBC';
+  ctx.font = '13px Noto Sans SC';
+  ctx.textAlign = 'center';
+  ctx.fillText('侧偏角 α (°)', margin.left + plotW / 2, margin.top + plotH + 45);
+
+  ctx.save();
+  ctx.translate(25, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('侧向力 F_y (N)', 0, 0);
+  ctx.restore();
+
+  // 更新信息面板
+  document.getElementById('infoPanel').innerHTML = `
+    <strong>侧偏特性</strong>：当前峰值力 <strong>${peakFy.toFixed(2)}N</strong> 出现在侧偏角 <strong>${peakAlpha.toFixed(1)}°</strong>。
+    初始刚度（斜率）= ${(params.B * params.C * params.D).toFixed(2)} N/°
+  `;
+}
+
+// 查找峰值侧偏角
+function findPeakAlpha() {
+  let peakAlpha = 0;
+  let peakFy = 0;
+
+  for (let alpha = 0; alpha <= 30; alpha += 0.1) {
+    const Fy = magicFormula(alpha, params.B, params.C, params.D, params.E);
+    if (Fy > peakFy) {
+      peakFy = Fy;
+      peakAlpha = alpha;
+    }
+  }
+
+  return peakAlpha;
+}
+
+// 绘制纵向特性曲线
+function drawLongitudinalCurve(margin, plotW, plotH) {
+  const maxX = 0.3; // 最大滑移率
+  const maxY = params.D * 1.2;
+
+  // 绘制曲线
+  ctx.strokeStyle = '#a855f7';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+
+  for (let i = 0; i <= 200; i++) {
+    const kappa = (i / 200) * maxX;
+    const Fx = magicFormula(kappa * 100, params.B * 0.8, params.C, params.D, params.E);
+
+    const x = margin.left + (kappa / maxX) * plotW;
+    const y = margin.top + plotH - (Fx / maxY) * plotH;
+
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+
+  // 标注轴
+  ctx.fillStyle = '#A7AFBC';
+  ctx.font = '13px Noto Sans SC';
+  ctx.textAlign = 'center';
+  ctx.fillText('纵向滑移率 κ', margin.left + plotW / 2, margin.top + plotH + 45);
+
+  ctx.save();
+  ctx.translate(25, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('纵向力 F_x (N)', 0, 0);
+  ctx.restore();
+
+  document.getElementById('infoPanel').innerHTML = `
+    <strong>纵向特性</strong>：驱动/制动时的力-滑移关系。注意滑移率通常在 <strong>10%~20%</strong> 时达到峰值。
+    ABS 系统就是将滑移率控制在这个最优区间。
+  `;
+}
+
+// 绘制摩擦圆
+function drawFrictionCircle(margin, plotW, plotH) {
+  const centerX = margin.left + plotW / 2;
+  const centerY = margin.top + plotH / 2;
+  const radius = Math.min(plotW, plotH) / 2 - 40;
+
+  // 绘制摩擦圆
+  ctx.strokeStyle = '#54B7C4';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // 绘制坐标轴
+  ctx.strokeStyle = '#2A303A';
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+  ctx.moveTo(centerX - radius - 20, centerY);
+  ctx.lineTo(centerX + radius + 20, centerY);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY - radius - 20);
+  ctx.lineTo(centerX, centerY + radius + 20);
+  ctx.stroke();
+
+  // 绘制典型工况点
+  const scenarios = [
+    { name: '纯侧向', Fx: 0, Fy: params.D, color: '#54B7C4' },
+    { name: '纯纵向', Fx: params.D, Fy: 0, color: '#EF7440' },
+    { name: '混合', Fx: params.D * 0.5, Fy: params.D * 0.866, color: '#fbbf24' },
+  ];
+
+  scenarios.forEach(s => {
+    const x = centerX + (s.Fx / params.D) * radius;
+    const y = centerY - (s.Fy / params.D) * radius;
+
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.font = '11px Noto Sans SC';
+    ctx.fillText(s.name, x + 8, y - 8);
+  });
+
+  // 绘制合力矢量
+  const Fx = params.D * 0.5;
+  const Fy = params.D * 0.866;
+  const x = centerX + (Fx / params.D) * radius;
+  const y = centerY - (Fy / params.D) * radius;
+
+  ctx.strokeStyle = '#EDE7DA';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 标注轴
+  ctx.fillStyle = '#A7AFBC';
+  ctx.font = '13px Noto Sans SC';
+  ctx.textAlign = 'center';
+  ctx.fillText('纵向力 F_x →', centerX + radius + 10, centerY + 20);
+
+  ctx.save();
+  ctx.translate(centerX - 20, centerY - radius - 10);
+  ctx.fillText('↑ 侧向力 F_y', 0, 0);
+  ctx.restore();
+
+  // 标注半径
+  ctx.fillStyle = '#54B7C4';
+  ctx.font = '12px JetBrains Mono';
+  ctx.fillText(`μ·F_z = ${params.D.toFixed(2)}`, centerX + radius / 2 + 10, centerY - 10);
+
+  document.getElementById('infoPanel').innerHTML = `
+    <strong>摩擦圆</strong>：合力矢量必须始终在圆内。<br>
+    <strong>纯侧向</strong>: ${params.D.toFixed(2)}N &nbsp;|&nbsp;
+    <strong>纯纵向</strong>: ${params.D.toFixed(2)}N &nbsp;|&nbsp;
+    <strong>合力上限</strong>: ${params.D.toFixed(2)}N
+  `;
+}
+
+// 鼠标交互
+canvas.addEventListener('mousemove', (e) => {
+  if (currentTab === 'friction') return;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const margin = { left: 70, right: 40, top: 40, bottom: 60 };
+  const plotW = rect.width - margin.left - margin.right;
+
+  if (x < margin.left || x > rect.width - margin.right) return;
+
+  const relX = (x - margin.left) / plotW;
+  let value, force;
+
+  if (currentTab === 'lateral') {
+    value = relX * 20; // 0-20度
+    force = magicFormula(value, params.B, params.C, params.D, params.E);
+    document.getElementById('infoPanel').innerHTML = `
+      <strong>鼠标位置</strong>：α = ${value.toFixed(1)}°, F_y = ${force.toFixed(2)}N
+    `;
+  } else {
+    value = relX * 0.3; // 0-0.3滑移率
+    force = magicFormula(value * 100, params.B * 0.8, params.C, params.D, params.E);
+    document.getElementById('infoPanel').innerHTML = `
+      <strong>鼠标位置</strong>：κ = ${(value * 100).toFixed(1)}%, F_x = ${force.toFixed(2)}N
+    `;
+  }
+});
+
+// 窗口大小改变时重绘
+window.addEventListener('resize', draw);
+
+// 初始化
+initSliders();
+draw();
+</script>
+</body>
+</html>

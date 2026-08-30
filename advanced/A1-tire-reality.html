@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进阶 A1 · Magic Formula：轮胎的真实脾气</title>
+<meta name="description" content="进阶课第一课：深入理解Magic Formula四参数模型、摩擦圆精确表达、实测数据拟合与驾驶应用。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<!-- KaTeX LaTeX 渲染 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+<style>
+/* 进阶课特殊样式 */
+.adva-section {
+  background: linear-gradient(135deg, rgba(0,210,211,0.03) 0%, rgba(255,75,75,0.03) 100%);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+}
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.param-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.param-card h3 {
+  font-family: var(--mono);
+  font-size: 28px;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.param-card .desc {
+  font-size: 14px;
+  color: var(--muted);
+}
+.formula-box {
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+  font-family: var(--mono);
+  font-size: 18px;
+  text-align: center;
+  line-height: 2;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+.data-table th,
+.data-table td {
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.data-table th {
+  background: var(--accent);
+  color: var(--paper);
+}
+.data-table tr:nth-child(even) {
+  background: rgba(0,210,211,0.05);
+}
+.sim-entry {
+  display: block;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  color: var(--paper);
+  text-decoration: none;
+  padding: 24px 32px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.sim-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,210,211,0.3);
+}
+.sim-entry .icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="../framework.html">全书框架</a>
+    <a href="../syllabus.html">课程表</a>
+  </div>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">进阶课 A1 · 轮胎建模</p>
+    <h1>Magic Formula：轮胎的真实脾气</h1>
+    <p class="lede">基础课里我们用"一条曲线"概括了轮胎的侧偏特性。但真要精确预测、仿真、调校，你需要知道这条曲线长什么样——它叫 Magic Formula，是整个汽车动力学仿真的基石。</p>
+    <div class="meta">
+      <span>面向有基础的驾驶者</span><span>约 12 分钟</span><span>KEYWORDS&nbsp;&nbsp;Magic Formula · 四参数 · Pacejka</span>
+    </div>
+
+    <div class="map" aria-label="本课在进阶课的位置">
+      <div class="step here"><span class="n">A1</span>Magic Formula</div>
+      <div class="step"><span class="n">A2</span>载荷转移</div>
+      <div class="step"><span class="n">A3</span>瞬态响应</div>
+      <div class="step"><span class="n">A4</span>热管理</div>
+      <div class="step"><span class="n">A5</span>综合调校</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先回忆一下</span>
+    <p>基础课第 1 课里，我们说过"侧偏角和侧向力成正比，到极限就饱和"。但这条曲线到底是直线+弯折？还是某种特定形状？<strong>答案是：一条优雅的正弦函数组合——Pacejka Magic Formula。</strong></p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>线性模型的局限</h2>
+    <p>基础课的侧偏刚度模型（$F_y = K_y \cdot \alpha$）在小角度时很准，但它有三个致命问题：</p>
+    <ul>
+      <li><strong>无法描述饱和</strong>——真实轮胎在 6°~12° 左右达到峰值，然后力会下降，线性模型只能无限增长</li>
+      <li><strong>无法描述峰值后的滑移</strong>——超过极限后力会衰减，这是失控的物理基础</li>
+      <li><strong>无法统一描述纵向和侧向</strong>——刹车、加速、转弯需要用同一个数学框架</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 520 340" role="img" aria-label="线性模型与Magic Formula对比">
+        <rect x="70" y="40" width="46" height="250" class="band" opacity=".8"/>
+        <line x1="70" y1="90" x2="490" y2="90" class="s-grid"/>
+        <line x1="70" y1="165" x2="490" y2="165" class="s-grid"/>
+        <line x1="70" y1="240" x2="490" y2="240" class="s-grid"/>
+        <line x1="70" y1="30" x2="70" y2="292" class="s-axis"/>
+        <line x1="70" y1="290" x2="496" y2="290" class="s-axis"/>
+        <text x="16" y="60" class="t mut">侧向力</text><text x="30" y="76" class="t mut">F_y</text>
+        <text x="404" y="312" class="t mut">侧偏角 α (°)</text>
+        <!-- 线性模型 - 红色虚线 -->
+        <line x1="70" y1="290" x2="420" y2="40" stroke="var(--accent)" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+        <text x="425" y="50" class="t acc" style="font-size:12px">线性模型 (无限增长)</text>
+        <!-- Magic Formula - 青色实线 -->
+        <path d="M70,290 C120,200 180,100 240,75 C300,55 360,60 490,90" class="s-curve" stroke-width="3"/>
+        <text x="360" y="50" class="t teal" style="font-size:12px">Magic Formula</text>
+        <!-- 峰值标记 -->
+        <circle cx="240" cy="75" r="5" fill="var(--teal)"/>
+        <text x="250" y="65" class="t teal">峰值 F_y_max</text>
+        <!-- 峰值后下降 -->
+        <text x="320" y="100" class="t muted" style="font-size:11px">峰值后衰减</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 线性模型 vs Magic Formula</span> &nbsp;线性模型（红色虚线）只能描述小角度的线性关系，一旦超过极限就"飞上天"。Magic Formula（青色实线）精确描述了从线性区、到饱和、再到峰值后衰减的完整过程。</figcaption>
+    </figure>
+  </section>
+
+  <section class="adva-section">
+    <h2><span class="idx">02</span>Magic Formula 四参数</h2>
+    <p>Pacejka 教授在 1980 年代提出了这个模型，用<strong>四个参数</strong>就能完整描述轮胎的力学特性。公式长这样：</p>
+
+    <div class="formula-box">
+      $$y = D \cdot \sin\left[ C \cdot \arctan\left( B \cdot x - E \cdot \left( B \cdot x - \arctan(B \cdot x) \right) \right) \right]$$
+    </div>
+
+    <p>别被数学吓到，我们用"厨师调味"来理解每个参数：</p>
+
+    <div class="param-grid">
+      <div class="param-card">
+        <h3>B</h3>
+        <p class="desc"><strong>刚度因子</strong><br>控制曲线初始上升有多陡——轮胎"多硬"。B 越大，小角度下力增长越快。</p>
+      </div>
+      <div class="param-card">
+        <h3>C</h3>
+        <p class="desc"><strong>形状因子</strong><br>决定曲线是"尖峰"还是"平顶"。C=1.65 是典型侧向力，C=1.65 也是纵向力。</p>
+      </div>
+      <div class="param-card">
+        <h3>D</h3>
+        <p class="desc"><strong>峰值因子</strong><br>曲线能达到的最大值 = $\mu \cdot F_z$（摩擦系数×垂直载荷）。这就是抓地力的天花板。</p>
+      </div>
+      <div class="param-card">
+        <h3>E</h3>
+        <p class="desc"><strong>曲率因子</strong><br>控制峰值附近有多"尖"或多"平"，以及峰值后的衰减速度。</p>
+      </div>
+    </div>
+
+    <p><strong>关键洞察</strong>：这四个参数不是随便凑的，它们都有明确的物理意义。调整任何一个，都能对应到轮胎的某个真实特性。</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>摩擦圆的精确表达</h2>
+    <p>基础课的摩擦圆是"一个圆"。但在 Magic Formula 里，纵向力和侧向力的耦合是这样的：</p>
+
+    <div class="formula-box">
+      $$F_{total} = \sqrt{F_x^2 + F_y^2} \leq \mu \cdot F_z$$
+    </div>
+
+    <p>当纵向力 $F_x$ 增加时，可用于侧向的力会减少。精确的耦合关系是：</p>
+
+    <div class="formula-box">
+      $$F_y = \sqrt{(\mu \cdot F_z)^2 - F_x^2} - F_{y\_from\_slip}$$
+    </div>
+
+    <p>这意味着：</p>
+    <ul>
+      <li><strong>纯侧向</strong>（$F_x=0$）：侧向力达到最大值 $D = \mu \cdot F_z$</li>
+      <li><strong>纯纵向</strong>（$F_y=0$）：纵向力达到最大值 $D = \mu \cdot F_z$</li>
+      <li><strong>混合工况</strong>：两者此消彼长，合力始终在摩擦圆内</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 400 320" role="img" aria-label="摩擦圆精确表达">
+        <circle cx="200" cy="165" r="120" class="s-teal" stroke-width="2.5"/>
+        <line x1="200" y1="45" x2="200" y2="285" class="s-grid"/>
+        <line x1="80" y1="165" x2="320" y2="165" class="s-grid"/>
+
+        <!-- 纯侧向点 -->
+        <circle cx="200" cy="45" r="6" fill="var(--teal)"/>
+        <text x="210" y="42" class="t teal">纯侧向 F_y_max</text>
+
+        <!-- 纯纵向点 -->
+        <circle cx="320" cy="165" r="6" fill="var(--accent)"/>
+        <text x="326" y="162" class="t acc">纯纵向 F_x_max</text>
+
+        <!-- 混合工况点 -->
+        <circle cx="280" cy="95" r="6" fill="var(--paper)"/>
+        <text x="286" y="92" class="t">混合工况</text>
+        <line x1="200" y1="165" x2="280" y2="95" stroke="var(--paper)" stroke-width="2" stroke-dasharray="4,2"/>
+
+        <!-- 矢量标注 -->
+        <line x1="200" y1="165" x2="280" y2="165" stroke="var(--accent)" stroke-width="2"/>
+        <text x="240" y="180" class="t acc" style="font-size:11px">F_x</text>
+
+        <line x1="280" y1="165" x2="280" y2="95" stroke="var(--teal)" stroke-width="2"/>
+        <text x="286" y="130" class="t teal" style="font-size:11px">F_y</text>
+
+        <text x="160" y="300" class="t teal">μ·F_z = 摩擦圆半径</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 摩擦圆精确表达</span> &nbsp;合力矢量必须始终在圆内。当纵向力增加（F_x），可用于侧向的力（F_y）就会减少。这就是为什么"边刹车边转弯"需要精细控制。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>实测数据：真实轮胎长什么样</h2>
+    <p>理论很好，但真实轮胎的 Magic Formula 参数从哪来？答案是：<strong>轮胎测力机实验</strong>。</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>参数</th>
+          <th>典型值范围</th>
+          <th>物理意义</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>B (刚度)</td>
+          <td>8 ~ 15</td>
+          <td>初始侧偏刚度，与胎压、结构相关</td>
+        </tr>
+        <tr>
+          <td>C (形状)</td>
+          <td>1.5 ~ 1.8</td>
+          <td>侧向力 C≈1.65，纵向力 C≈1.65</td>
+        </tr>
+        <tr>
+          <td>D (峰值)</td>
+          <td>μ · F_z</td>
+          <td>最大摩擦力，干地 μ≈1.0，湿地 μ≈0.6</td>
+        </tr>
+        <tr>
+          <td>E (曲率)</td>
+          <td>-0.5 ~ 0.5</td>
+          <td>峰值附近的曲率，影响衰减特性</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hook teal">
+      <span class="k">一个有趣的事实</span>
+      <p>同一条轮胎，在不同垂直载荷下，Magic Formula 参数会变化。这就是为什么"载荷转移"对操控影响巨大——它不仅改变了 D（峰值），还改变了 B（刚度）和 E（曲率）。我们在下一课详细展开。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>驾驶应用：从公式到方向盘</h2>
+    <p>知道了 Magic Formula，对驾驶有什么实际意义？</p>
+
+    <ul>
+      <li><strong>理解轮胎温度</strong>：温度影响橡胶摩擦系数 μ，直接改变 D 值。冷胎和热胎的抓地力天差地别。</li>
+      <li><strong>理解胎压</strong>：胎压影响接触面积和刚度 B。胎压过高，接触面积小，峰值 D 下降；胎压过低，响应变慢，B 减小。</li>
+      <li><strong>理解磨损</strong>：磨损改变橡胶特性，C 和 E 会变化，导致峰值后衰减特性改变。</li>
+      <li><strong>理解赛道选择</strong>：不同赛道对轮胎的要求不同——高速弯需要高 B（硬胎），低速弯需要高 D（软胎）。</li>
+    </ul>
+
+    <div class="formula">
+      驾驶员的终极目标：让轮胎工作在 Magic Formula 曲线的峰值附近，而不是超过它。
+    </div>
+
+    <p>这就是为什么专业车手的"线"看起来那么流畅——他们精确地在抓地力极限边缘游走，既不过早（浪费抓地力），也不过晚（失控）。</p>
+  </section>
+
+  <section class="adva-section">
+    <h2><span class="idx">06</span>交互仿真入口</h2>
+    <p>理论讲完了，让我们用仿真来"触摸" Magic Formula。调整四个参数，实时观察曲线如何变化：</p>
+
+    <a href="../sim/magic-formula.html" class="sim-entry">
+      <span class="icon">🎛️</span>
+      打开 Magic Formula 交互仿真
+      <br><small style="font-weight:400;opacity:0.9">调整 B、C、D、E 参数，观察轮胎力学曲线的实时变化</small>
+    </a>
+
+    <p style="margin-top:20px;text-align:center;color:var(--muted);font-size:14px">仿真包含：侧偏特性曲线、摩擦圆可视化、参数敏感性分析、典型工况演示</p>
+  </section>
+
+  <div class="take">
+    <h2>进阶一课一收：你现在掌握的</h2>
+    <ol>
+      <li>线性模型只能描述小角度，真实轮胎需要 Magic Formula 来完整描述；</li>
+      <li>Magic Formula 的四个参数（B、C、D、E）都有明确物理意义：刚度、形状、峰值、曲率；</li>
+      <li>摩擦圆的精确表达：纵向和侧向力此消彼长，合力始终在圆内；</li>
+      <li>轮胎参数来自实测，且会随载荷、温度、胎压、磨损而变化；</li>
+      <li>驾驶的本质是让轮胎工作在 Magic Formula 曲线的峰值附近。</li>
+    </ol>
+  </div>
+
+  <div class="quiz">
+    <span class="k">🚗 思考题</span>
+    <p>你换了一套新轮胎（更软的配方），感觉小角度转向更灵敏了（B 增大），但极限后衰减更快了（E 变化）。用 Magic Formula 的语言解释这个现象。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">进阶 A2 · 载荷转移：四轮的博弈</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">为什么过弯时外侧轮更"吃力"？载荷转移如何改变每个轮胎的 Magic Formula 参数？前后轮的载荷转移分配为什么如此关键？</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　进阶课 A1 / 共 5 课</p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a></p>
+  </footer>
+</div>
+<script src="../assets/anim-toggle.js"></script>
+<script src="../assets/chat-widget.js"></script>
+</body>
+</html>
