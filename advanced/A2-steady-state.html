@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进阶 A2 · 稳态不是一条线</title>
+<meta name="description" content="进阶课第二课：深入理解稳态增益随速度变化的完整曲线、US/OS转换点、转向特性的速度依赖性。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../">首页</a>
+    <a href="../lessons/">零基础课程</a>
+    <a href="index.html" style="color:var(--teal)">进阶课程</a>
+    <span style="color:var(--muted)">|</span>
+    <a href="A1-tire-reality.html" style="color:var(--teal)">A1</a>
+    <a href="A2-steady-state.html" style="color:var(--teal);font-weight:700">A2</a>
+  </div>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow" style="color:var(--teal)">进阶课 A2 · 稳态响应深度</p>
+    <h1>稳态不是一条线</h1>
+    <p class="lede">零基础课里，我们说"低速转向不足、高速转向过度"，这听起来像是一个简单的线性关系。但真实情况是：稳态增益是一条<strong>非单调曲线</strong>，US/OS转换点藏在某个速度上，而且不同工况下这个点会移动。今天要彻底搞清楚"稳态到底怎么变"。</p>
+    <div class="meta">
+      <span>面向有基础的驾驶者</span><span>约 30 分钟</span><span>KEYWORDS&nbsp;&nbsp;稳态增益 · US/OS转换 · 速度依赖性 · 工程边界</span>
+    </div>
+
+    <div class="map" aria-label="本课在进阶课的位置">
+      <div class="step here"><span class="n">A2</span>稳态深度</div>
+      <div class="step"><span class="n">A3</span>瞬态响应</div>
+      <div class="step"><span class="n">A4</span>相平面</div>
+      <div class="step"><span class="n">A5</span>非线性区</div>
+      <div class="step"><span class="n">A6</span>极限边界</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先回忆一下</span>
+    <p>零基础课第 2 课，我们说过"不足转向系数K越大，转向越迟钝"。但K是一个常数吗？如果K本身随速度变化呢？如果在某个速度下K=0（中性转向），而在另一个速度下K<0（转向过度）呢？<strong>这就是今天要解决的问题。</strong></p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>稳态增益的完整曲线</h2>
+    <p>零基础课的公式 $\beta/V = L/R - m/(C_r \cdot L)$ 只是<strong>低速近似</strong>。完整的侧偏角增益公式是：</p>
+
+    <div style="background:var(--surface);border:2px solid var(--teal);border-radius:12px;padding:24px;margin:24px 0">
+      <h3 style="color:var(--teal);margin:0 0 16px">完整稳态增益公式</h3>
+      <p style="margin:0 0 12px;font-family:JetBrains Mono;font-size:16px">$$\frac{\delta}{R} = \frac{L}{R} + K \cdot V^2$$</p>
+      <p style="margin:0;color:var(--muted);font-size:14px">其中 $K = \frac{m}{L^2} \left( \frac{a}{C_r} - \frac{b}{C_f} \right)$ 是不足转向梯度</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 600 350" role="img" aria-label="稳态增益随速度变化曲线">
+        <rect x="0" y="0" width="600" height="350" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">稳态增益随速度变化</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="300" x2="560" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="300" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 网格 -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="60" x2="560" y2="60" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- 不足转向曲线 (US) -->
+        <path d="M80,260 C180,230 280,180 400,120 C480,90 540,75 560,70" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="480" y="60" fill="#54B7C4" font-size="12" font-weight="bold">不足转向 (US)</text>
+
+        <!-- 中性转向曲线 (Neutral) -->
+        <line x1="80" y1="260" x2="560" y2="80" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="520" y="75" fill="var(--muted)" font-size="11">中性转向</text>
+
+        <!-- 过度转向曲线 (OS) -->
+        <path d="M80,260 C180,270 280,290 400,320 C480,340 540,350 560,355" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="480" y="340" fill="#EF7440" font-size="12" font-weight="bold">过度转向 (OS)</text>
+
+        <!-- US/OS转换点 -->
+        <circle cx="320" cy="170" r="6" fill="#FBBF24"/>
+        <text x="330" y="165" fill="#FBBF24" font-size="11" font-weight="bold">转换点 V_c</text>
+
+        <!-- 速度标注 -->
+        <text x="120" y="315" fill="var(--muted)" font-size="10">低速</text>
+        <text x="300" y="315" fill="var(--muted)" font-size="10" text-anchor="middle">中速</text>
+        <text x="520" y="315" fill="var(--muted)" font-size="10">高速</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="340" fill="var(--muted)" font-size="12" text-anchor="middle">速度 V</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">稳态增益 δ/R</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 稳态增益曲线</span> &nbsp;不足转向（US）的增益随速度增加而<strong>减速上升</strong>；过度转向（OS）的增益随速度增加而<strong>加速上升</strong>。中性转向是一条直线。关键：存在一个<strong>转换速度 V_c</strong>，在这个速度下，车辆从中性转向变为转向过度。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>US/OS 转换点：隐藏的临界速度</h2>
+    <p>很多车在低速时是不足转向，但到了高速会变成<strong>转向过度</strong>。这个转换发生在某个临界速度 $V_c$：</p>
+
+    <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:24px;margin:24px 0">
+      <h3 style="color:var(--accent);margin:0 0 16px">临界速度公式</h3>
+      <p style="margin:0 0 12px;font-family:JetBrains Mono;font-size:16px">$$V_c = \sqrt{\frac{L^2 \cdot C_f \cdot C_r}{m \cdot (a \cdot C_f - b \cdot C_r)}}$$</p>
+      <p style="margin:0;color:var(--muted);font-size:14px">当 $V < V_c$ 时：不足转向；当 $V > V_c$ 时：转向过度</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="不同工况下的转换速度">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">不同工况下的US/OS转换速度</text>
+
+        <!-- 转换速度线 -->
+        <line x1="100" y1="80" x2="500" y2="80" stroke="#54B7C4" stroke-width="3"/>
+        <text x="100" y="70" fill="#54B7C4" font-size="11">干地 V_c = 180 km/h</text>
+
+        <line x1="100" y1="140" x2="500" y2="140" stroke="#EF7440" stroke-width="3"/>
+        <text x="100" y="130" fill="#EF7440" font-size="11">湿地 V_c = 120 km/h</text>
+
+        <line x1="100" y1="200" x2="500" y2="200" stroke="#A855F7" stroke-width="3"/>
+        <text x="100" y="190" fill="#A855F7" font-size="11">磨损胎 V_c = 150 km/h</text>
+
+        <line x1="100" y1="260" x2="500" y2="260" stroke="#FBBF24" stroke-width="3"/>
+        <text x="100" y="250" fill="#FBBF24" font-size="11">重载 V_c = 140 km/h</text>
+
+        <!-- 区域标注 -->
+        <rect x="100" y="300" width="300" height="80" fill="#54B7C4" opacity="0.1" rx="4"/>
+        <text x="250" y="340" fill="#54B7C4" font-size="12" text-anchor="middle" font-weight="bold">不足转向区</text>
+
+        <rect x="400" y="300" width="100" height="80" fill="#EF7440" opacity="0.1" rx="4"/>
+        <text x="450" y="340" fill="#EF7440" font-size="12" text-anchor="middle" font-weight="bold">过度转向区</text>
+
+        <!-- 速度轴 -->
+        <line x1="100" y1="300" x2="500" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <text x="100" y="315" fill="var(--muted)" font-size="10">0</text>
+        <text x="250" y="315" fill="var(--muted)" font-size="10" text-anchor="middle">100</text>
+        <text x="400" y="315" fill="var(--muted)" font-size="10" text-anchor="middle">200</text>
+        <text x="500" y="315" fill="var(--muted)" font-size="10">300 km/h</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 不同工况的转换速度</span> &nbsp;湿地、磨损胎、重载都会<strong>降低转换速度</strong>，意味着车辆更早进入转向过度区。这就是为什么雨天高速驾驶更危险——车辆的稳定裕度变小了。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>转向特性的速度依赖性</h2>
+    <p>同一辆车，在不同速度下可以表现出完全不同的转向特性。这不是"调校问题"，而是物理规律：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="前后轮侧偏角随速度变化">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">前后轮侧偏角随速度变化</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="320" x2="560" y2="320" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="320" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 零线 -->
+        <line x1="80" y1="200" x2="560" y2="200" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="70" y="205" fill="var(--muted)" font-size="10" text-anchor="end">α_f = α_r</text>
+
+        <!-- 前轮侧偏角 -->
+        <path d="M80,160 C180,180 280,200 400,210 C480,215 540,218 560,220" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="560" y="235" fill="#EF7440" font-size="11">α_f (前轮)</text>
+
+        <!-- 后轮侧偏角 -->
+        <path d="M80,240 C180,220 280,200 400,185 C480,175 540,170 560,168" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="560" y="160" fill="#54B7C4" font-size="11">α_r (后轮)</text>
+
+        <!-- 交点标记 -->
+        <circle cx="280" cy="200" r="6" fill="#FBBF24"/>
+        <text x="290" y="190" fill="#FBBF24" font-size="11">α_f = α_r</text>
+        <text x="290" y="210" fill="#FBBF24" font-size="10">中性转向点</text>
+
+        <!-- 区域标注 -->
+        <rect x="80" y="40" width="200" height="280" fill="#54B7C4" opacity="0.1"/>
+        <text x="180" y="55" fill="#54B7C4" font-size="11" text-anchor="middle">α_f > α_r → 不足转向</text>
+
+        <rect x="280" y="40" width="280" height="280" fill="#EF7440" opacity="0.1"/>
+        <text x="420" y="55" fill="#EF7440" font-size="11" text-anchor="middle">α_f < α_r → 过度转向</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="340" fill="var(--muted)" font-size="12" text-anchor="middle">速度 V</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">侧偏角 α</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 前后轮侧偏角变化</span> &nbsp;低速时前轮侧偏角 α_f 大于后轮 α_r（不足转向）。随着速度增加，后轮侧偏角增长更快，在某个速度下两者相等（中性转向），之后后轮侧偏角超过前轮（过度转向）。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>稳态响应的工程边界</h2>
+    <p>理论上稳态增益可以无限增加，但工程上有<strong>硬边界</strong>：轮胎力饱和。当某个轮胎的侧向力达到 $\mu \cdot F_z$，稳态就不再成立。</p>
+
+    <figure>
+      <svg viewBox="0 0 600 350" role="img" aria-label="稳态响应的工程边界">
+        <rect x="0" y="0" width="600" height="350" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">稳态响应的工程边界</text>
+
+        <!-- 理论曲线 -->
+        <path d="M80,280 C200,220 350,140 500,60" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="510" y="50" fill="var(--muted)" font-size="10">理论值</text>
+
+        <!-- 实际曲线 (饱和) -->
+        <path d="M80,280 C200,230 350,160 450,130 C500,120 540,118 560,117" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="560" y="107" fill="#54B7C4" font-size="11" font-weight="bold">实际值</text>
+
+        <!-- 饱和线 -->
+        <line x1="80" y1="117" x2="560" y2="117" stroke="#EF7440" stroke-width="2" stroke-dasharray="8,4"/>
+        <text x="90" y="110" fill="#EF7440" font-size="10">轮胎力饱和</text>
+
+        <!-- 区域标注 -->
+        <rect x="80" y="120" width="480" height="200" fill="#54B7C4" opacity="0.1" rx="4"/>
+        <text x="320" y="290" fill="#54B7C4" font-size="12" text-anchor="middle">稳态可实现区</text>
+
+        <rect x="80" y="40" width="480" height="77" fill="#EF7440" opacity="0.1" rx="4"/>
+        <text x="320" y="85" fill="#EF7440" font-size="12" text-anchor="middle">稳态不可实现区（需要更高速度才能达到）</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="340" fill="var(--muted)" font-size="12" text-anchor="middle">速度 V</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">稳态增益 δ/R</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 稳态响应的工程边界</span> &nbsp;理论增益可以无限增加（灰色虚线），但实际增益在某个速度后趋于饱和（青色实线）。这是因为轮胎力达到极限 $\mu \cdot F_z$，无法提供更多侧向力。在这个速度以上，车辆<strong>无法维持稳态转弯</strong>。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>真实场景分析：高速弯的极限</h2>
+    <p>理解了稳态的工程边界，我们来分析一个真实场景：高速公路匝道弯道。</p>
+
+    <div style="background:var(--surface);border:2px solid var(--teal);border-radius:12px;padding:24px;margin:24px 0">
+      <h3 style="color:var(--teal);margin:0 0 16px">场景：高速公路匝道（半径 R=200m）</h3>
+      <ul style="margin:0;padding-left:20px;line-height:2">
+        <li>干地：$\mu = 1.0$，极限速度 $V_{max} = \sqrt{\mu \cdot g \cdot R} = \sqrt{1.0 \times 9.8 \times 200} = 44.3$ m/s ≈ 159 km/h</li>
+        <li>湿地：$\mu = 0.6$，极限速度 $V_{max} = \sqrt{0.6 \times 9.8 \times 200} = 34.3$ m/s ≈ 123 km/h</li>
+        <li>结论：湿地下降<strong>36%</strong>！匝道限速80km/h是保守的，但很多车在湿地下超速驾驶</li>
+      </ul>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 600 300" role="img" aria-label="不同路面的极限速度对比">
+        <rect x="0" y="0" width="600" height="300" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">不同路面的极限速度（R=200m）</text>
+
+        <!-- 干地 -->
+        <rect x="100" y="60" width="400" height="50" fill="#54B7C4" rx="4"/>
+        <text x="110" y="90" fill="var(--paper)" font-size="12" font-weight="bold">干地 μ=1.0</text>
+        <text x="490" y="90" fill="var(--paper)" font-size="14" text-anchor="end" font-weight="bold">159 km/h</text>
+
+        <!-- 湿地 -->
+        <rect x="100" y="130" width="300" height="50" fill="#EF7440" rx="4"/>
+        <text x="110" y="160" fill="var(--paper)" font-size="12" font-weight="bold">湿地 μ=0.6</text>
+        <text x="390" y="160" fill="var(--paper)" font-size="14" text-anchor="end" font-weight="bold">123 km/h</text>
+
+        <!-- 积雪 -->
+        <rect x="100" y="200" width="180" height="50" fill="#A855F7" rx="4"/>
+        <text x="110" y="230" fill="var(--paper)" font-size="12" font-weight="bold">积雪 μ=0.3</text>
+        <text x="270" y="230" fill="var(--paper)" font-size="14" text-anchor="end" font-weight="bold">87 km/h</text>
+
+        <!-- 冰面 -->
+        <rect x="100" y="270" width="120" height="30" fill="#FBBF24" rx="4"/>
+        <text x="110" y="290" fill="var(--ink)" font-size="10" font-weight="bold">冰面 μ=0.1</text>
+        <text x="210" y="290" fill="var(--ink)" font-size="10" text-anchor="end" font-weight="bold">50 km/h</text>
+      </svg>
+      <figcaption><span class="figtag">图 5 · 不同路面的极限速度</span> &nbsp;同样的弯道，路面条件从干地变为冰面，极限速度下降<strong>69%</strong>。这就是为什么冬季轮胎和雪地驾驶如此重要。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">06</span>交互仿真入口</h2>
+    <p>理论讲完了，让我们用仿真来"触摸"稳态增益。调整参数，实时观察增益曲线如何变化：</p>
+
+    <a href="../sim/steady-state.html" style="display:block;background:linear-gradient(135deg,var(--teal),var(--accent));color:var(--paper);text-decoration:none;padding:32px;border-radius:12px;text-align:center;font-size:18px;font-weight:700;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(84,183,196,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-size:32px;margin-bottom:8px">🎛️</div>
+      打开稳态响应交互仿真
+      <div style="font-weight:400;opacity:0.9;font-size:14px;margin-top:8px">调整质量、轴距、侧偏刚度、摩擦系数等参数，观察稳态增益曲线</div>
+    </a>
+  </section>
+
+  <div style="background:var(--teal-soft);border-radius:12px;padding:24px;margin:32px 0">
+    <h2 style="color:var(--teal);margin:0 0 16px">进阶一课一收：你现在掌握的</h2>
+    <ol style="margin:0;padding-left:20px;line-height:2">
+      <li>稳态增益不是常数，而是随速度变化的非单调曲线；</li>
+      <li>US/OS转换点藏在临界速度 $V_c$，不同工况下这个点会移动；</li>
+      <li>同一辆车在不同速度下可以表现出完全不同的转向特性；</li>
+      <li>稳态响应有工程边界：轮胎力饱和后，稳态不再成立；</li>
+      <li>路面条件大幅改变极限速度，湿地下降30-40%，冰面下降70%。</li>
+    </ol>
+  </div>
+
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:20px;margin:24px 0">
+    <h3 style="color:var(--accent);margin:0 0 12px">🚗 思考题</h3>
+    <p style="margin:0">你的车在高速时感觉"发飘"（转向过度倾向），但低速时很正常。用稳态增益曲线解释这个现象，并提出两种可能的解决方案。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">进阶 A3 · 瞬态的致命延迟</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">为什么打方向盘后，车不是立刻转向？相位滞后如何导致"人车不同步"？为什么0.1秒的延迟在高速时是致命的？</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　进阶课 A2 / 共 8 课</p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../">← 回首页</a></p>
+  </footer>
+</div>
+<script src="../assets/anim-toggle.js"></script>
+<script src="../assets/chat-widget.js"></script>
+</body>
+</html>

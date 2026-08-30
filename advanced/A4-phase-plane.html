@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进阶 A4 · 相平面：读懂车的状态</title>
+<meta name="description" content="进阶课第四课：深入理解β-r相平面、稳定区域边界、极限环、相轨迹分析方法。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../">首页</a>
+    <a href="../lessons/">零基础课程</a>
+    <a href="index.html" style="color:var(--teal)">进阶课程</a>
+    <span style="color:var(--muted)">|</span>
+    <a href="A3-transient.html" style="color:var(--teal)">A3</a>
+    <a href="A4-phase-plane.html" style="color:var(--teal);font-weight:700">A4</a>
+  </div>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow" style="color:var(--teal)">进阶课 A4 · 状态空间分析</p>
+    <h1>相平面：读懂车的状态</h1>
+    <p class="lede">前几课我们用"曲线"描述车辆行为。但有一种更强大的工具：<strong>相平面</strong>。它能让你"一眼"看出车是在稳态转弯、还是濒临失控。今天要学会"读"相平面图。</p>
+    <div class="meta">
+      <span>面向有基础的驾驶者</span><span>约 30 分钟</span><span>KEYWORDS&nbsp;&nbsp;β-r相平面 · 稳定区域 · 极限环 · 相轨迹</span>
+    </div>
+
+    <div class="map" aria-label="本课在进阶课的位置">
+      <div class="step here"><span class="n">A4</span>相平面</div>
+      <div class="step"><span class="n">A5</span>非线性区</div>
+      <div class="step"><span class="n">A6</span>极限边界</div>
+      <div class="step"><span class="n">A7</span>过了极限</div>
+      <div class="step"><span class="n">A8</span>工程实践</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先回忆一下</span>
+    <p>零基础课里，我们用"不足转向/过度转向"来描述车辆状态。但这些是<strong>稳态概念</strong>。在瞬态过程中，车辆的状态是"动态变化"的——侧偏角 β 和横摆角速度 r 随时间变化。相平面就是描述这种动态变化的工具。</p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>什么是相平面</h2>
+    <p>相平面是用两个状态变量（侧偏角 β 和横摆角速度 r）作为坐标轴，画出车辆状态随时间变化的轨迹。每个点代表车辆的"瞬间状态"：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="β-r相平面基本结构">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">β-r 相平面</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="200" x2="560" y2="200" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="300" y1="40" x2="300" y2="380" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 稳定区域 -->
+        <ellipse cx="300" cy="200" rx="150" ry="100" fill="#54B7C4" opacity="0.2" stroke="#54B7C4" stroke-width="2"/>
+        <text x="300" y="205" fill="#54B7C4" font-size="12" text-anchor="middle" font-weight="bold">稳定区域</text>
+
+        <!-- 不稳定区域 -->
+        <rect x="80" y="40" width="480" height="340" fill="#EF7440" opacity="0.05" rx="4"/>
+        <text x="540" y="60" fill="#EF7440" font-size="10">不稳定区</text>
+
+        <!-- 稳态转弯点 -->
+        <circle cx="380" cy="180" r="6" fill="#FBBF24"/>
+        <text x="395" y="175" fill="#FBBF24" font-size="11">稳态转弯</text>
+
+        <!-- 相轨迹示例 -->
+        <path d="M300,200 C320,190 350,185 380,180" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <text x="350" y="195" fill="var(--ink)" font-size="10">正常转弯</text>
+
+        <!-- 失控轨迹 -->
+        <path d="M300,200 C320,180 360,150 420,100 C480,60 540,50 560,45" fill="none" stroke="#EF7440" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="480" y="55" fill="#EF7440" font-size="10">甩尾失控</text>
+
+        <!-- 轴标签 -->
+        <text x="560" y="195" fill="var(--muted)" font-size="12">β (侧偏角)</text>
+        <text x="305" y="50" fill="var(--muted)" font-size="12">r (横摆角速度)</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · β-r 相平面</span> &nbsp;横轴是侧偏角 β，纵轴是横摆角速度 r。青色椭圆是<strong>稳定区域</strong>：只要状态点在这个区域内，车辆就是稳定的。红色区域是不稳定区：状态点一旦离开稳定区域，车辆就会失控。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>稳定区域边界</h2>
+    <p>稳定区域的边界不是任意画的，它由<strong>轮胎力饱和</strong>决定。当某个轮胎的侧向力达到 $\mu \cdot F_z$，边界就出现了：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="不同路面的稳定区域">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">不同路面的稳定区域</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="200" x2="560" y2="200" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="300" y1="40" x2="300" y2="380" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 干地稳定区域 -->
+        <ellipse cx="300" cy="200" rx="180" ry="120" fill="#54B7C4" opacity="0.15" stroke="#54B7C4" stroke-width="2"/>
+        <text x="480" y="200" fill="#54B7C4" font-size="11">干地 μ=1.0</text>
+
+        <!-- 湿地稳定区域 -->
+        <ellipse cx="300" cy="200" rx="120" ry="80" fill="#EF7440" opacity="0.15" stroke="#EF7440" stroke-width="2"/>
+        <text x="420" y="200" fill="#EF7440" font-size="11">湿地 μ=0.6</text>
+
+        <!-- 冰面稳定区域 -->
+        <ellipse cx="300" cy="200" rx="60" ry="40" fill="#A855F7" opacity="0.15" stroke="#A855F7" stroke-width="2"/>
+        <text x="360" y="200" fill="#A855F7" font-size="11">冰面 μ=0.1</text>
+
+        <!-- 说明 -->
+        <text x="300" y="380" fill="var(--muted)" font-size="11" text-anchor="middle">路面越滑，稳定区域越小 → 可操控范围越窄</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 不同路面的稳定区域</span> &nbsp;干地（μ=1.0）的稳定区域最大，冰面（μ=0.1）的稳定区域最小。这意味着在冰面上，很小的侧偏角或横摆角速度就能让车辆失控。这就是为什么冬季轮胎和雪地驾驶如此重要。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>极限环：失控的"漩涡"</h2>
+    <p>当车辆进入不稳定区域，状态点不会直线飞走，而是可能进入<strong>极限环</strong>——一个稳定的振荡循环。这就是"甩尾"的力学本质：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="极限环现象">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">极限环：甩尾的力学本质</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="200" x2="560" y2="200" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="300" y1="40" x2="300" y2="380" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 稳定区域 -->
+        <ellipse cx="300" cy="200" rx="100" ry="70" fill="#54B7C4" opacity="0.1" stroke="#54B7C4" stroke-width="1"/>
+        <text x="300" y="205" fill="#54B7C4" font-size="10" text-anchor="middle">稳定区</text>
+
+        <!-- 极限环 -->
+        <ellipse cx="300" cy="200" rx="180" ry="120" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="480" y="200" fill="#EF7440" font-size="11" font-weight="bold">极限环</text>
+
+        <!-- 相轨迹 -->
+        <path d="M300,200 C320,190 340,180 360,170 C400,150 440,140 460,150 C500,170 520,210 500,250 C480,290 440,310 400,300 C360,290 340,270 360,250 C380,230 400,220 420,230" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <text x="460" y="140" fill="var(--ink)" font-size="10">状态轨迹</text>
+
+        <!-- 旋转方向 -->
+        <path d="M450,150 L440,160 L460,160" fill="var(--ink)"/>
+        <text x="450" y="130" fill="var(--ink)" font-size="9">旋转方向</text>
+
+        <!-- 说明 -->
+        <text x="300" y="380" fill="var(--muted)" font-size="11" text-anchor="middle">状态点围绕极限环旋转 → 车辆左右摆动（甩尾）</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 极限环现象</span> &nbsp;当车辆进入不稳定区域，状态点会围绕一个<strong>极限环</strong>旋转。在物理上，这表现为车辆左右摆动（甩尾）。极限环的大小决定了甩尾的幅度。驾驶员需要在状态点回到稳定区域时，及时修正方向盘。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>真实救车动作的相轨迹</h2>
+    <p>专业车手的救车动作，在相平面上有清晰的轨迹。我们来分析"反打方向盘"的救车过程：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="救车动作的相轨迹">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">救车动作的相轨迹</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="200" x2="560" y2="200" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="300" y1="40" x2="300" y2="380" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 稳定区域 -->
+        <ellipse cx="300" cy="200" rx="120" ry="80" fill="#54B7C4" opacity="0.1" stroke="#54B7C4" stroke-width="1"/>
+
+        <!-- 失控轨迹 -->
+        <path d="M300,200 C320,180 360,150 400,120 C440,90 460,80 470,85" fill="none" stroke="#EF7440" stroke-width="2"/>
+        <text x="470" y="75" fill="#EF7440" font-size="10">甩尾开始</text>
+
+        <!-- 救车轨迹 -->
+        <path d="M470,85 C450,100 420,130 400,160 C380,180 350,195 320,200" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="380" y="145" fill="#54B7C4" font-size="10" font-weight="bold">反打方向盘</text>
+
+        <!-- 回到稳定 -->
+        <circle cx="320" cy="200" r="6" fill="#FBBF24"/>
+        <text x="330" y="195" fill="#FBBF24" font-size="10">回到稳定</text>
+
+        <!-- 关键点标注 -->
+        <circle cx="470" cy="85" r="4" fill="#EF7440"/>
+        <text x="480" y="95" fill="#EF7440" font-size="9">1. 识别甩尾</text>
+
+        <circle cx="420" cy="140" r="4" fill="#A855F7"/>
+        <text x="430" y="135" fill="#A855F7" font-size="9">2. 反打方向盘</text>
+
+        <circle cx="350" cy="190" r="4" fill="#FBBF24"/>
+        <text x="360" y="185" fill="#FBBF24" font-size="9">3. 状态回归</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 救车动作的相轨迹</span> &nbsp;救车过程：①识别甩尾（状态点离开稳定区域）→②反打方向盘（状态点开始向稳定区域移动）→③状态回归（状态点回到稳定区域）。关键是<strong>时机</strong>：反打太晚，状态点已经太远，无法拉回。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>相平面的工程应用</h2>
+    <p>相平面不仅是理论工具，它在工程上有广泛应用：</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0">
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">🔧 ESC调校</h3>
+        <p style="margin:0;font-size:14px">电子稳定控制系统（ESC）的核心就是相平面分析。系统实时监测β和r，一旦状态点接近边界，就主动制动某个车轮，把状态点"拉回"稳定区域。</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">🏎️ 赛车调校</h3>
+        <p style="margin:0;font-size:14px">赛车工程师用相平面分析车辆的操控性。通过调整悬架参数，可以改变稳定区域的形状和大小，优化车辆的极限操控性能。</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">📊 数据分析</h3>
+        <p style="margin:0;font-size:14px">实车测试数据可以画成相轨迹，分析车辆在极限工况下的行为。这是评估车辆操控安全性的重要手段。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">06</span>交互仿真入口</h2>
+    <p>理论讲完了，让我们用仿真来"触摸"相平面。调整参数，实时观察相轨迹如何变化：</p>
+
+    <a href="../sim/phase-plane.html" style="display:block;background:linear-gradient(135deg,var(--teal),var(--accent));color:var(--paper);text-decoration:none;padding:32px;border-radius:12px;text-align:center;font-size:18px;font-weight:700;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(84,183,196,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-size:32px;margin-bottom:8px">🎛️</div>
+      打开相平面交互仿真
+      <div style="font-weight:400;opacity:0.9;font-size:14px;margin-top:8px">调整摩擦系数、车速、转向输入等参数，观察相轨迹和稳定区域变化</div>
+    </a>
+  </section>
+
+  <div style="background:var(--teal-soft);border-radius:12px;padding:24px;margin:32px 0">
+    <h2 style="color:var(--teal);margin:0 0 16px">进阶一课一收：你现在掌握的</h2>
+    <ol style="margin:0;padding-left:20px;line-height:2">
+      <li>相平面用β-r坐标描述车辆状态，每个点代表车辆的"瞬间状态"；</li>
+      <li>稳定区域由轮胎力饱和决定，路面越滑区域越小；</li>
+      <li>极限环是失控的"漩涡"，状态点围绕它旋转表现为甩尾；</li>
+      <li>救车动作的相轨迹：识别→反打→回归，关键是时机；</li>
+      <li>相平面是ESC调校、赛车调校、数据分析的核心工具。</li>
+    </ol>
+  </div>
+
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:20px;margin:24px 0">
+    <h3 style="color:var(--accent);margin:0 0 12px">🚗 思考题</h3>
+    <p style="margin:0">你的车在湿滑路面过弯时甩尾，你反打方向盘但车辆仍然失控。用相平面分析可能的原因（提示：考虑反打时机和幅度）。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">进阶 A5 · 非线性区的力学</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">轮胎力饱和后，车辆行为会发生什么变化？侧偏刚度如何"退化"？前后轴力分配的临界点在哪里？</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　进阶课 A4 / 共 8 课</p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../">← 回首页</a></p>
+  </footer>
+</div>
+<script src="../assets/anim-toggle.js"></script>
+<script src="../assets/chat-widget.js"></script>
+</body>
+</html>

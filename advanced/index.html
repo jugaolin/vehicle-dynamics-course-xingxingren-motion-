@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>进阶课程目录 · 星星人讲运动学</title>
-<meta name="description" content="深入理解轮胎建模、载荷管理、瞬态响应等高级主题。">
+<title>进阶课程 · 从线性到极限</title>
+<meta name="description" content="进阶课程：深入理解汽车动力学，从线性近似走向极限操控。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,83 +17,100 @@
   <div class="nav-links">
     <a href="../">首页</a>
     <a href="../lessons/">零基础课程</a>
-    <a href="index.html" class="active" style="color:var(--teal)">进阶课程</a>
+    <a href="index.html" style="color:var(--teal)">进阶课程</a>
   </div>
-  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
 </div></nav>
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow" style="color:var(--teal)">汽车运动性能 · 进阶课程</p>
-    <h1>深入理解:从 Magic Formula 到综合调校</h1>
-    <p class="lede">在零基础课程的基础上,深入学习轮胎数学模型、载荷管理、瞬态响应等高级主题。包含交互式仿真,让你"触摸"每个物理概念。</p>
-    <div class="meta">
-      <span>共 5 课</span><span>每课约 30 分钟</span><span>每课含交互仿真</span><span>更新中</span>
-    </div>
+    <p class="eyebrow" style="color:var(--teal)">进阶课程</p>
+    <h1>从线性到极限</h1>
+    <p class="lede">零基础课用线性近似帮你建立了直觉。进阶课要打破这个舒适区：轮胎不是线性的、稳态会变、瞬态有延迟、极限可以算。8课走完，你能像工程师一样分析车辆行为。</p>
   </header>
 
-  <section>
-    <h2><span class="idx" style="color:var(--teal)">→</span>课程目录</h2>
-    <div class="cards">
-      <a class="card" href="A1-tire-reality.html">
-        <span class="n" style="color:var(--teal)">ADVANCED A1</span>
-        <span class="ti">Magic Formula：轮胎的真实脾气</span>
-        <span class="de">四参数模型 · 摩擦圆精确表达 · 实测数据拟合 · 驾驶应用</span>
-        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">✓ 已更新</span>
-      </a>
-      <a class="card" href="A2-load-transfer.html">
-        <span class="n" style="color:var(--teal)">ADVANCED A2</span>
-        <span class="ti">载荷转移：四轮的博弈</span>
-        <span class="de">前后轮分配 · 重心高度影响 · 调校方法论</span>
-        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">✓ 已更新</span>
-      </a>
-      <a class="card" style="opacity:0.6;pointer-events:none">
-        <span class="n" style="color:var(--teal)">ADVANCED A3</span>
-        <span class="ti">瞬态响应：轮胎不是开关</span>
-        <span class="de">侧偏角建立过程 · 响应延迟 · 赛车手的"线"</span>
-        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
-      </a>
-      <a class="card" style="opacity:0.6;pointer-events:none">
-        <span class="n" style="color:var(--teal)">ADVANCED A4</span>
-        <span class="ti">热管理：温度决定抓地力</span>
-        <span class="de">轮胎温度分布 · 热衰减 · 赛道策略</span>
-        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
-      </a>
-      <a class="card" style="opacity:0.6;pointer-events:none">
-        <span class="n" style="color:var(--teal)">ADVANCED A5</span>
-        <span class="ti">综合调校：参数的艺术</span>
-        <span class="de">整体平衡 · 赛道应用 · 案例分析</span>
-        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">即将推出</span>
-      </a>
-    </div>
-  </section>
+  <div class="toc" style="margin:40px 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
 
-  <section>
-    <h2><span class="idx" style="color:var(--teal)">→</span>与零基础课程的区别</h2>
-    <div class="thesis">
-      <p>进阶课程假设你已经掌握零基础课程的内容（轮胎、二自由度模型、摩擦圆等），在此基础上：</p>
-      <ul style="margin:16px 0;padding-left:24px;list-style:disc">
-        <li>使用<strong>数学公式</strong>（LaTeX渲染）精确描述物理现象</li>
-        <li>每课配套<strong>交互式仿真</strong>，可以调整参数观察效果</li>
-        <li>深入讲解<strong>工程应用</strong>（调校、赛道策略）</li>
-        <li>每课约<strong>30分钟</strong>，内容更深入</li>
-      </ul>
-      <p style="margin:12px 0 0;color:var(--muted);font-size:.95rem">如果还没学过零基础课程，建议先从那里开始。</p>
-    </div>
-  </section>
+      <a href="A1-tire-reality.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A1</span>
+          <span style="font-weight:700;font-size:18px">轮胎的真实面目</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">Magic Formula推导、滑移率-侧偏力耦合、摩擦圆的精确表达、实测数据vs线性近似</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："课本上的Cα是假的"</div>
+      </a>
 
-  <div style="text-align:center;margin:40px 0">
-    <a href="../index.html" style="color:var(--muted);font-size:14px">← 返回首页</a>
-    <span style="margin:0 16px;color:var(--hair)">|</span>
-    <a href="../lessons/index.html" style="color:var(--accent);font-size:14px">零基础课程 →</a>
+      <a href="A2-steady-state.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A2</span>
+          <span style="font-weight:700;font-size:18px">稳态不是一条线</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">稳态增益随V变化的完整曲线、US/OS转换点、转向特性的速度依赖性、稳态响应的工程边界</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："稳态会变"</div>
+      </a>
+
+      <a href="A3-transient.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A3</span>
+          <span style="font-weight:700;font-size:18px">瞬态的致命延迟</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">相位滞后的频域分析、阶跃响应全解读、瞬态稳定性判据、人和车的延迟叠加</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："快0.1秒差距巨大"</div>
+      </a>
+
+      <a href="A4-phase-plane.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A4</span>
+          <span style="font-weight:700;font-size:18px">相平面：读懂车的状态</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">β-r相平面、稳定区域边界、极限环、相轨迹分析方法、真实救车动作的相轨迹</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："一张图看懂失控"</div>
+      </a>
+
+      <a href="A5-nonlinear.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A5</span>
+          <span style="font-weight:700;font-size:18px">非线性区的力学</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">轮胎力饱和后的载荷转移非线性、侧偏刚度退化、前后轴力分配的临界点、不足转向梯度的非线性修正</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："力饱和了车怎么走"</div>
+      </a>
+
+      <a href="A6-limits.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A6</span>
+          <span style="font-weight:700;font-size:18px">极限边界在哪里</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">极限速度的精确计算、摩擦圆边界的几何解释、载荷转移对极限的影响、不同路面的极限对比</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："车的极限可以算"</div>
+      </a>
+
+      <a href="A7-overflow.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A7</span>
+          <span style="font-weight:700;font-size:18px">过了极限怎么办</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">甩尾的力学本质和恢复条件、DYC的理论基础、驾驶人模型在极限区的行为、救车动作的力学分析</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："失控不是结束"</div>
+      </a>
+
+      <a href="A8-practice.html" style="display:block;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:24px;text-decoration:none;color:var(--ink);transition:transform 0.2s,box-shadow 0.2s;border-left:4px solid var(--teal)" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span style="background:var(--teal);color:var(--paper);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">A8</span>
+          <span style="font-weight:700;font-size:18px">真实数据与工程实践</span>
+        </div>
+        <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">实车测试数据解读、GPS/IMU数据分析、调校参数对稳态瞬态的影响、从理论到赛道的桥梁</p>
+        <div style="margin-top:12px;font-size:12px;color:var(--teal)">认知升级："书和现实差多远"</div>
+      </a>
+
+    </div>
   </div>
 
   <footer>
-    <p class="src">星星人 · 讲运动学　|　进阶课程</p>
-    <p>本站为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,<b>不引外部知识、不做扩展</b>。</p>
+    <p class="src">星星人 · 讲运动学　|　进阶课程 / 共 8 课</p>
+    <p><a href="../">← 回首页</a></p>
   </footer>
 </div>
-<script src="../assets/anim-toggle.js"></script>
-<script src="../assets/chat-widget.js"></script>
+
 </body>
 </html>

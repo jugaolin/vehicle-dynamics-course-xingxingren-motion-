@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进阶 A5 · 非线性区的力学</title>
+<meta name="description" content="进阶课第五课：深入理解轮胎力饱和后的载荷转移非线性、侧偏刚度退化、前后轴力分配的临界点。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ]
+  });"></script>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <a class="brand" href="../">星星人<span class="dot">·</span>讲运动学</a>
+  <div class="nav-links">
+    <a href="../">首页</a>
+    <a href="../lessons/">零基础课程</a>
+    <a href="index.html" style="color:var(--teal)">进阶课程</a>
+    <span style="color:var(--muted)">|</span>
+    <a href="A4-phase-plane.html" style="color:var(--teal)">A4</a>
+    <a href="A5-nonlinear.html" style="color:var(--teal);font-weight:700">A5</a>
+  </div>
+  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+</div></nav>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow" style="color:var(--teal)">进阶课 A5 · 非线性力学</p>
+    <h1>非线性区的力学</h1>
+    <p class="lede">前几课我们用线性模型近似。但真实轮胎在大侧偏角时会<strong>饱和</strong>——力不再随角度线性增加。这个"非线性区"才是赛车和极限操控的主战场。今天要搞清楚"力饱和了车怎么走"。</p>
+    <div class="meta">
+      <span>面向有基础的驾驶者</span><span>约 30 分钟</span><span>KEYWORDS&nbsp;&nbsp;力饱和 · 侧偏刚度退化 · 临界点 · 非线性修正</span>
+    </div>
+
+    <div class="map" aria-label="本课在进阶课的位置">
+      <div class="step here"><span class="n">A5</span>非线性区</div>
+      <div class="step"><span class="n">A6</span>极限边界</div>
+      <div class="step"><span class="n">A7</span>过了极限</div>
+      <div class="step"><span class="n">A8</span>工程实践</div>
+    </div>
+  </header>
+
+  <div class="hook">
+    <span class="k">先回忆一下</span>
+    <p>零基础课里，我们说"侧偏角和侧向力成正比，到极限就饱和"。但"饱和"到底是什么意思？当轮胎力饱和后，车辆行为会发生什么变化？为什么赛车手要"管理"轮胎力？<strong>今天要给出精确答案。</strong></p>
+  </div>
+
+  <section>
+    <h2><span class="idx">01</span>轮胎力饱和：从线性到非线性</h2>
+    <p>轮胎力曲线可以分为三个区域：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 350" role="img" aria-label="轮胎力三区域">
+        <rect x="0" y="0" width="600" height="350" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">轮胎力三区域</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="300" x2="560" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="300" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 网格 -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- 线性区 -->
+        <rect x="80" y="40" width="120" height="260" fill="#54B7C4" opacity="0.1"/>
+        <text x="140" y="320" fill="#54B7C4" font-size="11" text-anchor="middle">线性区</text>
+
+        <!-- 过渡区 -->
+        <rect x="200" y="40" width="160" height="260" fill="#FBBF24" opacity="0.1"/>
+        <text x="280" y="320" fill="#FBBF24" font-size="11" text-anchor="middle">过渡区</text>
+
+        <!-- 饱和区 -->
+        <rect x="360" y="40" width="200" height="260" fill="#EF7440" opacity="0.1"/>
+        <text x="460" y="320" fill="#EF7440" font-size="11" text-anchor="middle">饱和区</text>
+
+        <!-- 轮胎力曲线 -->
+        <path d="M80,300 C120,250 160,180 200,140 C240,110 280,100 320,98 C360,96 400,95 440,94 C480,93 520,93 560,93" fill="none" stroke="var(--ink)" stroke-width="3"/>
+
+        <!-- 线性区斜率 -->
+        <line x1="80" y1="300" x2="200" y2="140" stroke="#54B7C4" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="120" y="160" fill="#54B7C4" font-size="10" transform="rotate(-50 120 160)">侧偏刚度 Cα</text>
+
+        <!-- 峰值 -->
+        <circle cx="320" cy="98" r="5" fill="#EF7440"/>
+        <text x="330" y="90" fill="#EF7440" font-size="10">峰值 F_y_max</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="340" fill="var(--muted)" font-size="12" text-anchor="middle">侧偏角 α (°)</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">侧向力 F_y</text>
+      </svg>
+      <figcaption><span class="figtag">图 1 · 轮胎力三区域</span> &nbsp;<strong>线性区</strong>（α<5°）：力与角度成正比，侧偏刚度 Cα 是常数。<strong>过渡区</strong>（5°<α<12°）：力增长减速，Cα 开始下降。<strong>饱和区</strong>（α>12°）：力不再增加，甚至开始下降。赛车主要在<strong>过渡区</strong>工作。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">02</span>侧偏刚度退化：非线性的本质</h2>
+    <p>侧偏刚度 Cα 不是常数，它随侧偏角增加而<strong>退化</strong>。这是非线性的核心：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 350" role="img" aria-label="侧偏刚度退化曲线">
+        <rect x="0" y="0" width="600" height="350" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">侧偏刚度退化</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="300" x2="560" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="300" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 网格 -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- 侧偏刚度曲线 -->
+        <path d="M80,100 C180,110 280,160 400,240 C480,280 540,295 560,300" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="120" y="90" fill="#54B7C4" font-size="12" font-weight="bold">Cα</text>
+
+        <!-- 线性近似 -->
+        <line x1="80" y1="100" x2="560" y2="100" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="500" y="90" fill="var(--muted)" font-size="10">线性近似</text>
+
+        <!-- 区域标注 -->
+        <text x="140" y="320" fill="#54B7C4" font-size="10" text-anchor="middle">Cα ≈ 常数</text>
+        <text x="320" y="320" fill="#FBBF24" font-size="10" text-anchor="middle">Cα 下降</text>
+        <text x="480" y="320" fill="#EF7440" font-size="10" text-anchor="middle">Cα ≈ 0</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="340" fill="var(--muted)" font-size="12" text-anchor="middle">侧偏角 α (°)</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">侧偏刚度 Cα</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · 侧偏刚度退化</span> &nbsp;侧偏刚度 Cα 在小角度时接近常数（线性区），但随着角度增加而<strong>急剧下降</strong>。在饱和区，Cα 接近零——这意味着再增加角度，力也不会增加。这就是为什么赛车手要"管理"轮胎力，避免进入饱和区。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">03</span>载荷转移的非线性</h2>
+    <p>载荷转移在非线性区变得更加复杂。因为轮胎力饱和，外侧轮增加的力<strong>小于</strong>内侧轮减少的力：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="载荷转移的非线性效应">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">载荷转移的非线性效应</text>
+
+        <!-- 线性区 -->
+        <text x="150" y="60" fill="#54B7C4" font-size="12" text-anchor="middle" font-weight="bold">线性区</text>
+        <rect x="50" y="80" width="200" height="120" fill="var(--paper)" rx="4" stroke="var(--hair)" stroke-width="1"/>
+        <text x="150" y="105" fill="var(--ink)" font-size="11" text-anchor="middle">外侧轮：ΔF_y = +100N</text>
+        <text x="150" y="125" fill="var(--ink)" font-size="11" text-anchor="middle">内侧轮：ΔF_y = -100N</text>
+        <text x="150" y="145" fill="#54B7C4" font-size="11" text-anchor="middle" font-weight="bold">净变化：0N</text>
+        <text x="150" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">（完全抵消）</text>
+
+        <!-- 非线性区 -->
+        <text x="450" y="60" fill="#EF7440" font-size="12" text-anchor="middle" font-weight="bold">非线性区</text>
+        <rect x="350" y="80" width="200" height="120" fill="var(--paper)" rx="4" stroke="var(--hair)" stroke-width="1"/>
+        <text x="450" y="105" fill="var(--ink)" font-size="11" text-anchor="middle">外侧轮：ΔF_y = +80N</text>
+        <text x="450" y="125" fill="var(--ink)" font-size="11" text-anchor="middle">内侧轮：ΔF_y = -100N</text>
+        <text x="450" y="145" fill="#EF7440" font-size="11" text-anchor="middle" font-weight="bold">净变化：-20N</text>
+        <text x="450" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">（净损失！）</text>
+
+        <!-- 箭头 -->
+        <path d="M250,140 L340,140" fill="none" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="295" y="130" fill="var(--ink)" font-size="10" text-anchor="middle">非线性</text>
+
+        <!-- 底部说明 -->
+        <rect x="50" y="220" width="500" height="160" fill="var(--paper)" rx="8" stroke="var(--hair)" stroke-width="1"/>
+        <text x="300" y="250" fill="var(--ink)" font-size="12" text-anchor="middle" font-weight="bold">非线性载荷转移的后果：</text>
+        <text x="300" y="280" fill="var(--ink)" font-size="11" text-anchor="middle">• 总侧向力减少 → 弯道极限降低</text>
+        <text x="300" y="305" fill="var(--ink)" font-size="11" text-anchor="middle">• 前后轴力分配改变 → 转向特性变化</text>
+        <text x="300" y="330" fill="var(--ink)" font-size="11" text-anchor="middle">• 载荷转移越大，净损失越大</text>
+        <text x="300" y="355" fill="#EF7440" font-size="11" text-anchor="middle" font-weight="bold">→ 这就是为什么"减少载荷转移"是调校的核心目标</text>
+      </svg>
+      <figcaption><span class="figtag">图 3 · 载荷转移的非线性效应</span> &nbsp;在线性区，外侧轮增加的力完全抵消内侧轮减少的力（净变化为零）。但在非线性区，外侧轮的力已经饱和，增加量小于内侧轮的减少量，导致<strong>总侧向力净损失</strong>。载荷转移越大，这个损失越严重。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">04</span>前后轴力分配的临界点</h2>
+    <p>当前后轴的轮胎力都接近饱和时，车辆进入<strong>临界状态</strong>。这个临界点决定了车辆的极限操控性能：</p>
+
+    <figure>
+      <svg viewBox="0 0 600 400" role="img" aria-label="前后轴力分配临界点">
+        <rect x="0" y="0" width="600" height="400" fill="var(--surface)" rx="8"/>
+
+        <!-- 标题 -->
+        <text x="300" y="25" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">前后轴力分配临界点</text>
+
+        <!-- 前轴力 -->
+        <path d="M80,300 C180,200 280,120 380,100 C440,95 500,93 560,92" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="500" y="80" fill="#EF7440" font-size="12" font-weight="bold">前轴力 F_yf</text>
+
+        <!-- 后轴力 -->
+        <path d="M80,300 C180,220 280,160 380,130 C440,120 500,115 560,112" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="500" y="105" fill="#54B7C4" font-size="12" font-weight="bold">后轴力 F_yr</text>
+
+        <!-- 临界点 -->
+        <line x1="400" y1="40" x2="400" y2="340" stroke="#FBBF24" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="405" y="50" fill="#FBBF24" font-size="11" font-weight="bold">临界点</text>
+
+        <!-- 区域标注 -->
+        <rect x="80" y="40" width="320" height="300" fill="#54B7C4" opacity="0.1"/>
+        <text x="240" y="350" fill="#54B7C4" font-size="11" text-anchor="middle">可操控区</text>
+
+        <rect x="400" y="40" width="160" height="300" fill="#EF7440" opacity="0.1"/>
+        <text x="480" y="350" fill="#EF7440" font-size="11" text-anchor="middle">极限区</text>
+
+        <!-- 说明 -->
+        <text x="300" y="380" fill="var(--muted)" font-size="11" text-anchor="middle">当前轴力先饱和 → 转向不足；当后轴力先饱和 → 转向过度</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 前后轴力分配临界点</span> &nbsp;随着侧偏角增加，前后轴力都趋向饱和。如果<strong>前轴先饱和</strong>，车辆变成转向不足（推头）；如果<strong>后轴先饱和</strong>，车辆变成转向过度（甩尾）。赛车调校的目标是让前后轴<strong>同时达到临界</strong>，最大化总侧向力。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="idx">05</span>真实场景：赛车的轮胎管理</h2>
+    <p>理解了非线性力学，我们来分析赛车手如何"管理"轮胎力：</p>
+
+    <div style="background:var(--surface);border:2px solid var(--teal);border-radius:12px;padding:24px;margin:24px 0">
+      <h3 style="color:var(--teal);margin:0 0 16px">🏎️ 赛车轮胎管理策略</h3>
+      <ul style="margin:0;padding-left:20px;line-height:2">
+        <li><strong>避免饱和</strong>：保持轮胎工作在过渡区，而不是饱和区</li>
+        <li><strong>控制载荷转移</strong>：通过平滑的转向输入，减少瞬态载荷转移</li>
+        <li><strong>温度管理</strong>：轮胎温度影响摩擦系数，进而影响饱和点</li>
+        <li><strong>前后平衡</strong>：调整驾驶风格，让前后轴同时达到极限</li>
+      </ul>
+    </div>
+
+    <div style="background:var(--teal-soft);border-radius:8px;padding:20px;margin:24px 0;text-align:center">
+      <p style="margin:0;font-size:16px;color:var(--teal);font-weight:bold">专业车手不是"开得更快"，而是"管理得更好"——让轮胎始终工作在最佳区域。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">06</span>交互仿真入口</h2>
+    <p>理论讲完了，让我们用仿真来"触摸"非线性区。调整参数，实时观察轮胎力饱和如何影响车辆行为：</p>
+
+    <a href="../sim/nonlinear.html" style="display:block;background:linear-gradient(135deg,var(--teal),var(--accent));color:var(--paper);text-decoration:none;padding:32px;border-radius:12px;text-align:center;font-size:18px;font-weight:700;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(84,183,196,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-size:32px;margin-bottom:8px">🎛️</div>
+      打开非线性区交互仿真
+      <div style="font-weight:400;opacity:0.9;font-size:14px;margin-top:8px">调整侧偏角、载荷转移、摩擦系数等参数，观察轮胎力饱和效应</div>
+    </a>
+  </section>
+
+  <div style="background:var(--teal-soft);border-radius:12px;padding:24px;margin:32px 0">
+    <h2 style="color:var(--teal);margin:0 0 16px">进阶一课一收：你现在掌握的</h2>
+    <ol style="margin:0;padding-left:20px;line-height:2">
+      <li>轮胎力曲线分三区：线性区、过渡区、饱和区，赛车主要在过渡区工作；</li>
+      <li>侧偏刚度 Cα 随角度增加而退化，这是非线性的核心；</li>
+      <li>非线性区的载荷转移导致总侧向力净损失，载荷转移越大损失越大；</li>
+      <li>前后轴力分配的临界点决定转向特性：前轴先饱和→不足，后轴先饱和→过度；</li>
+      <li>赛车手的核心技能是"管理"轮胎力，让它始终工作在最佳区域。</li>
+    </ol>
+  </div>
+
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:20px;margin:24px 0">
+    <h3 style="color:var(--accent);margin:0 0 12px">🚗 思考题</h3>
+    <p style="margin:0">你的车在高速过弯时推头（转向不足），但你不想换轮胎。用非线性力学分析两种可能的解决方案（提示：考虑载荷转移和驾驶风格）。</p>
+  </div>
+
+  <div class="next">
+    <span class="arrow">→</span>
+    <div>
+      <div class="lbl">下一课预告</div>
+      <div class="ti">进阶 A6 · 极限边界在哪里</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">车的极限到底可以算出来吗？摩擦圆边界的几何解释是什么？不同路面对极限的影响有多大？</p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="src">星星人 · 讲运动学　|　进阶课 A5 / 共 8 课</p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../">← 回首页</a></p>
+  </footer>
+</div>
+<script src="../assets/anim-toggle.js"></script>
+<script src="../assets/chat-widget.js"></script>
+</body>
+</html>
