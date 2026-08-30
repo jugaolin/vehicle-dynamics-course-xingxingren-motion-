@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
-<!-- KaTeX LaTeX 渲染 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
@@ -21,89 +20,6 @@
       {left: '\\[', right: '\\]', display: true}
     ]
   });"></script>
-<style>
-/* 进阶课特殊样式 */
-.adva-section {
-  background: linear-gradient(135deg, rgba(0,210,211,0.03) 0%, rgba(255,75,75,0.03) 100%);
-  border-radius: 12px;
-  padding: 32px;
-  margin: 24px 0;
-}
-.param-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin: 20px 0;
-}
-.param-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-}
-.param-card h3 {
-  font-family: var(--mono);
-  font-size: 28px;
-  color: var(--accent);
-  margin: 0 0 8px;
-}
-.param-card .desc {
-  font-size: 14px;
-  color: var(--muted);
-}
-.formula-box {
-  background: var(--bg);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  padding: 24px;
-  margin: 24px 0;
-  font-family: var(--mono);
-  font-size: 18px;
-  text-align: center;
-  line-height: 2;
-}
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 14px;
-}
-.data-table th,
-.data-table td {
-  padding: 12px;
-  border: 1px solid var(--border);
-  text-align: center;
-}
-.data-table th {
-  background: var(--accent);
-  color: var(--paper);
-}
-.data-table tr:nth-child(even) {
-  background: rgba(0,210,211,0.05);
-}
-.sim-entry {
-  display: block;
-  background: linear-gradient(135deg, var(--accent), var(--teal));
-  color: var(--paper);
-  text-decoration: none;
-  padding: 24px 32px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.sim-entry:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,210,211,0.3);
-}
-.sim-entry .icon {
-  font-size: 32px;
-  display: block;
-  margin-bottom: 8px;
-}
-</style>
 </head>
 <body>
 
@@ -122,11 +38,11 @@
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">进阶课 A1 · 轮胎建模</p>
+    <p class="eyebrow" style="color:var(--teal)">进阶课 A1 · 轮胎建模</p>
     <h1>Magic Formula：轮胎的真实脾气</h1>
     <p class="lede">基础课里我们用"一条曲线"概括了轮胎的侧偏特性。但真要精确预测、仿真、调校，你需要知道这条曲线长什么样——它叫 Magic Formula，是整个汽车动力学仿真的基石。</p>
     <div class="meta">
-      <span>面向有基础的驾驶者</span><span>约 12 分钟</span><span>KEYWORDS&nbsp;&nbsp;Magic Formula · 四参数 · Pacejka</span>
+      <span>面向有基础的驾驶者</span><span>约 30 分钟</span><span>KEYWORDS&nbsp;&nbsp;Magic Formula · 四参数 · Pacejka</span>
     </div>
 
     <div class="map" aria-label="本课在进阶课的位置">
@@ -146,199 +62,357 @@
   <section>
     <h2><span class="idx">01</span>线性模型的局限</h2>
     <p>基础课的侧偏刚度模型（$F_y = K_y \cdot \alpha$）在小角度时很准，但它有三个致命问题：</p>
-    <ul>
-      <li><strong>无法描述饱和</strong>——真实轮胎在 6°~12° 左右达到峰值，然后力会下降，线性模型只能无限增长</li>
-      <li><strong>无法描述峰值后的滑移</strong>——超过极限后力会衰减，这是失控的物理基础</li>
-      <li><strong>无法统一描述纵向和侧向</strong>——刹车、加速、转弯需要用同一个数学框架</li>
-    </ul>
 
     <figure>
-      <svg viewBox="0 0 520 340" role="img" aria-label="线性模型与Magic Formula对比">
-        <rect x="70" y="40" width="46" height="250" class="band" opacity=".8"/>
-        <line x1="70" y1="90" x2="490" y2="90" class="s-grid"/>
-        <line x1="70" y1="165" x2="490" y2="165" class="s-grid"/>
-        <line x1="70" y1="240" x2="490" y2="240" class="s-grid"/>
-        <line x1="70" y1="30" x2="70" y2="292" class="s-axis"/>
-        <line x1="70" y1="290" x2="496" y2="290" class="s-axis"/>
-        <text x="16" y="60" class="t mut">侧向力</text><text x="30" y="76" class="t mut">F_y</text>
-        <text x="404" y="312" class="t mut">侧偏角 α (°)</text>
+      <svg viewBox="0 0 600 350" role="img" aria-label="线性模型与Magic Formula对比">
+        <!-- 坐标轴 -->
+        <line x1="80" y1="300" x2="560" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="300" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 网格线 -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="60" x2="560" y2="60" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+
         <!-- 线性模型 - 红色虚线 -->
-        <line x1="70" y1="290" x2="420" y2="40" stroke="var(--accent)" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
-        <text x="425" y="50" class="t acc" style="font-size:12px">线性模型 (无限增长)</text>
+        <line x1="80" y1="300" x2="500" y2="50" stroke="#EF7440" stroke-width="2" stroke-dasharray="8,4" opacity="0.7"/>
+        <text x="510" y="55" fill="#EF7440" font-size="12">线性模型</text>
+        <text x="510" y="70" fill="#EF7440" font-size="10">(无限增长)</text>
+
         <!-- Magic Formula - 青色实线 -->
-        <path d="M70,290 C120,200 180,100 240,75 C300,55 360,60 490,90" class="s-curve" stroke-width="3"/>
-        <text x="360" y="50" class="t teal" style="font-size:12px">Magic Formula</text>
+        <path d="M80,300 C140,250 200,150 280,100 C360,60 440,65 560,90" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="480" y="50" fill="#54B7C4" font-size="12" font-weight="bold">Magic Formula</text>
+
         <!-- 峰值标记 -->
-        <circle cx="240" cy="75" r="5" fill="var(--teal)"/>
-        <text x="250" y="65" class="t teal">峰值 F_y_max</text>
-        <!-- 峰值后下降 -->
-        <text x="320" y="100" class="t muted" style="font-size:11px">峰值后衰减</text>
+        <circle cx="280" cy="100" r="6" fill="#EF7440"/>
+        <text x="290" y="90" fill="#EF7440" font-size="11">峰值 F_y_max</text>
+
+        <!-- 区域标注 -->
+        <rect x="80" y="40" width="120" height="260" fill="#54B7C4" opacity="0.1"/>
+        <text x="140" y="320" fill="#54B7C4" font-size="11" text-anchor="middle">线性区</text>
+
+        <rect x="200" y="40" width="160" height="260" fill="#EF7440" opacity="0.1"/>
+        <text x="280" y="320" fill="#EF7440" font-size="11" text-anchor="middle">非线性区</text>
+
+        <rect x="360" y="40" width="200" height="260" fill="#A7AFBC" opacity="0.1"/>
+        <text x="460" y="320" fill="#A7AFBC" font-size="11" text-anchor="middle">峰值后衰减</text>
+
+        <!-- 轴标签 -->
+        <text x="300" y="340" fill="var(--muted)" font-size="13" text-anchor="middle">侧偏角 α (°)</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="13" text-anchor="middle" transform="rotate(-90 30 180)">侧向力 F_y</text>
+
+        <!-- 问题标注 -->
+        <text x="520" y="120" fill="#EF7440" font-size="10">问题1: 无限增长</text>
+        <text x="520" y="135" fill="#EF7440" font-size="10">问题2: 无饱和</text>
+        <text x="520" y="150" fill="#EF7440" font-size="10">问题3: 无衰减</text>
       </svg>
-      <figcaption><span class="figtag">图 1 · 线性模型 vs Magic Formula</span> &nbsp;线性模型（红色虚线）只能描述小角度的线性关系，一旦超过极限就"飞上天"。Magic Formula（青色实线）精确描述了从线性区、到饱和、再到峰值后衰减的完整过程。</figcaption>
+      <figcaption><span class="figtag">图 1 · 线性模型 vs Magic Formula</span> &nbsp;线性模型（红色虚线）只能描述小角度的线性关系，一旦超过极限就"飞上天"。Magic Formula（青色实线）精确描述了从<strong>线性区</strong>、到<strong>饱和</strong>、再到<strong>峰值后衰减</strong>的完整过程。</figcaption>
     </figure>
+
+    <p>这就像用"匀速直线运动"来描述赛车——在赛道上根本行不通！</p>
   </section>
 
-  <section class="adva-section">
+  <section>
     <h2><span class="idx">02</span>Magic Formula 四参数</h2>
-    <p>Pacejka 教授在 1980 年代提出了这个模型，用<strong>四个参数</strong>就能完整描述轮胎的力学特性。公式长这样：</p>
+    <p>Pacejka 教授在 1980 年代提出了这个模型，用<strong>四个参数</strong>就能完整描述轮胎的力学特性。</p>
 
-    <div class="formula-box">
-      $$y = D \cdot \sin\left[ C \cdot \arctan\left( B \cdot x - E \cdot \left( B \cdot x - \arctan(B \cdot x) \right) \right) \right]$$
-    </div>
+    <figure>
+      <svg viewBox="0 0 700 400" role="img" aria-label="Magic Formula四参数可视化">
+        <!-- 背景 -->
+        <rect x="0" y="0" width="700" height="400" fill="var(--surface)" rx="8"/>
 
-    <p>别被数学吓到，我们用"厨师调味"来理解每个参数：</p>
+        <!-- 公式区域 -->
+        <text x="350" y="40" fill="var(--ink)" font-size="18" text-anchor="middle" font-family="JetBrains Mono">y = D · sin[ C · arctan( B·x − E·(B·x − arctan(B·x)) ) ]</text>
 
-    <div class="param-grid">
-      <div class="param-card">
-        <h3>B</h3>
-        <p class="desc"><strong>刚度因子</strong><br>控制曲线初始上升有多陡——轮胎"多硬"。B 越大，小角度下力增长越快。</p>
-      </div>
-      <div class="param-card">
-        <h3>C</h3>
-        <p class="desc"><strong>形状因子</strong><br>决定曲线是"尖峰"还是"平顶"。C=1.65 是典型侧向力，C=1.65 也是纵向力。</p>
-      </div>
-      <div class="param-card">
-        <h3>D</h3>
-        <p class="desc"><strong>峰值因子</strong><br>曲线能达到的最大值 = $\mu \cdot F_z$（摩擦系数×垂直载荷）。这就是抓地力的天花板。</p>
-      </div>
-      <div class="param-card">
-        <h3>E</h3>
-        <p class="desc"><strong>曲率因子</strong><br>控制峰值附近有多"尖"或多"平"，以及峰值后的衰减速度。</p>
-      </div>
-    </div>
+        <!-- B参数 - 刚度 -->
+        <rect x="30" y="70" width="150" height="150" fill="var(--paper)" rx="8" stroke="#EF7440" stroke-width="2"/>
+        <text x="105" y="100" fill="#EF7440" font-size="24" text-anchor="middle" font-weight="bold">B</text>
+        <text x="105" y="125" fill="var(--ink)" font-size="12" text-anchor="middle">刚度因子</text>
+        <text x="105" y="145" fill="var(--muted)" font-size="10" text-anchor="middle">控制初始斜率</text>
+        <text x="105" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">B越大响应越硬</text>
+        <!-- B的影响曲线 -->
+        <path d="M50,200 L80,180 L105,160 L130,140 L160,130" fill="none" stroke="#EF7440" stroke-width="2"/>
+        <text x="105" y="195" fill="var(--muted)" font-size="9" text-anchor="middle">B=8 (软)</text>
+        <path d="M50,200 L70,150 L90,110 L110,80 L130,60" fill="none" stroke="#EF7440" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="105" y="215" fill="var(--muted)" font-size="9" text-anchor="middle">B=15 (硬)</text>
+
+        <!-- C参数 - 形状 -->
+        <rect x="200" y="70" width="150" height="150" fill="var(--paper)" rx="8" stroke="#54B7C4" stroke-width="2"/>
+        <text x="275" y="100" fill="#54B7C4" font-size="24" text-anchor="middle" font-weight="bold">C</text>
+        <text x="275" y="125" fill="var(--ink)" font-size="12" text-anchor="middle">形状因子</text>
+        <text x="275" y="145" fill="var(--muted)" font-size="10" text-anchor="middle">决定曲线形状</text>
+        <text x="275" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">C≈1.65 典型值</text>
+        <!-- C的影响曲线 -->
+        <path d="M220,200 Q275,180 330,200" fill="none" stroke="#54B7C4" stroke-width="2"/>
+        <text x="275" y="195" fill="var(--muted)" font-size="9" text-anchor="middle">C=1.0 (平)</text>
+        <path d="M220,200 Q275,100 330,200" fill="none" stroke="#54B7C4" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="275" y="215" fill="var(--muted)" font-size="9" text-anchor="middle">C=2.0 (尖)</text>
+
+        <!-- D参数 - 峰值 -->
+        <rect x="370" y="70" width="150" height="150" fill="var(--paper)" rx="8" stroke="#FBBF24" stroke-width="2"/>
+        <text x="445" y="100" fill="#FBBF24" font-size="24" text-anchor="middle" font-weight="bold">D</text>
+        <text x="445" y="125" fill="var(--ink)" font-size="12" text-anchor="middle">峰值因子</text>
+        <text x="445" y="145" fill="var(--muted)" font-size="10" text-anchor="middle">最大力 = μ·F_z</text>
+        <text x="445" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">抓地力天花板</text>
+        <!-- D的影响 -->
+        <line x1="390" y1="200" x2="500" y2="200" stroke="#FBBF24" stroke-width="2"/>
+        <text x="445" y="195" fill="var(--muted)" font-size="9" text-anchor="middle">D=0.6 (湿地)</text>
+        <line x1="390" y1="180" x2="500" y2="180" stroke="#FBBF24" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="445" y="215" fill="var(--muted)" font-size="9" text-anchor="middle">D=1.2 (热熔胎)</text>
+
+        <!-- E参数 - 曲率 -->
+        <rect x="540" y="70" width="150" height="150" fill="var(--paper)" rx="8" stroke="#A855F7" stroke-width="2"/>
+        <text x="615" y="100" fill="#A855F7" font-size="24" text-anchor="middle" font-weight="bold">E</text>
+        <text x="615" y="125" fill="var(--ink)" font-size="12" text-anchor="middle">曲率因子</text>
+        <text x="615" y="145" fill="var(--muted)" font-size="10" text-anchor="middle">控制峰值附近形状</text>
+        <text x="615" y="165" fill="var(--muted)" font-size="10" text-anchor="middle">影响衰减速度</text>
+        <!-- E的影响 -->
+        <path d="M560,200 Q615,180 670,200" fill="none" stroke="#A855F7" stroke-width="2"/>
+        <text x="615" y="195" fill="var(--muted)" font-size="9" text-anchor="middle">E=0.0 (标准)</text>
+        <path d="M560,200 Q615,120 670,200" fill="none" stroke="#A855F7" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="615" y="215" fill="var(--muted)" font-size="9" text-anchor="middle">E=0.5 (平缓)</text>
+
+        <!-- 底部说明 -->
+        <text x="350" y="260" fill="var(--ink)" font-size="14" text-anchor="middle" font-weight="bold">调整任意参数，都会改变曲线形状：</text>
+
+        <!-- 示例曲线 -->
+        <path d="M100,380 C180,300 280,280 400,270 C520,260 600,280 680,300" fill="none" stroke="var(--ink)" stroke-width="2"/>
+        <text x="350" y="395" fill="var(--muted)" font-size="11" text-anchor="middle">调整参数 → 观察曲线变化 → 理解物理意义</text>
+      </svg>
+      <figcaption><span class="figtag">图 2 · Magic Formula 四参数</span> &nbsp;四个参数各有明确物理意义：<strong>B</strong> 控制"有多硬"，<strong>C</strong> 控制"什么形状"，<strong>D</strong> 控制"天花板多高"，<strong>E</strong> 控制"峰值后怎么衰减"。</figcaption>
+    </figure>
 
     <p><strong>关键洞察</strong>：这四个参数不是随便凑的，它们都有明确的物理意义。调整任何一个，都能对应到轮胎的某个真实特性。</p>
+
+    <div style="background:var(--surface);border:2px solid var(--teal);border-radius:12px;padding:24px;margin:24px 0">
+      <h3 style="color:var(--teal);margin:0 0 16px">厨师调味比喻</h3>
+      <ul style="margin:0;padding-left:20px;line-height:2">
+        <li><strong style="color:#EF7440">B = 火力大小</strong> — 火越猛，菜熟得越快（响应越快）</li>
+        <li><strong style="color:#54B7C4">C = 调料比例</strong> — 决定菜品是"尖锐"还是"平和"</li>
+        <li><strong style="color:#FBBF24">D = 食材品质</strong> — 决定菜品的"上限"</li>
+        <li><strong style="color:#A855F7">E = 烹饪时间</strong> — 过头了就"老"了（衰减）</li>
+      </ul>
+    </div>
   </section>
 
   <section>
     <h2><span class="idx">03</span>摩擦圆的精确表达</h2>
     <p>基础课的摩擦圆是"一个圆"。但在 Magic Formula 里，纵向力和侧向力的耦合是这样的：</p>
 
-    <div class="formula-box">
-      $$F_{total} = \sqrt{F_x^2 + F_y^2} \leq \mu \cdot F_z$$
-    </div>
-
-    <p>当纵向力 $F_x$ 增加时，可用于侧向的力会减少。精确的耦合关系是：</p>
-
-    <div class="formula-box">
-      $$F_y = \sqrt{(\mu \cdot F_z)^2 - F_x^2} - F_{y\_from\_slip}$$
-    </div>
-
-    <p>这意味着：</p>
-    <ul>
-      <li><strong>纯侧向</strong>（$F_x=0$）：侧向力达到最大值 $D = \mu \cdot F_z$</li>
-      <li><strong>纯纵向</strong>（$F_y=0$）：纵向力达到最大值 $D = \mu \cdot F_z$</li>
-      <li><strong>混合工况</strong>：两者此消彼长，合力始终在摩擦圆内</li>
-    </ul>
-
     <figure>
-      <svg viewBox="0 0 400 320" role="img" aria-label="摩擦圆精确表达">
-        <circle cx="200" cy="165" r="120" class="s-teal" stroke-width="2.5"/>
-        <line x1="200" y1="45" x2="200" y2="285" class="s-grid"/>
-        <line x1="80" y1="165" x2="320" y2="165" class="s-grid"/>
+      <svg viewBox="0 0 500 400" role="img" aria-label="摩擦圆精确表达">
+        <!-- 圆 -->
+        <circle cx="250" cy="200" r="150" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="250" y="380" fill="#54B7C4" font-size="14" text-anchor="middle">圆的边 = μ·F_z = 抓地力极限</text>
+
+        <!-- 坐标轴 -->
+        <line x1="250" y1="50" x2="250" y2="350" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="100" y1="200" x2="400" y2="200" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- 轴标签 -->
+        <text x="250" y="40" fill="var(--ink)" font-size="12" text-anchor="middle">F_y 侧向力</text>
+        <text x="420" y="205" fill="var(--ink)" font-size="12">F_x 纵向力</text>
 
         <!-- 纯侧向点 -->
-        <circle cx="200" cy="45" r="6" fill="var(--teal)"/>
-        <text x="210" y="42" class="t teal">纯侧向 F_y_max</text>
+        <circle cx="250" cy="50" r="6" fill="#54B7C4"/>
+        <text x="260" y="45" fill="#54B7C4" font-size="11">纯侧向</text>
 
         <!-- 纯纵向点 -->
-        <circle cx="320" cy="165" r="6" fill="var(--accent)"/>
-        <text x="326" y="162" class="t acc">纯纵向 F_x_max</text>
+        <circle cx="400" cy="200" r="6" fill="#EF7440"/>
+        <text x="410" y="195" fill="#EF7440" font-size="11">纯纵向</text>
 
         <!-- 混合工况点 -->
-        <circle cx="280" cy="95" r="6" fill="var(--paper)"/>
-        <text x="286" y="92" class="t">混合工况</text>
-        <line x1="200" y1="165" x2="280" y2="95" stroke="var(--paper)" stroke-width="2" stroke-dasharray="4,2"/>
+        <circle cx="360" cy="100" r="6" fill="#FBBF24"/>
+        <text x="370" y="95" fill="#FBBF24" font-size="11">混合工况</text>
 
-        <!-- 矢量标注 -->
-        <line x1="200" y1="165" x2="280" y2="165" stroke="var(--accent)" stroke-width="2"/>
-        <text x="240" y="180" class="t acc" style="font-size:11px">F_x</text>
+        <!-- 合力矢量 -->
+        <line x1="250" y1="200" x2="360" y2="100" stroke="var(--ink)" stroke-width="2"/>
+        <text x="300" y="140" fill="var(--ink)" font-size="11">合力</text>
 
-        <line x1="280" y1="165" x2="280" y2="95" stroke="var(--teal)" stroke-width="2"/>
-        <text x="286" y="130" class="t teal" style="font-size:11px">F_y</text>
+        <!-- 分量箭头 -->
+        <line x1="250" y1="200" x2="360" y2="200" stroke="#EF7440" stroke-width="2"/>
+        <text x="305" y="215" fill="#EF7440" font-size="10">F_x</text>
 
-        <text x="160" y="300" class="t teal">μ·F_z = 摩擦圆半径</text>
+        <line x1="360" y1="200" x2="360" y2="100" stroke="#54B7C4" stroke-width="2"/>
+        <text x="370" y="150" fill="#54B7C4" font-size="10">F_y</text>
+
+        <!-- 说明 -->
+        <text x="250" y="25" fill="var(--ink)" font-size="12" text-anchor="middle" font-weight="bold">F_total = √(F_x² + F_y²) ≤ μ·F_z</text>
       </svg>
-      <figcaption><span class="figtag">图 2 · 摩擦圆精确表达</span> &nbsp;合力矢量必须始终在圆内。当纵向力增加（F_x），可用于侧向的力（F_y）就会减少。这就是为什么"边刹车边转弯"需要精细控制。</figcaption>
+      <figcaption><span class="figtag">图 3 · 摩擦圆精确表达</span> &nbsp;合力矢量必须始终在圆内。当纵向力增加（F_x），可用于侧向的力（F_y）就会减少。这就是为什么"边刹车边转弯"需要精细控制。</figcaption>
     </figure>
+
+    <div style="background:var(--surface);border-left:4px solid var(--accent);padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0">
+      <h3 style="color:var(--accent);margin:0 0 8px">关键公式</h3>
+      <p style="margin:8px 0;font-family:JetBrains Mono;font-size:16px">$$F_{total} = \sqrt{F_x^2 + F_y^2} \leq \mu \cdot F_z$$</p>
+      <p style="margin:0;color:var(--muted);font-size:14px">其中 $\mu$ 是摩擦系数（干地约1.0，湿地约0.6），$F_z$ 是垂直载荷</p>
+    </div>
   </section>
 
   <section>
     <h2><span class="idx">04</span>实测数据：真实轮胎长什么样</h2>
     <p>理论很好，但真实轮胎的 Magic Formula 参数从哪来？答案是：<strong>轮胎测力机实验</strong>。</p>
 
-    <table class="data-table">
+    <figure>
+      <svg viewBox="0 0 600 350" role="img" aria-label="不同工况下的轮胎特性曲线">
+        <rect x="0" y="0" width="600" height="350" fill="var(--surface)" rx="8"/>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="300" x2="560" y2="300" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="300" x2="80" y2="40" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 网格 -->
+        <line x1="80" y1="220" x2="560" y2="220" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="140" x2="560" y2="140" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="60" x2="560" y2="60" stroke="var(--hair)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- 干地高性能胎 -->
+        <path d="M80,300 C140,200 200,100 280,70 C360,50 440,55 560,80" fill="none" stroke="#54B7C4" stroke-width="3"/>
+        <text x="500" y="70" fill="#54B7C4" font-size="11">干地高性能胎</text>
+
+        <!-- 湿地轮胎 -->
+        <path d="M80,300 C160,250 240,180 320,160 C400,145 480,150 560,170" fill="none" stroke="#EF7440" stroke-width="3"/>
+        <text x="500" y="160" fill="#EF7440" font-size="11">湿地轮胎</text>
+
+        <!-- 磨损公路胎 -->
+        <path d="M80,300 C180,270 280,220 380,200 C480,185 540,190 560,195" fill="none" stroke="#A855F7" stroke-width="3"/>
+        <text x="500" y="200" fill="#A855F7" font-size="11">磨损公路胎</text>
+
+        <!-- 轴标签 -->
+        <text x="320" y="330" fill="var(--muted)" font-size="12" text-anchor="middle">侧偏角 α (°)</text>
+        <text x="30" y="180" fill="var(--muted)" font-size="12" text-anchor="middle" transform="rotate(-90 30 180)">侧向力 F_y</text>
+
+        <!-- 数据标注 -->
+        <text x="280" y="55" fill="#54B7C4" font-size="10">D=1.0, B=12</text>
+        <text x="320" y="145" fill="#EF7440" font-size="10">D=0.6, B=8</text>
+        <text x="380" y="185" fill="#A855F7" font-size="10">D=0.8, B=6</text>
+      </svg>
+      <figcaption><span class="figtag">图 4 · 不同工况下的轮胎特性</span> &nbsp;同一条轮胎在不同条件下，Magic Formula 参数完全不同。干地胎峰值高（D大）、响应快（B大）；湿地胎峰值低、响应慢。</figcaption>
+    </figure>
+
+    <table style="width:100%;border-collapse:collapse;margin:24px 0">
       <thead>
-        <tr>
-          <th>参数</th>
-          <th>典型值范围</th>
-          <th>物理意义</th>
+        <tr style="background:var(--teal);color:var(--paper)">
+          <th style="padding:12px;border:1px solid var(--hair);text-align:left">轮胎类型</th>
+          <th style="padding:12px;border:1px solid var(--hair);text-align:center">B (刚度)</th>
+          <th style="padding:12px;border:1px solid var(--hair);text-align:center">C (形状)</th>
+          <th style="padding:12px;border:1px solid var(--hair);text-align:center">D (峰值)</th>
+          <th style="padding:12px;border:1px solid var(--hair);text-align:center">E (曲率)</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>B (刚度)</td>
-          <td>8 ~ 15</td>
-          <td>初始侧偏刚度，与胎压、结构相关</td>
+        <tr style="background:var(--paper)">
+          <td style="padding:12px;border:1px solid var(--hair)">🏎️ 赛车热熔胎</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#EF7440;font-weight:bold">14-16</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center">1.65</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#FBBF24;font-weight:bold">1.2-1.5</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#A855F7">-0.2~0</td>
         </tr>
-        <tr>
-          <td>C (形状)</td>
-          <td>1.5 ~ 1.8</td>
-          <td>侧向力 C≈1.65，纵向力 C≈1.65</td>
+        <tr style="background:var(--surface)">
+          <td style="padding:12px;border:1px solid var(--hair)">🚗 高性能街胎</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#EF7440;font-weight:bold">10-13</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center">1.65</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#FBBF24;font-weight:bold">0.9-1.1</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#A855F7">0~0.2</td>
         </tr>
-        <tr>
-          <td>D (峰值)</td>
-          <td>μ · F_z</td>
-          <td>最大摩擦力，干地 μ≈1.0，湿地 μ≈0.6</td>
+        <tr style="background:var(--paper)">
+          <td style="padding:12px;border:1px solid var(--hair)">🌧️ 湿地轮胎</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#EF7440;font-weight:bold">7-10</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center">1.65</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#FBBF24;font-weight:bold">0.5-0.7</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#A855F7">0.1~0.3</td>
         </tr>
-        <tr>
-          <td>E (曲率)</td>
-          <td>-0.5 ~ 0.5</td>
-          <td>峰值附近的曲率，影响衰减特性</td>
+        <tr style="background:var(--surface)">
+          <td style="padding:12px;border:1px solid var(--hair)">🚙 磨损公路胎</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#EF7440;font-weight:bold">5-8</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center">1.8</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#FBBF24;font-weight:bold">0.7-0.9</td>
+          <td style="padding:12px;border:1px solid var(--hair);text-align:center;color:#A855F7">0.2~0.4</td>
         </tr>
       </tbody>
     </table>
-
-    <div class="hook teal">
-      <span class="k">一个有趣的事实</span>
-      <p>同一条轮胎，在不同垂直载荷下，Magic Formula 参数会变化。这就是为什么"载荷转移"对操控影响巨大——它不仅改变了 D（峰值），还改变了 B（刚度）和 E（曲率）。我们在下一课详细展开。</p>
-    </div>
   </section>
 
   <section>
     <h2><span class="idx">05</span>驾驶应用：从公式到方向盘</h2>
     <p>知道了 Magic Formula，对驾驶有什么实际意义？</p>
 
-    <ul>
-      <li><strong>理解轮胎温度</strong>：温度影响橡胶摩擦系数 μ，直接改变 D 值。冷胎和热胎的抓地力天差地别。</li>
-      <li><strong>理解胎压</strong>：胎压影响接触面积和刚度 B。胎压过高，接触面积小，峰值 D 下降；胎压过低，响应变慢，B 减小。</li>
-      <li><strong>理解磨损</strong>：磨损改变橡胶特性，C 和 E 会变化，导致峰值后衰减特性改变。</li>
-      <li><strong>理解赛道选择</strong>：不同赛道对轮胎的要求不同——高速弯需要高 B（硬胎），低速弯需要高 D（软胎）。</li>
-    </ul>
+    <figure>
+      <svg viewBox="0 0 600 300" role="img" aria-label="轮胎温度对Magic Formula的影响">
+        <rect x="0" y="0" width="600" height="300" fill="var(--surface)" rx="8"/>
 
-    <div class="formula">
-      驾驶员的终极目标：让轮胎工作在 Magic Formula 曲线的峰值附近，而不是超过它。
+        <!-- 温度色带 -->
+        <defs>
+          <linearGradient id="tempGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#54B7C4"/>
+            <stop offset="50%" style="stop-color:#FBBF24"/>
+            <stop offset="100%" style="stop-color:#EF7440"/>
+          </linearGradient>
+        </defs>
+        <rect x="80" y="30" width="440" height="20" fill="url(#tempGrad)" rx="4"/>
+        <text x="80" y="25" fill="var(--muted)" font-size="10">冷胎 20°C</text>
+        <text x="300" y="25" fill="var(--muted)" font-size="10" text-anchor="middle">最佳温度 80-100°C</text>
+        <text x="520" y="25" fill="var(--muted)" font-size="10" text-anchor="end">过热 120°C+</text>
+
+        <!-- 坐标轴 -->
+        <line x1="80" y1="280" x2="520" y2="280" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="80" y1="280" x2="80" y2="60" stroke="var(--ink)" stroke-width="2"/>
+
+        <!-- 冷胎曲线 -->
+        <path d="M80,280 C120,240 160,180 220,150 C280,125 340,130 400,150" fill="none" stroke="#54B7C4" stroke-width="2"/>
+        <text x="400" y="165" fill="#54B7C4" font-size="10">冷胎 D=0.7</text>
+
+        <!-- 最佳温度曲线 -->
+        <path d="M80,280 C140,180 200,100 280,80 C360,65 440,70 520,95" fill="none" stroke="#FBBF24" stroke-width="3"/>
+        <text x="450" y="85" fill="#FBBF24" font-size="10">最佳温度 D=1.0</text>
+
+        <!-- 过热曲线 -->
+        <path d="M80,280 C150,230 220,170 300,150 C380,135 460,140 520,155" fill="none" stroke="#EF7440" stroke-width="2"/>
+        <text x="460" y="165" fill="#EF7440" font-size="10">过热 D=0.8</text>
+
+        <!-- 轴标签 -->
+        <text x="300" y="295" fill="var(--muted)" font-size="11" text-anchor="middle">侧偏角 α</text>
+        <text x="40" y="170" fill="var(--muted)" font-size="11" text-anchor="middle" transform="rotate(-90 40 170)">侧向力 F_y</text>
+      </svg>
+      <figcaption><span class="figtag">图 5 · 轮胎温度的影响</span> &nbsp;温度直接改变 D 值（峰值）。冷胎抓地力低，过热也会衰减。专业车手的工作就是让轮胎保持在最佳温度窗口。</figcaption>
+    </figure>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:24px 0">
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">🌡️ 温度</h3>
+        <p style="margin:0;font-size:14px">温度影响橡胶摩擦系数 $\mu$，直接改变 D 值。冷胎和热胎的抓地力天差地别。</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">💨 胎压</h3>
+        <p style="margin:0;font-size:14px">胎压影响接触面积和刚度 B。胎压过高，接触面积小，峰值 D 下降；胎压过低，响应变慢。</p>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:20px">
+        <h3 style="color:var(--teal);margin:0 0 12px">🔧 磨损</h3>
+        <p style="margin:0;font-size:14px">磨损改变橡胶特性，C 和 E 会变化，导致峰值后衰减特性改变。</p>
+      </div>
     </div>
 
-    <p>这就是为什么专业车手的"线"看起来那么流畅——他们精确地在抓地力极限边缘游走，既不过早（浪费抓地力），也不过晚（失控）。</p>
+    <div style="background:var(--teal-soft);border-radius:8px;padding:20px;margin:24px 0;text-align:center">
+      <p style="margin:0;font-size:16px;color:var(--teal);font-weight:bold">驾驶员的终极目标：让轮胎工作在 Magic Formula 曲线的峰值附近，而不是超过它。</p>
+    </div>
   </section>
 
-  <section class="adva-section">
+  <section>
     <h2><span class="idx">06</span>交互仿真入口</h2>
     <p>理论讲完了，让我们用仿真来"触摸" Magic Formula。调整四个参数，实时观察曲线如何变化：</p>
 
-    <a href="../sim/magic-formula.html" class="sim-entry">
-      <span class="icon">🎛️</span>
+    <a href="../sim/magic-formula.html" style="display:block;background:linear-gradient(135deg,var(--teal),var(--accent));color:var(--paper);text-decoration:none;padding:32px;border-radius:12px;text-align:center;font-size:18px;font-weight:700;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(84,183,196,0.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-size:32px;margin-bottom:8px">🎛️</div>
       打开 Magic Formula 交互仿真
-      <br><small style="font-weight:400;opacity:0.9">调整 B、C、D、E 参数，观察轮胎力学曲线的实时变化</small>
+      <div style="font-weight:400;opacity:0.9;font-size:14px;margin-top:8px">调整 B、C、D、E 参数，观察轮胎力学曲线的实时变化</div>
     </a>
 
     <p style="margin-top:20px;text-align:center;color:var(--muted);font-size:14px">仿真包含：侧偏特性曲线、摩擦圆可视化、参数敏感性分析、典型工况演示</p>
   </section>
 
-  <div class="take">
-    <h2>进阶一课一收：你现在掌握的</h2>
-    <ol>
+  <div style="background:var(--teal-soft);border-radius:12px;padding:24px;margin:32px 0">
+    <h2 style="color:var(--teal);margin:0 0 16px">进阶一课一收：你现在掌握的</h2>
+    <ol style="margin:0;padding-left:20px;line-height:2">
       <li>线性模型只能描述小角度，真实轮胎需要 Magic Formula 来完整描述；</li>
       <li>Magic Formula 的四个参数（B、C、D、E）都有明确物理意义：刚度、形状、峰值、曲率；</li>
       <li>摩擦圆的精确表达：纵向和侧向力此消彼长，合力始终在圆内；</li>
@@ -347,9 +421,9 @@
     </ol>
   </div>
 
-  <div class="quiz">
-    <span class="k">🚗 思考题</span>
-    <p>你换了一套新轮胎（更软的配方），感觉小角度转向更灵敏了（B 增大），但极限后衰减更快了（E 变化）。用 Magic Formula 的语言解释这个现象。</p>
+  <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:20px;margin:24px 0">
+    <h3 style="color:var(--accent);margin:0 0 12px">🚗 思考题</h3>
+    <p style="margin:0">你换了一套新轮胎（更软的配方），感觉小角度转向更灵敏了（B 增大），但极限后衰减更快了（E 变化）。用 Magic Formula 的语言解释这个现象。</p>
   </div>
 
   <div class="next">
@@ -363,7 +437,7 @@
 
   <footer>
     <p class="src">星星人 · 讲运动学　|　进阶课 A1 / 共 5 课</p>
-    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a></p>
+    <p>本页为个人学习讲义，内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘</b>,未复制原书图片或成段原文。&nbsp;<a href="../">← 回首页</a></p>
   </footer>
 </div>
 <script src="../assets/anim-toggle.js"></script>
