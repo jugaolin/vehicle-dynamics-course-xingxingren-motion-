@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>瞬态响应交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+</style>
+</head>
+<body>
+<h1>🎛️ 瞬态响应交互仿真</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="400"></canvas>
+  </div>
+  <div class="controls">
+    <label>自然频率 ωn (rad/s) <span class="value" id="vwn">3.0</span></label>
+    <input type="range" id="wn" min="1" max="8" value="3" step="0.1">
+    <label>阻尼比 ζ <span class="value" id="vz">0.7</span></label>
+    <input type="range" id="z" min="0.1" max="1.5" value="0.7" step="0.05">
+    <label>车速 V (km/h) <span class="value" id="vv">60</span></label>
+    <input type="range" id="v" min="20" max="180" value="60" step="5">
+    <label>方向盘输入幅值 (°) <span class="value" id="vd">30</span></label>
+    <input type="range" id="d" min="5" max="90" value="30" step="5">
+  </div>
+</div>
+<div class="info">
+  <b>图表说明：</b>青色虚线为方向盘阶跃输入，红色实线为车辆响应。观察延迟时间、上升时间和振荡特性。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+const pad={l:60,r:30,t:40,b:50};
+const ids=['wn','z','v','d'];
+const vals=['vwn','vz','vv','vd'];
+
+function stepResponse(t,wn,z){
+  if(z>=1){
+    return 1-Math.exp(-wn*t)*(Math.cosh(wn*Math.sqrt(z*z-1)*t)+z/Math.sqrt(z*z-1)*Math.sinh(wn*Math.sqrt(z*z-1)*t));
+  }else{
+    const wd=wn*Math.sqrt(1-z*z);
+    return 1-Math.exp(-z*wn*t)*(Math.cos(wd*t)+z/Math.sqrt(1-z*z)*Math.sin(wd*t));
+  }
+}
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+  const wn=parseFloat(document.getElementById('wn').value);
+  const z=parseFloat(document.getElementById('z').value);
+  const speed=parseFloat(document.getElementById('v').value);
+  const amp=parseFloat(document.getElementById('d').value);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#333';
+  ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const x=pad.l+i*(W-pad.l-pad.r)/5;
+    ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,H-pad.b);ctx.stroke();
+    const y=pad.t+i*(H-pad.t-pad.b)/5;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle='#EDE7DA';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle='#EDE7DA';
+  ctx.font='12px sans-serif';
+  ctx.textAlign='center';
+  for(let i=0;i<=5;i++){
+    ctx.fillText((i*0.5).toFixed(1)+'s',pad.l+i*(W-pad.l-pad.r)/5,H-pad.b+20);
+  }
+  ctx.fillText('时间',W/2,H-10);
+
+  const maxT=3;
+  const maxAmp=amp*1.3;
+
+  // Steering input (step)
+  ctx.strokeStyle='#54B7C4';
+  ctx.lineWidth=2;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  ctx.moveTo(pad.l,H-pad.b);
+  ctx.lineTo(pad.l+(0.3/maxT)*(W-pad.l-pad.r),H-pad.b);
+  ctx.lineTo(pad.l+(0.3/maxT)*(W-pad.l-pad.r),pad.t+20);
+  ctx.lineTo(W-pad.r,pad.t+20);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Vehicle response
+  ctx.strokeStyle='#EF7440';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  let first=true;
+  for(let i=0;i<=200;i++){
+    const t=i*maxT/200;
+    const yNorm=stepResponse(Math.max(0,t-0.3),wn,z);
+    const yVal=amp*yNorm;
+    const x=pad.l+(t/maxT)*(W-pad.l-pad.r);
+    const y=H-pad.b-(yVal/maxAmp)*(H-pad.t-pad.b);
+    if(first){ctx.moveTo(x,y);first=false;}
+    else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // Info
+  ctx.fillStyle='#54B7C4';
+  ctx.font='bold 12px sans-serif';
+  ctx.textAlign='left';
+  const label=z<0.95?'欠阻尼 ζ<1':z>1.05?'过阻尼 ζ>1':'临界阻尼 ζ≈1';
+  ctx.fillText('ωn='+wn.toFixed(1)+' rad/s  ζ='+z.toFixed(2)+'  '+label,pad.l+10,pad.t+20);
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',draw));
+draw();
+</script>
+</body>
+</html>

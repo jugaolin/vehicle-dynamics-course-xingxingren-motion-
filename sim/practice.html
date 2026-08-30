@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>综合交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+button{background:#54B7C4;color:#13161B;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin:5px}
+button:hover{background:#EF7440}
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.meter{background:#1a1d23;border-radius:4px;padding:8px;text-align:center}
+.meter .label{font-size:0.8em;color:#54B7C4}
+.meter .value{font-size:1.2em;font-weight:bold;color:#FBBF24}
+</style>
+</head>
+<body>
+<h1>🎛️ 综合交互仿真 - 完整车辆动力学</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="400"></canvas>
+    <div class="meters">
+      <div class="meter"><div class="label">侧偏角 β</div><div class="value" id="mb">0.0°</div></div>
+      <div class="meter"><div class="label">横摆角速度 r</div><div class="value" id="mr">0.0°/s</div></div>
+      <div class="meter"><div class="label">侧向加速度 ay</div><div class="value" id="ma">0.0g</div></div>
+      <div class="meter"><div class="label">车速 V</div><div class="value" id="mv">60 km/h</div></div>
+    </div>
+  </div>
+  <div class="controls">
+    <label>方向盘输入 (°) <span class="value" id="vs">0</span></label>
+    <input type="range" id="s" min="-90" max="90" value="0" step="5">
+    <label>油门 (%) <span class="value" id="vth">0</span></label>
+    <input type="range" id="th" min="0" max="100" value="0" step="5">
+    <label>刹车 (%) <span class="value" id="vb">0</span></label>
+    <input type="range" id="br" min="0" max="100" value="0" step="5">
+    <label>路面摩擦 μ <span class="value" id="vmu">1.0</span></label>
+    <input type="range" id="mu" min="0.2" max="1.5" value="1.0" step="0.1">
+    <label>前防倾杆刚度 <span class="value" id="vaf">50</span></label>
+    <input type="range" id="af" min="20" max="100" value="50" step="5">
+    <label>后防倾杆刚度 <span class="value" id="var2">50</span></label>
+    <input type="range" id="ar2" min="20" max="100" value="50" step="5">
+    <div style="margin-top:15px">
+      <button onclick="toggleSim()">开始/暂停</button>
+      <button onclick="resetSim()">重置</button>
+    </div>
+  </div>
+</div>
+<div class="info">
+  <b>综合仿真：</b>模拟完整车辆动力学。调整所有参数观察车辆行为。注意前后防倾杆刚度对转向特性的影响。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+let running=false;
+let beta=0,r=0,heading=0,speed=60/3.6;
+let trail=[];
+
+const ids=['s','th','br','mu','af','ar2'];
+const vals=['vs','vth','vb','vmu','vaf','var2'];
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+
+  ctx.clearRect(0,0,W,H);
+
+  // Draw track background
+  ctx.fillStyle='#1a1d23';
+  ctx.fillRect(0,0,W,H);
+
+  // Draw trail
+  if(trail.length>1){
+    ctx.strokeStyle='rgba(239,116,64,0.4)';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(trail[0][0],trail[0][1]);
+    for(let i=1;i<trail.length;i++){
+      ctx.lineTo(trail[i][0],trail[i][1]);
+    }
+    ctx.stroke();
+  }
+
+  // Draw car
+  ctx.save();
+  ctx.translate(W/2,H/2);
+  ctx.rotate(heading);
+
+  // Car body
+  const color=Math.abs(beta)>0.15?'#EF7440':'#54B7C4';
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.roundRect(-20,-35,40,70,5);
+  ctx.fill();
+
+  // Windshield
+  ctx.fillStyle='rgba(255,255,255,0.3)';
+  ctx.fillRect(-15,-30,30,15);
+
+  // Wheels
+  ctx.fillStyle='#333';
+  ctx.fillRect(-25,-25,6,12);
+  ctx.fillRect(19,-25,6,12);
+  ctx.fillRect(-25,13,6,12);
+  ctx.fillRect(19,13,6,12);
+
+  // Direction arrow
+  ctx.strokeStyle='#FBBF24';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(0,-35);
+  ctx.lineTo(0,-55);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-5,-50);
+  ctx.lineTo(0,-55);
+  ctx.lineTo(5,-50);
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Update meters
+  document.getElementById('mb').textContent=(beta*180/Math.PI).toFixed(1)+'°';
+  document.getElementById('mr').textContent=(r*180/Math.PI).toFixed(1)+'°/s';
+  document.getElementById('ma').textContent=(Math.abs(r)*speed/9.8).toFixed(2)+'g';
+  document.getElementById('mv').textContent=(speed*3.6).toFixed(0)+' km/h';
+}
+
+function step(){
+  if(!running)return;
+
+  const steer=parseFloat(document.getElementById('s').value)*Math.PI/180;
+  const throttle=parseFloat(document.getElementById('th').value)/100;
+  const brake=parseFloat(document.getElementById('br').value)/100;
+  const mu=parseFloat(document.getElementById('mu').value);
+  const af=parseFloat(document.getElementById('af').value);
+  const ar=parseFloat(document.getElementById('ar2').value);
+
+  const L=2.6,a=1.2,b=L-a;
+  const m=1500;
+  const Cf=55000,Cr=60000;
+
+  // Lateral force
+  const Fyf=Cf*steer;
+  const Fyr=Cr*beta;
+  const FyTotal=Fyf+Fyr;
+
+  // Yaw moment
+  const My=a*Fyf-b*Fyr;
+
+  // Anti-roll bar effect on load transfer distribution
+  const rollStiffness=af/(af+ar);
+
+  // Dynamics
+  const dBeta=speed*r-FyTotal/m;
+  const dR=My/(m*2.5*2.5);
+
+  beta+=dBeta*0.01;
+  r+=dR*0.01;
+
+  // Speed control
+  const accel=throttle*5-brake*8;
+  speed+=accel*0.01;
+  speed=Math.max(0,speed);
+
+  heading+=r*0.01;
+
+  // Trail
+  const px=W/2+Math.sin(heading)*beta*200;
+  const py=H/2-Math.cos(heading)*beta*200;
+  trail.push([px,py]);
+  if(trail.length>500)trail.shift();
+
+  draw();
+  requestAnimationFrame(step);
+}
+
+function toggleSim(){
+  running=!running;
+  if(running)step();
+}
+
+function resetSim(){
+  beta=0;r=0;heading=0;speed=60/3.6;
+  trail=[];
+  running=false;
+  draw();
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',()=>{
+  const idx=ids.indexOf(id);
+  document.getElementById(vals[idx]).textContent=document.getElementById(id).value;
+}));
+
+draw();
+</script>
+</body>
+</html>

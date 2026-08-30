@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>相平面交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+button{background:#54B7C4;color:#13161B;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin:5px}
+button:hover{background:#EF7440}
+</style>
+</head>
+<body>
+<h1>🎛️ 相平面交互仿真</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="500"></canvas>
+  </div>
+  <div class="controls">
+    <label>摩擦系数 μ <span class="value" id="vmu">1.0</span></label>
+    <input type="range" id="mu" min="0.3" max="1.5" value="1.0" step="0.05">
+    <label>车速 V (km/h) <span class="value" id="vv">60</span></label>
+    <input type="range" id="v" min="20" max="180" value="60" step="5">
+    <label>转向输入 (°) <span class="value" id="vd">0</span></label>
+    <input type="range" id="d" min="-45" max="45" value="0" step="5">
+    <div style="margin-top:15px">
+      <button onclick="reset()">重置轨迹</button>
+      <button onclick="addPerturbation()">添加扰动</button>
+    </div>
+  </div>
+</div>
+<div class="info">
+  <b>图表说明：</b>横轴为侧偏角 β，纵轴为横摆角速度 r。青色椭圆为稳定区域，红色轨迹为车辆状态变化。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+const cx=W/2,cy=H/2;
+const ids=['mu','v','d'];
+const vals=['vmu','vv','vd'];
+
+let beta=0,r=0;
+let trail=[];
+let animId;
+
+function getStableRadius(mu,speed){
+  const vs=speed/3.6;
+  return{rb:mu*9.8/vs*80,rr:mu*9.8/vs*3};
+}
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+  const mu=parseFloat(document.getElementById('mu').value);
+  const speed=parseFloat(document.getElementById('v').value);
+  const steer=parseFloat(document.getElementById('d').value);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#333';
+  ctx.lineWidth=1;
+  for(let i=-5;i<=5;i++){
+    const x=cx+i*40;
+    ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,H-20);ctx.stroke();
+    const y=cy+i*40;
+    ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(W-20,y);ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle='#EDE7DA';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(20,cy);ctx.lineTo(W-20,cy);
+  ctx.moveTo(cx,20);ctx.lineTo(cx,H-20);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle='#EDE7DA';
+  ctx.font='12px sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('β (侧偏角)',W-60,cy-10);
+  ctx.fillText('r (横摆角速度)',cx+50,30);
+
+  // Stable region
+  const sr=getStableRadius(mu,speed);
+  ctx.strokeStyle='#54B7C4';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.ellipse(cx,cy,sr.rb,sr.rr,0,0,Math.PI*2);
+  ctx.stroke();
+  ctx.fillStyle='rgba(84,183,196,0.1)';
+  ctx.fill();
+
+  // Trail
+  if(trail.length>1){
+    ctx.strokeStyle='#EF7440';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(cx+trail[0][0],cy-trail[0][1]);
+    for(let i=1;i<trail.length;i++){
+      ctx.lineTo(cx+trail[i][0],cy-trail[i][1]);
+    }
+    ctx.stroke();
+  }
+
+  // Current point
+  ctx.fillStyle='#FBBF24';
+  ctx.beginPath();
+  ctx.arc(cx+beta*80,cy-r*3,6,0,Math.PI*2);
+  ctx.fill();
+}
+
+function step(){
+  const mu=parseFloat(document.getElementById('mu').value);
+  const speed=parseFloat(document.getElementById('v').value);
+  const steer=parseFloat(document.getElementById('d').value);
+  const vs=speed/3.6;
+
+  const dBeta=vs*r-9.8*mu*Math.sin(beta);
+  const dR=(9.8*mu*Math.cos(beta)*steer*Math.PI/180)/(vs*2.5)-0.5*r;
+
+  beta+=dBeta*0.02;
+  r+=dR*0.02;
+
+  trail.push([beta*80,r*3]);
+  if(trail.length>500)trail.shift();
+
+  draw();
+  animId=requestAnimationFrame(step);
+}
+
+function reset(){
+  beta=0;r=0;trail=[];
+  cancelAnimationFrame(animId);
+  draw();
+}
+
+function addPerturbation(){
+  beta+=0.02;
+  r+=0.1;
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',()=>{
+  cancelAnimationFrame(animId);
+  draw();
+}));
+
+step();
+</script>
+</body>
+</html>

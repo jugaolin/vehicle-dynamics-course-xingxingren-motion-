@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>极限边界交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+.result{background:#1a1d23;border-radius:8px;padding:15px;margin-top:10px;text-align:center;font-size:1.2em;color:#FBBF24;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>🎛️ 极限边界交互仿真</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="500"></canvas>
+    <div class="result" id="result">极限速度: 159 km/h</div>
+  </div>
+  <div class="controls">
+    <label>摩擦系数 μ <span class="value" id="vmu">1.0</span></label>
+    <input type="range" id="mu" min="0.1" max="1.5" value="1.0" step="0.05">
+    <label>弯道半径 R (m) <span class="value" id="vr">200</span></label>
+    <input type="range" id="R" min="50" max="500" value="200" step="10">
+    <label>纵向力比例 Fx/F (%) <span class="value" id="vfx">0</span></label>
+    <input type="range" id="fx" min="0" max="80" value="0" step="5">
+    <label>载荷转移比例 (%) <span class="value" id="vlt">0</span></label>
+    <input type="range" id="lt" min="0" max="50" value="0" step="5">
+  </div>
+</div>
+<div class="info">
+  <b>图表说明：</b>摩擦圆可视化。青色圆为理论极限，红色扇形为可用侧向力（扣除纵向力后）。载荷转移会降低有效摩擦系数。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+const cx=W/2,cy=H/2;
+const ids=['mu','R','fx','lt'];
+const vals=['vmu','vr','vfx','vlt'];
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+  const mu=parseFloat(document.getElementById('mu').value);
+  const R=parseFloat(document.getElementById('R').value);
+  const fxRatio=parseFloat(document.getElementById('fx').value)/100;
+  const ltRatio=parseFloat(document.getElementById('lt').value)/100;
+
+  const muEff=mu*(1-ltRatio*0.3);
+  const Fmax=muEff*9.8;
+  const FyAvail=Math.sqrt(Math.max(0,Fmax*Fmax-Fmax*fxRatio*Fmax*fxRatio));
+  const Vmax=Math.sqrt(muEff*9.8*R);
+  const VmaxKmh=Vmax*3.6;
+
+  document.getElementById('result').textContent='极限速度: '+VmaxKmh.toFixed(0)+' km/h';
+
+  ctx.clearRect(0,0,W,H);
+
+  // Friction circle
+  const radius=180;
+  ctx.strokeStyle='#54B7C4';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.arc(cx,cy,radius,0,Math.PI*2);
+  ctx.stroke();
+
+  // Available lateral force arc
+  const fxPx=fxRatio*radius;
+  const fyPx=FyAvail/Fmax*radius;
+  ctx.fillStyle='rgba(239,116,64,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(cx,cy-fyPx);
+  ctx.lineTo(cx+fxPx,cy-fyPx);
+  ctx.arc(cx,cy,radius,-Math.PI/2,Math.asin(fxPx/radius)-Math.PI/2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Current point
+  ctx.fillStyle='#FBBF24';
+  ctx.beginPath();
+  ctx.arc(cx+fxPx,cy-fyPx,6,0,Math.PI*2);
+  ctx.fill();
+
+  // Axes
+  ctx.strokeStyle='#EDE7DA';
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(cx-radius-20,cy);ctx.lineTo(cx+radius+20,cy);
+  ctx.moveTo(cx,cy-radius-20);ctx.lineTo(cx,cy+radius+20);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle='#EDE7DA';
+  ctx.font='12px sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Fx (纵向力)',cx+radius+10,cy-10);
+  ctx.fillText('Fy (侧向力)',cx+10,cy-radius-10);
+
+  // Info
+  ctx.fillStyle='#54B7C4';
+  ctx.font='bold 12px sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('μ='+mu+'  μ_eff='+muEff.toFixed(3)+'  R='+R+'m',20,25);
+  ctx.fillText('Fx/F='+(fxRatio*100).toFixed(0)+'%  Fy_avail='+(FyAvail).toFixed(1)+'m/s²',20,45);
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',draw));
+draw();
+</script>
+</body>
+</html>

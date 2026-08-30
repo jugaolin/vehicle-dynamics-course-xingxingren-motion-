@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>救车过程交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+button{background:#54B7C4;color:#13161B;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin:5px}
+button:hover{background:#EF7440}
+.status{background:#1a1d23;border-radius:8px;padding:10px;margin-top:10px;text-align:center;font-weight:bold}
+.status.ok{color:#54B7C4}
+.status.warn{color:#FBBF24}
+.status.danger{color:#EF7440}
+</style>
+</head>
+<body>
+<h1>🎛️ 救车过程交互仿真</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="500"></canvas>
+    <div class="status ok" id="status">状态: 稳定</div>
+  </div>
+  <div class="controls">
+    <label>反打方向盘时机 (秒) <span class="value" id="vt">0.5</span></label>
+    <input type="range" id="t" min="0.1" max="2.0" value="0.5" step="0.1">
+    <label>反打幅度 (°) <span class="value" id="va">-30</span></label>
+    <input type="range" id="ar" min="-60" max="0" value="-30" step="5">
+    <label>油门控制 <span class="value" id="vth">松油门</span></label>
+    <input type="range" id="th" min="0" max="2" value="1" step="1">
+    <div style="margin-top:15px">
+      <button onclick="startScenario()">开始甩尾场景</button>
+      <button onclick="reset()">重置</button>
+    </div>
+  </div>
+</div>
+<div class="info">
+  <b>图表说明：</b>俯视图显示车辆姿态。红色区域为甩尾状态，青色为正常状态。观察反打时机和幅度对救车效果的影响。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+const ids=['t','ar','th'];
+const vals=['vt','va','vth'];
+const thLabels=['踩死刹车','松油门','给油'];
+
+let beta=0,r=0,heading=0;
+let scenarioRunning=false;
+let scenarioTime=0;
+let countersteerApplied=false;
+let trail=[];
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+  document.getElementById('vth').textContent=thLabels[parseInt(document.getElementById('th').value)];
+
+  ctx.clearRect(0,0,W,H);
+
+  // Draw car
+  ctx.save();
+  ctx.translate(W/2,H/2);
+  ctx.rotate(heading);
+
+  // Car body
+  const carW=40,carH=80;
+  ctx.fillStyle=Math.abs(beta)>0.15?'#EF7440':'#54B7C4';
+  ctx.fillRect(-carW/2,-carH/2,carW,carH);
+
+  // Wheels
+  ctx.fillStyle='#333';
+  ctx.fillRect(-carW/2-5,-carH/2+10,8,15);
+  ctx.fillRect(carW/2-3,-carH/2+10,8,15);
+  ctx.fillRect(-carW/2-5,carH/2-25,8,15);
+  ctx.fillRect(carW/2-3,carH/2-25,8,15);
+
+  // Direction arrow
+  ctx.strokeStyle='#FBBF24';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(0,-carH/2);
+  ctx.lineTo(0,-carH/2-20);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-5,-carH/2-15);
+  ctx.lineTo(0,-carH/2-20);
+  ctx.lineTo(5,-carH/2-15);
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Trail
+  if(trail.length>1){
+    ctx.strokeStyle='rgba(239,116,64,0.3)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(trail[0][0],trail[0][1]);
+    for(let i=1;i<trail.length;i++){
+      ctx.lineTo(trail[i][0],trail[i][1]);
+    }
+    ctx.stroke();
+  }
+
+  // Info
+  ctx.fillStyle='#EDE7DA';
+  ctx.font='12px sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('β='+(beta*180/Math.PI).toFixed(1)+'°  r='+(r*180/Math.PI).toFixed(1)+'°/s',10,25);
+  ctx.fillText('时间: '+scenarioTime.toFixed(1)+'s',10,45);
+
+  // Status
+  const statusEl=document.getElementById('status');
+  if(Math.abs(beta)<0.1){
+    statusEl.className='status ok';
+    statusEl.textContent='状态: 稳定';
+  }else if(Math.abs(beta)<0.2){
+    statusEl.className='status warn';
+    statusEl.textContent='状态: 警告 - 轻微甩尾';
+  }else{
+    statusEl.className='status danger';
+    statusEl.textContent='状态: 危险 - 严重甩尾!';
+  }
+}
+
+function step(){
+  if(!scenarioRunning)return;
+
+  const tThreshold=parseFloat(document.getElementById('t').value);
+  const counterAngle=parseFloat(document.getElementById('ar').value)*Math.PI/180;
+  const throttle=parseInt(document.getElementById('th').value);
+
+  scenarioTime+=0.016;
+
+  // Initial disturbance
+  if(scenarioTime<0.5){
+    beta+=0.02;
+    r+=0.15;
+  }
+
+  // Countersteer
+  if(scenarioTime>tThreshold&&!countersteerApplied){
+    countersteerApplied=true;
+    r-=Math.abs(counterAngle)*2;
+  }
+
+  // Throttle effect
+  if(countersteerApplied){
+    if(throttle===0){ // brake
+      beta*=0.95;
+      r*=0.9;
+    }else if(throttle===1){ // coast
+      beta*=0.92;
+      r*=0.88;
+    }else{ // throttle
+      beta*=0.97;
+      r*=0.92;
+    }
+  }
+
+  // Natural damping
+  beta*=0.98;
+  r*=0.97;
+
+  heading+=r*0.016;
+
+  const px=W/2+Math.sin(heading)*beta*200;
+  const py=H/2-Math.cos(heading)*beta*200;
+  trail.push([px,py]);
+  if(trail.length>300)trail.shift();
+
+  draw();
+  requestAnimationFrame(step);
+}
+
+function startScenario(){
+  reset();
+  scenarioRunning=true;
+  step();
+}
+
+function reset(){
+  beta=0;r=0;heading=0;
+  scenarioRunning=false;
+  scenarioTime=0;
+  countersteerApplied=false;
+  trail=[];
+  draw();
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',()=>{
+  document.getElementById(vals[ids.indexOf(id)]).textContent=document.getElementById(id).value;
+}));
+
+draw();
+</script>
+</body>
+</html>

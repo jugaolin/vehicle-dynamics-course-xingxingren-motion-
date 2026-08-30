@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>稳态响应交互仿真</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#13161B;color:#EDE7DA;font-family:'Noto Sans SC',sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:20px;color:#54B7C4;font-size:1.5em}
+.container{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.canvas-box{background:#1a1d23;border-radius:8px;padding:15px;flex:1;min-width:300px}
+.controls{background:#1a1d23;border-radius:8px;padding:15px;min-width:280px}
+label{display:block;margin:10px 0 5px;color:#54B7C4;font-size:0.9em}
+input[type=range]{width:100%;accent-color:#54B7C4}
+.value{text-align:right;color:#EF7440;font-size:0.85em;font-family:monospace}
+canvas{width:100%;border-radius:4px}
+.info{background:#1a1d23;border-radius:8px;padding:15px;margin-top:20px;font-size:0.9em;line-height:1.6}
+.info b{color:#54B7C4}
+</style>
+</head>
+<body>
+<h1>🎛️ 稳态响应交互仿真</h1>
+<div class="container">
+  <div class="canvas-box">
+    <canvas id="cv" width="500" height="400"></canvas>
+  </div>
+  <div class="controls">
+    <label>质量 m (kg) <span class="value" id="vm">1500</span></label>
+    <input type="range" id="m" min="800" max="2500" value="1500" step="50">
+    <label>轴距 L (m) <span class="value" id="vl">2.6</span></label>
+    <input type="range" id="L" min="2.0" max="3.2" value="2.6" step="0.1">
+    <label>前侧偏刚度 Cf (N/rad) <span class="value" id="vcf">55000</span></label>
+    <input type="range" id="Cf" min="30000" max="80000" value="55000" step="1000">
+    <label>后侧偏刚度 Cr (N/rad) <span class="value" id="vcr">60000</span></label>
+    <input type="range" id="Cr" min="30000" max="80000" value="60000" step="1000">
+    <label>重心前距 a (m) <span class="value" id="va">1.2</span></label>
+    <input type="range" id="a" min="0.8" max="1.8" value="1.2" step="0.05">
+    <label>摩擦系数 μ <span class="value" id="vmu">1.0</span></label>
+    <input type="range" id="mu" min="0.3" max="1.5" value="1.0" step="0.05">
+  </div>
+</div>
+<div class="info">
+  <b>图表说明：</b>横轴为速度，纵轴为稳态增益。青色曲线为不足转向增益，黄色竖线为US/OS转换速度 Vc。
+</div>
+<script>
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+const pad={l:60,r:30,t:40,b:50};
+const ids=['m','L','Cf','Cr','a','mu'];
+const vals=['vm','vl','vcf','vcr','va','vmu'];
+
+function draw(){
+  ids.forEach((id,i)=>{
+    document.getElementById(vals[i]).textContent=document.getElementById(id).value;
+  });
+  const m=parseFloat(document.getElementById('m').value);
+  const L=parseFloat(document.getElementById('L').value);
+  const Cf=parseFloat(document.getElementById('Cf').value);
+  const Cr=parseFloat(document.getElementById('Cr').value);
+  const a=parseFloat(document.getElementById('a').value);
+  const b=L-a;
+  const mu=parseFloat(document.getElementById('mu').value);
+
+  const K=(m/(L*L))*(a/Cr-b/Cf);
+  const denom=m*(a*Cf-b*Cr);
+  const Vc=denom>0?Math.sqrt(L*L*Cf*Cr/denom):Infinity;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#333';
+  ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const x=pad.l+i*(W-pad.l-pad.r)/5;
+    ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,H-pad.b);ctx.stroke();
+    const y=pad.t+i*(H-pad.t-pad.b)/5;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle='#EDE7DA';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle='#EDE7DA';
+  ctx.font='12px sans-serif';
+  ctx.textAlign='center';
+  for(let i=0;i<=5;i++){
+    ctx.fillText(i*40+'',pad.l+i*(W-pad.l-pad.r)/5,H-pad.b+20);
+  }
+  ctx.fillText('速度 V (km/h)',W/2,H-10);
+  ctx.save();
+  ctx.translate(15,H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('稳态增益 δ/R',0,0);
+  ctx.restore();
+
+  // Plot gain curve
+  const maxV=200;
+  const maxGain=0.12;
+
+  ctx.strokeStyle='#54B7C4';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  let first=true;
+  for(let v=1;v<=maxV;v+=2){
+    const vs=v/3.6;
+    const gain=L/50+K*vs*vs;
+    const x=pad.l+(v/maxV)*(W-pad.l-pad.r);
+    const y=H-pad.b-(gain/maxGain)*(H-pad.t-pad.b);
+    if(y<pad.t-10||y>H-pad.b+10)continue;
+    const yc=Math.max(pad.t,Math.min(H-pad.b,y));
+    if(first){ctx.moveTo(x,yc);first=false;}
+    else ctx.lineTo(x,yc);
+  }
+  ctx.stroke();
+
+  // Vc line
+  if(Vc>0&&Vc<300){
+    const vcKmh=Vc*3.6;
+    const xc=pad.l+(vcKmh/maxV)*(W-pad.l-pad.r);
+    if(xc>pad.l&&xc<W-pad.r){
+      ctx.strokeStyle='#FBBF24';
+      ctx.lineWidth=2;
+      ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(xc,pad.t);ctx.lineTo(xc,H-pad.b);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#FBBF24';
+      ctx.fillText('Vc='+vcKmh.toFixed(0)+'km/h',xc,pad.t-5);
+    }
+  }
+
+  // K info
+  ctx.fillStyle='#54B7C4';
+  ctx.font='bold 12px sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('K='+K.toFixed(6)+(K>0?' (不足转向)':K<0?' (过度转向)':' (中性)'),pad.l+10,pad.t+20);
+}
+
+ids.forEach(id=>document.getElementById(id).addEventListener('input',draw));
+draw();
+</script>
+</body>
+</html>
