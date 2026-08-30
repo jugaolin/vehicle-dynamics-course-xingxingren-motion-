@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>第 3 课 · 跟手,还是发飘发晃</title>
-<meta name="description" content="汽车运动性能第三课:瞬态转向响应——固有频率与阻尼、横摆角速度的频率响应与共振峰、响应时间;以及极限附近(前后轮谁先到极限)与低摩擦路面。含动态原创插图。">
+<title>�� 3 �� �� ����,���Ƿ�Ʈ����</title>
+<meta name="description" content="�����˶����ܵ�����:˲̬ת����Ӧ��������Ƶ�������ᡢ��ڽ��ٶȵ�Ƶ����Ӧ�빲��塢��Ӧʱ��;�Լ����޸���(ǰ����˭�ȵ�����)���Ħ��·�档����̬ԭ����ͼ��">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,9 +12,9 @@
 <style>
 @media (prefers-reduced-motion:no-preference){
   .peakdot{animation:pulse 1.8s ease-in-out infinite}
-  /* 推头:整车顺着变宽的弧线往外滑 */
+  /* ��ͷ:����˳�ű���Ļ������⻬ */
   .push{offset-path:path('M60,150 C120,120 210,116 300,150'); animation:travel 4.4s ease-in-out infinite; offset-rotate:auto}
-  /* 甩尾:车尾甩出,车身绕质心旋转 */
+  /* ˦β:��β˦��,������������ת */
   .spin{transform-box:view-box; transform-origin:490px 170px; animation:spin 4.4s cubic-bezier(.5,0,.4,1) infinite}
   @keyframes spin{0%,14%{transform:rotate(0deg)}52%,72%{transform:rotate(28deg)}92%,100%{transform:rotate(0deg)}}
   .swaytag{animation:pulse 2s ease-in-out infinite}
@@ -24,118 +24,118 @@
 <body>
 
 <nav class="nav"><div class="nav-in">
-  <a class="brand" href="../index.html">星星人<span class="dot">·</span>讲运动学</a>
+  <a class="brand" href="../index.html">������<span class="dot">��</span>���˶�ѧ</a>
   <div class="nav-links">
-    <a href="../index.html">首页</a>
-    <a href="../framework.html">全书框架</a>
-    <a href="../syllabus.html">课程表</a>
+    <a href="../index.html">��ҳ</a>
+    <a href="../framework.html">ȫ����</a>
+    <a href="../syllabus.html">�γ̱�</a>
   </div>
-  <button class="anim-toggle" id="animToggle" aria-label="切换动画">&#9654; 动图</button>
+  <button class="anim-toggle" id="animToggle" aria-label="�л�����">&#9654; ��ͼ</button>
 </div></nav>
 
 <div class="wrap">
   <header class="hero">
-    <p class="eyebrow">第 3 课 · 第二、三章 动态转向响应与极限性能</p>
-    <h1>跟手,还是发飘发晃?</h1>
-    <p class="lede">第 2 课讲的是"稳稳转弯以后"车往哪走(稳态)。可开车最真切的手感,是<strong>你打方向那一下、到车真正转起来之间</strong>的那零点几秒——有的车干脆跟手,有的车慢半拍、还发晃。这一课讲这段"过程",再往前推到<strong>轮胎快滑的极限</strong>。</p>
+    <p class="eyebrow">�� 3 �� �� �ڶ������� ��̬ת����Ӧ�뼫������</p>
+    <h1>����,���Ƿ�Ʈ����?</h1>
+    <p class="lede">�� 2 �ν�����"����ת���Ժ�"��������(��̬)���ɿ��������е��ָ�,��<strong>�������һ�¡���������ת����֮��</strong>������㼸�롪���еĳ��ɴ����,�еĳ������ġ������Ρ���һ�ν����"����",����ǰ�Ƶ�<strong>��̥�컬�ļ���</strong>��</p>
     <div class="meta">
-      <span>面向零基础驾驶者</span><span>约 12 分钟</span><span>KEYWORDS&nbsp;&nbsp;固有频率 · 阻尼 · 共振 · 极限</span>
+      <span>�����������ʻ��</span><span>Լ 12 ����</span><span>KEYWORDS&nbsp;&nbsp;����Ƶ�� �� ���� �� ���� �� ����</span>
     </div>
 
-    <div class="map" aria-label="本课在全书的位置">
-      <div class="step"><span class="n">01</span>轮胎</div>
-      <div class="step here"><span class="n">02–03</span>如何响应</div>
-      <div class="step"><span class="n">04–07</span>调节旋钮</div>
-      <div class="step"><span class="n">08</span>人来闭环</div>
+    <div class="map" aria-label="������ȫ���λ��">
+      <div class="step"><span class="n">01</span>��̥</div>
+      <div class="step here"><span class="n">02�C03</span>�����Ӧ</div>
+      <div class="step"><span class="n">04�C07</span>������ť</div>
+      <div class="step"><span class="n">08</span>�����ջ�</div>
     </div>
   </header>
 
   <div class="hook">
-    <span class="k">先问你一个手感</span>
-    <p>同样是变道,有的车"你手一动,车头立刻跟上、一步到位";有的车"你打了方向,车慢吞吞地转,还左右晃两下才稳住"。都能转弯,为什么这段<strong>过程</strong>的质感差这么多?书里用两个词回答:<strong>快不快(固有频率)</strong>、<strong>晃不晃(阻尼)</strong>。</p>
+    <span class="k">������һ���ָ�</span>
+    <p>ͬ���Ǳ��,�еĳ�"����һ��,��ͷ���̸��ϡ�һ����λ";�еĳ�"����˷���,�������̵�ת,�����һ����²���ס"������ת��,Ϊʲô���<strong>����</strong>���ʸв���ô��?�����������ʻش�:<strong>�첻��(����Ƶ��)</strong>��<strong>�β���(����)</strong>��</p>
   </div>
 
   <section>
-    <h2><span class="idx">01</span>车,是一个"二阶系统"</h2>
-    <p>第 2 课把车简化成横摆 + 侧移的<strong>二自由度模型</strong>。当你阶跃式地打一把方向,这个模型的横摆角速度不会瞬间到位,而是像<strong>被弹簧和阻尼器拉着</strong>一样,慢慢逼近目标值。书里(2.3 节)用两个量刻画这段过程:</p>
+    <h2><span class="idx">01</span>��,��һ��"����ϵͳ"</h2>
+    <p>�� 2 �ΰѳ��򻯳ɺ�� + ���Ƶ�<strong>�����ɶ�ģ��</strong>�������Ծʽ�ش�һ�ѷ���,���ģ�͵ĺ�ڽ��ٶȲ���˲�䵽λ,������<strong>�����ɺ�����������</strong>һ��,�����ƽ�Ŀ��ֵ������(2.3 ��)���������̻���ι���:</p>
     <ul>
-      <li><strong>固有频率 ω<sub>n</sub></strong>(式2-30):车"想多快回应"的本事。ω<sub>n</sub> 越高,反应越<strong>快、越跟手</strong>;</li>
-      <li><strong>阻尼比 ζ</strong>(式2-30):车"稳不稳得住"。ζ 太小会<strong>过冲、来回晃</strong>;够大则一步到位、不晃。</li>
+      <li><strong>����Ƶ�� ��<sub>n</sub></strong>(ʽ2-30):��"�����Ӧ"�ı��¡���<sub>n</sub> Խ��,��ӦԽ<strong>�졢Խ����</strong>;</li>
+      <li><strong>����� ��</strong>(ʽ2-30):��"�Ȳ��ȵ�ס"���� ̫С��<strong>���塢���ػ�</strong>;������һ����λ�����Ρ�</li>
     </ul>
-    <p>第 3 章(3.2.2)把这段过程拆成更细的"响应参数",其中最贴近手感的是:<strong>横摆率响应时间 t<sub>p</sub></strong>(打方向到横摆率第一次到峰值要多久,式3-15)、以及综合快与稳的<strong>阻尼系数 ζω<sub>n</sub></strong>(式3-16)。三种典型车的响应长这样:</p>
+    <p>�� 3 ��(3.2.2)����ι��̲�ɸ�ϸ��"��Ӧ����",�����������ָе���:<strong>�������Ӧʱ�� t<sub>p</sub></strong>(���򵽺���ʵ�һ�ε���ֵҪ���,ʽ3-15)���Լ��ۺϿ����ȵ�<strong>����ϵ�� �Ʀ�<sub>n</sub></strong>(ʽ3-16)�����ֵ��ͳ�����Ӧ������:</p>
 
     <figure class="figanim">
-      <span class="playtag">动态</span>
-      <svg viewBox="0 0 520 300" role="img" aria-label="阶跃打方向后横摆角速度的三种响应:跟手、发飘(慢)、发晃(过冲振荡)">
+      <span class="playtag">��̬</span>
+      <svg viewBox="0 0 520 300" role="img" aria-label="��Ծ������ڽ��ٶȵ�������Ӧ:���֡���Ʈ(��)������(������)">
         <line x1="60" y1="20" x2="60" y2="256" class="s-axis"/>
         <line x1="60" y1="220" x2="500" y2="220" class="s-axis"/>
-        <text x="16" y="34" class="t mut" font-size="12">横摆率</text>
-        <text x="430" y="248" class="t mut" font-size="12">时间 →</text>
+        <text x="16" y="34" class="t mut" font-size="12">�����</text>
+        <text x="430" y="248" class="t mut" font-size="12">ʱ�� ��</text>
         <!-- target line -->
         <line x1="60" y1="96" x2="500" y2="96" class="s-grid s-dash"/>
-        <text x="466" y="90" class="t mut" font-size="11">目标值</text>
-        <!-- 发晃:过冲振荡 (ζ小) -->
+        <text x="466" y="90" class="t mut" font-size="11">Ŀ��ֵ</text>
+        <!-- ����:������ (��С) -->
         <path d="M60,220 C110,220 120,54 160,72 C190,86 196,108 220,102 C250,96 250,96 300,96 L500,96"
               class="s-teal anim-draw" style="--dash:640;--dur:2.6s;--delay:.4s" stroke-width="2.5"/>
-        <text x="150" y="52" class="t teal" font-size="12">发晃(阻尼小)</text>
-        <!-- 跟手:干脆到位 (合适) -->
+        <text x="150" y="52" class="t teal" font-size="12">����(����С)</text>
+        <!-- ����:�ɴൽλ (����) -->
         <path d="M60,220 C112,220 130,98 190,96 L500,96" class="s-curve anim-draw" style="--dash:560;--dur:1.7s"/>
-        <text x="250" y="82" class="t acc" font-size="12.5">跟手(ω<tspan font-size="9" dy="3">n</tspan><tspan dy="-3">高、阻尼合适)</tspan></text>
-        <!-- 发飘:慢半拍 (ωn低) -->
+        <text x="250" y="82" class="t acc" font-size="12.5">����(��<tspan font-size="9" dy="3">n</tspan><tspan dy="-3">�ߡ��������)</tspan></text>
+        <!-- ��Ʈ:������ (��n��) -->
         <path d="M60,220 C170,220 300,120 500,100" class="s-faint anim-draw" style="--dash:640;--dur:3s;--delay:.2s" stroke-width="2"/>
-        <text x="360" y="150" class="t mut" font-size="12">发飘(慢半拍)</text>
+        <text x="360" y="150" class="t mut" font-size="12">��Ʈ(������)</text>
       </svg>
-      <figcaption><span class="figtag">图 1 · 原创动图</span> &nbsp;同样"啪"地打一把方向(阶跃),三种车的横摆率长出三条不同的曲线:<b class="acc">跟手</b>的一步到位;<b>发飘</b>的慢慢爬、迟迟不到位;<b class="teal">发晃</b>的冲过头、来回振荡才收住。工程师要的是第一种——又快又不晃。</figcaption>
+      <figcaption><span class="figtag">ͼ 1 �� ԭ����ͼ</span> &nbsp;ͬ��"ž"�ش�һ�ѷ���(��Ծ),���ֳ��ĺ���ʳ���������ͬ������:<b class="acc">����</b>��һ����λ;<b>��Ʈ</b>�����������ٳٲ���λ;<b class="teal">����</b>�ĳ��ͷ�������񵴲���ס������ʦҪ���ǵ�һ�֡����ֿ��ֲ��Ρ�</figcaption>
     </figure>
   </section>
 
   <section>
-    <h2><span class="idx">02</span>为什么高速变道会"心里发慌":频率响应与共振峰</h2>
-    <p>光看"打一把方向"还不够。真实开车是<strong>连续地来回打方向</strong>(变道、蛇形、修正)。书里(3.2.2,图对应式3-10~3-14)于是问:如果我以不同的<strong>快慢频率</strong>晃方向盘,车的横摆率跟得有多好?这就是<strong>横摆角速度的频率响应</strong>——动态转向响应最有代表性的评价方法。</p>
-    <p>画出来是一条带"驼峰"的曲线:在某个频率上,车的响应会<strong>被放大</strong>,这个峰对应<strong>横摆共振频率 f<sub>y</sub></strong>(高速时约等于 ω<sub>n</sub>/2π)。峰越高,说明这车在那个频率上<strong>越"神经质"、越容易晃</strong>——书里用<strong>峰值增益比</strong>衡量,它和阻尼、和第 2 课的稳定系数 K 都挂钩(不足转向越弱,峰越高)。此外还有<strong>相位滞后</strong>:车速越高,侧向加速度的相位滞后越大——这正是"高速变道感觉车慢半拍、心里发慌"的来源。</p>
+    <h2><span class="idx">02</span>Ϊʲô���ٱ����"���﷢��":Ƶ����Ӧ�빲���</h2>
+    <p>�⿴"��һ�ѷ���"����������ʵ������<strong>���������ش���</strong>(��������Ρ�����)������(3.2.2,ͼ��Ӧʽ3-10~3-14)������:������Բ�ͬ��<strong>����Ƶ��</strong>�η�����,���ĺ���ʸ����ж��?�����<strong>��ڽ��ٶȵ�Ƶ����Ӧ</strong>������̬ת����Ӧ���д����Ե����۷�����</p>
+    <p>��������һ����"�շ�"������:��ĳ��Ƶ����,������Ӧ��<strong>���Ŵ�</strong>,������Ӧ<strong>��ڹ���Ƶ�� f<sub>y</sub></strong>(����ʱԼ���� ��<sub>n</sub>/2��)����Խ��,˵���⳵���Ǹ�Ƶ����<strong>Խ"����"��Խ���׻�</strong>����������<strong>��ֵ�����</strong>����,�������ᡢ�͵� 2 �ε��ȶ�ϵ�� K ���ҹ�(����ת��Խ��,��Խ��)�����⻹��<strong>��λ�ͺ�</strong>:����Խ��,������ٶȵ���λ�ͺ�Խ�󡪡�������"���ٱ���о��������ġ����﷢��"����Դ��</p>
 
     <figure class="figanim">
-      <span class="playtag">动态</span>
-      <svg viewBox="0 0 520 290" role="img" aria-label="横摆角速度对转向角的频率响应:低频平坦,共振频率处出现峰值,高频衰减">
+      <span class="playtag">��̬</span>
+      <svg viewBox="0 0 520 290" role="img" aria-label="��ڽ��ٶȶ�ת��ǵ�Ƶ����Ӧ:��Ƶƽ̹,����Ƶ�ʴ����ַ�ֵ,��Ƶ˥��">
         <line x1="62" y1="18" x2="62" y2="250" class="s-axis"/>
         <line x1="62" y1="210" x2="500" y2="210" class="s-axis"/>
-        <text x="20" y="32" class="t mut" font-size="12">增益</text>
-        <text x="392" y="238" class="t mut" font-size="12">打方向的快慢(频率) →</text>
+        <text x="20" y="32" class="t mut" font-size="12">����</text>
+        <text x="392" y="238" class="t mut" font-size="12">����Ŀ���(Ƶ��) ��</text>
         <!-- response curve with resonance peak -->
         <path d="M62,150 L150,148 C210,146 236,150 270,96 C288,70 300,70 318,96 C352,150 400,182 500,196"
               class="s-curve anim-draw" style="--dash:640;--dur:2.4s"/>
         <!-- peak marker -->
         <line x1="294" y1="70" x2="294" y2="210" class="s-acc s-dash peakdot" stroke-width="1.4"/>
         <circle cx="294" cy="70" r="5" class="s-filla peakdot"/>
-        <text x="300" y="60" class="t acc" font-size="12">共振峰 f</text>
+        <text x="300" y="60" class="t acc" font-size="12">����� f</text>
         <text x="352" y="60" class="t acc mono" font-size="11">y</text>
-        <text x="86" y="140" class="t mut" font-size="11.5">低频:稳稳跟手</text>
-        <text x="404" y="180" class="t mut" font-size="11.5">高频:跟不动、还滞后</text>
+        <text x="86" y="140" class="t mut" font-size="11.5">��Ƶ:���ȸ���</text>
+        <text x="404" y="180" class="t mut" font-size="11.5">��Ƶ:�����������ͺ�</text>
       </svg>
-      <figcaption><span class="figtag">图 2 · 原创动图</span> &nbsp;横轴是"你晃方向盘的快慢"。低频时车稳稳跟手;到<b class="acc">共振频率 f<tspan font-size="9" dy="2">y</tspan></b>附近响应被放大(那个跳动的峰);再快车就跟不动、而且明显滞后。峰越高的车越"神经质"。书里说:想又快又不晃,关键是<b>做大后轮的等效侧抗刚度</b>,再配前轮。</figcaption>
+      <figcaption><span class="figtag">ͼ 2 �� ԭ����ͼ</span> &nbsp;������"��η����̵Ŀ���"����Ƶʱ�����ȸ���;��<b class="acc">����Ƶ�� f<tspan font-size="9" dy="2">y</tspan></b>������Ӧ���Ŵ�(�Ǹ������ķ�);�ٿ쳵�͸����������������ͺ󡣷�Խ�ߵĳ�Խ"����"������˵:���ֿ��ֲ���,�ؼ���<b>������ֵĵ�Ч�࿹�ն�</b>,����ǰ�֡�</figcaption>
     </figure>
 
     <div class="hook teal">
-      <span class="k">怎么把车调得又快又稳</span>
-      <p>书里(3.2.2)给的思路很统一:<strong>先确保后轮有足够大的"等效侧抗刚度"</strong>(让车尾咬得住地),再据此配前轮。第 5 课讲悬架时你会看到:束角、侧倾这些"旋钮",本质上就是在<strong>悄悄改这个等效侧抗刚度</strong>。第 6 课的 4WS,则是让后轮也能主动转向来直接改动态响应。</p>
+      <span class="k">��ô�ѳ������ֿ�����</span>
+      <p>����(3.2.2)����˼·��ͳһ:<strong>��ȷ���������㹻���"��Ч�࿹�ն�"</strong>(�ó�βҧ��ס��),�پݴ���ǰ�֡��� 5 �ν�����ʱ��ῴ��:���ǡ�������Щ"��ť",�����Ͼ�����<strong>���ĸ������Ч�࿹�ն�</strong>���� 6 �ε� 4WS,�����ú���Ҳ������ת����ֱ�ӸĶ�̬��Ӧ��</p>
     </div>
   </section>
 
   <section>
-    <h2><span class="idx">03</span>把车推到头:谁先"撑不住"?</h2>
-    <p>前面都在轮胎的<strong>线性区</strong>(第 1 课:力还能随侧偏角乖乖增大)。可一旦侧向加速度足够大,总有一根轴的轮胎<strong>先到摩擦极限</strong>、力再也给不上来。书里(3.5.1)说:<strong>只要前后轮有一方的侧向力到了摩擦圆半径,车就难以稳定回转</strong>。两种情形,手感完全不同:</p>
+    <h2><span class="idx">03</span>�ѳ��Ƶ�ͷ:˭��"�Ų�ס"?</h2>
+    <p>ǰ�涼����̥��<strong>������</strong>(�� 1 ��:���������ƫ�ǹԹ�����)����һ��������ٶ��㹻��,����һ�������̥<strong>�ȵ�Ħ������</strong>������Ҳ��������������(3.5.1)˵:<strong>ֻҪǰ������һ���Ĳ���������Ħ��Բ�뾶,���������ȶ���ת</strong>����������,�ָ���ȫ��ͬ:</p>
 
     <figure class="figanim">
-      <span class="playtag">动态</span>
-      <svg viewBox="0 0 640 290" role="img" aria-label="极限两种情形:前轮先到极限车往外推(推头),后轮先到极限车尾甩出向内打转(甩尾)">
-        <!-- Scene A: 推头(左半) -->
-        <text x="50" y="32" class="t acc" font-size="13.5">前轮先到极限 → 转不进、往外推</text>
-        <!-- 你想走的弧 -->
+      <span class="playtag">��̬</span>
+      <svg viewBox="0 0 640 290" role="img" aria-label="������������:ǰ���ȵ����޳�������(��ͷ),�����ȵ����޳�β˦�����ڴ�ת(˦β)">
+        <!-- Scene A: ��ͷ(���) -->
+        <text x="50" y="32" class="t acc" font-size="13.5">ǰ���ȵ����� �� ת������������</text>
+        <!-- �����ߵĻ� -->
         <path d="M50,160 C130,116 230,112 310,160" class="s-grid s-dash" stroke-width="1.8"/>
-        <text x="130" y="106" class="t mut" font-size="11">你想走的弧</text>
-        <!-- 车实际冲出去的弧(更宽) -->
+        <text x="130" y="106" class="t mut" font-size="11">�����ߵĻ�</text>
+        <!-- ��ʵ�ʳ��ȥ�Ļ�(����) -->
         <path d="M50,160 C130,138 240,160 310,220" class="s-faint s-dash" stroke-width="1.8"/>
-        <text x="180" y="240" class="t mut" font-size="11">车实际冲出去</text>
+        <text x="180" y="240" class="t mut" font-size="11">��ʵ�ʳ��ȥ</text>
         <!-- push car -->
         <g class="push">
           <rect x="-16" y="-11" width="32" height="22" rx="5" class="s-tirefill"/>
@@ -144,67 +144,67 @@
         <!-- divider -->
         <line x1="348" y1="40" x2="348" y2="260" class="s-grid"/>
 
-        <!-- Scene B: 甩尾(右半) -->
-        <text x="370" y="32" class="t teal" font-size="13.5">后轮先到极限 → 尾部甩、向内打转</text>
-        <!-- 你想走的弧(右半同理) -->
+        <!-- Scene B: ˦β(�Ұ�) -->
+        <text x="370" y="32" class="t teal" font-size="13.5">�����ȵ����� �� β��˦�����ڴ�ת</text>
+        <!-- �����ߵĻ�(�Ұ�ͬ��) -->
         <path d="M380,160 C440,116 540,112 600,160" class="s-grid s-dash" stroke-width="1.8"/>
-        <text x="440" y="106" class="t mut" font-size="11">你想走的弧</text>
+        <text x="440" y="106" class="t mut" font-size="11">�����ߵĻ�</text>
         <!-- spin car: parent <g> handles translate, inner <g> handles rotation -->
         <g transform="translate(490,170)">
           <g class="spin">
             <rect x="-15" y="-30" width="30" height="60" rx="8" class="s-fillsurface s-ink"/>
             <circle cx="0" cy="26" r="4" class="s-fillt"/>
           </g>
-          <!-- 车尾甩出去的弧线 -->
+          <!-- ��β˦��ȥ�Ļ��� -->
           <path d="M15,0 Q30,-10 36,14" class="s-teal" fill="none" stroke-width="1.5" stroke-dasharray="3 3"/>
-          <text x="40" y="10" class="t teal" font-size="10">尾巴甩</text>
+          <text x="40" y="10" class="t teal" font-size="10">β��˦</text>
         </g>
-        <text x="380" y="268" class="t mut" font-size="11">车身绕质心转,尾巴甩出去(向内打转)</text>
+        <text x="380" y="268" class="t mut" font-size="11">����������ת,β��˦��ȥ(���ڴ�ת)</text>
       </svg>
-      <figcaption><span class="figtag">图 3 · 原创动图</span> &nbsp;左:<b class="acc">前轮先到极限</b>——你再加方向,转弯半径也不再变小,车顺着变宽的弧往外冲(推头)。右:<b class="teal">后轮先到极限</b>——车身侧滑角骤增、绕着质心转起来,尾巴甩出去(向内打转)。书里(3.5.1)特别提醒:多数车后轮摩擦系数偏大,反而更容易前轮先到、往外推。</figcaption>
+      <figcaption><span class="figtag">ͼ 3 �� ԭ����ͼ</span> &nbsp;��:<b class="acc">ǰ���ȵ�����</b>�������ټӷ���,ת��뾶Ҳ���ٱ�С,��˳�ű���Ļ������(��ͷ)����:<b class="teal">�����ȵ�����</b>���������໬����������������ת����,β��˦��ȥ(���ڴ�ת)������(3.5.1)�ر�����:����������Ħ��ϵ��ƫ��,����������ǰ���ȵ��������ơ�</figcaption>
     </figure>
 
     <div class="hook">
-      <span class="k">⚠️ 一个容易绕晕的术语</span>
-      <p>书里在"极限"这一节的<strong>用词和线性区不一样</strong>,而且书自己反复叮嘱"<strong>两者本质不同,切勿混同</strong>":<br>
-      · <strong>线性区</strong>(第 2 课):由前后轮<strong>侧抗系数</strong>判断——C<sub>f</sub>&lt;C<sub>r</sub> 是不足转向,C<sub>f</sub>&gt;C<sub>r</sub> 是过度转向;<br>
-      · <strong>极限区</strong>(本节):由前后轮<strong>最大摩擦系数</strong>判断——μ<sub>f</sub>&lt;μ<sub>r</sub>(前轮先到极限)书里称<strong>过度转向</strong>,μ<sub>f</sub>&gt;μ<sub>r</sub>(后轮先到)称<strong>不足转向</strong>。<br>
-      记现象比记名字靠谱:<strong>前轮先滑=往外推,后轮先滑=尾巴甩</strong>。书里还说,<strong>高速快速回打方向盘时后轮容易先到极限;而在一个方向上持续加大转向时,前轮容易先到极限。</strong></p>
+      <span class="k">?? һ���������ε�����</span>
+      <p>������"����"��һ�ڵ�<strong>�ôʺ���������һ��</strong>,�������Լ���������"<strong>���߱��ʲ�ͬ,�����ͬ</strong>":<br>
+      �� <strong>������</strong>(�� 2 ��):��ǰ����<strong>�࿹ϵ��</strong>�жϡ���C<sub>f</sub>&lt;C<sub>r</sub> �ǲ���ת��,C<sub>f</sub>&gt;C<sub>r</sub> �ǹ���ת��;<br>
+      �� <strong>������</strong>(����):��ǰ����<strong>���Ħ��ϵ��</strong>�жϡ�����<sub>f</sub>&lt;��<sub>r</sub>(ǰ���ȵ�����)�����<strong>����ת��</strong>,��<sub>f</sub>&gt;��<sub>r</sub>(�����ȵ�)��<strong>����ת��</strong>��<br>
+      ������ȼ����ֿ���:<strong>ǰ���Ȼ�=������,�����Ȼ�=β��˦</strong>�����ﻹ˵,<strong>���ٿ��ٻش�����ʱ���������ȵ�����;����һ�������ϳ����Ӵ�ת��ʱ,ǰ�������ȵ����ޡ�</strong></p>
     </div>
   </section>
 
   <section>
-    <h2><span class="idx">04</span>路一滑,一切都被放大</h2>
-    <p>书里(3.5.2)把话说得很实在:<strong>干燥柏油路上,轮胎的接地力其实相当富裕</strong>;可一到<strong>冰雪路、高速湿滑路面</strong>,路面摩擦系数骤降,轮胎能给的力和你正需要的力<strong>贴得很近</strong>——摩擦圆一下子缩小,第 1 课那个"圆"变得又小又挤。</p>
-    <p>更麻烦的是<strong>水膜效应</strong>:高速时若水膜变厚,轮胎接地力会<strong>急速下降</strong>,这时车能不能开,很大程度上取决于轮胎的湿地接地与排水能力。书里给出的应对很明确:在易滑路面上,<strong>ABS、TCS</strong>(抑制车轮纵向打滑/抱死)和<strong>稳定控制系统</strong>(给车直接施加横摆力矩、减速)会<strong>发挥极大作用</strong>,帮你把车留在"还能动"的范围里。这些"主动技术",正是第 6 课的主角。</p>
+    <h2><span class="idx">04</span>·һ��,һ�ж����Ŵ�</h2>
+    <p>����(3.5.2)�ѻ�˵�ú�ʵ��:<strong>�������·��,��̥�Ľӵ�����ʵ�൱��ԣ</strong>;��һ��<strong>��ѩ·������ʪ��·��</strong>,·��Ħ��ϵ���轵,��̥�ܸ�������������Ҫ����<strong>���úܽ�</strong>����Ħ��Բһ������С,�� 1 ���Ǹ�"Բ"�����С�ּ���</p>
+    <p>���鷳����<strong>ˮĤЧӦ</strong>:����ʱ��ˮĤ���,��̥�ӵ�����<strong>�����½�</strong>,��ʱ���ܲ��ܿ�,�ܴ�̶���ȡ������̥��ʪ�ؽӵ�����ˮ���������������Ӧ�Ժ���ȷ:���׻�·����,<strong>ABS��TCS</strong>(���Ƴ��������/����)��<strong>�ȶ�����ϵͳ</strong>(����ֱ��ʩ�Ӻ�����ء�����)��<strong>���Ӽ�������</strong>,����ѳ�����"���ܶ�"�ķ�Χ���Щ"��������",���ǵ� 6 �ε����ǡ�</p>
   </section>
 
   <div class="take">
-    <h2>一课一收:你现在能说的三句话</h2>
+    <h2>һ��һ��:��������˵�����仰</h2>
     <ol>
-      <li>打方向到车转起来是个<strong>过程</strong>,由<strong>固有频率 ω<sub>n</sub></strong>(快不快)和<strong>阻尼 ζ</strong>(晃不晃)决定;工程师要的是又快又不晃;</li>
-      <li>连续打方向时,横摆率的<strong>频率响应</strong>有个<strong>共振峰 f<sub>y</sub></strong>,峰越高越"神经质";想又快又稳,先做大<strong>后轮等效侧抗刚度</strong>;</li>
-      <li>到极限时,<strong>前轮先滑=往外推、后轮先滑=尾巴甩</strong>;路一滑摩擦圆缩小、一切被放大,这时 <strong>ABS/TCS/稳定控制</strong>最能帮上忙。</li>
+      <li>���򵽳�ת�����Ǹ�<strong>����</strong>,��<strong>����Ƶ�� ��<sub>n</sub></strong>(�첻��)��<strong>���� ��</strong>(�β���)����;����ʦҪ�����ֿ��ֲ���;</li>
+      <li>��������ʱ,����ʵ�<strong>Ƶ����Ӧ</strong>�и�<strong>����� f<sub>y</sub></strong>,��Խ��Խ"����";���ֿ�����,������<strong>���ֵ�Ч�࿹�ն�</strong>;</li>
+      <li>������ʱ,<strong>ǰ���Ȼ�=�����ơ������Ȼ�=β��˦</strong>;·һ��Ħ��Բ��С��һ�б��Ŵ�,��ʱ <strong>ABS/TCS/�ȶ�����</strong>���ܰ���æ��</li>
     </ol>
   </div>
 
   <div class="quiz">
-    <span class="k">🚗 开车验证题</span>
-    <p>找一段<strong>空旷、干燥</strong>的路,低速做一次轻柔变道,体会车头"跟手"的那零点几秒——它是<strong>干脆一步到位</strong>,还是<strong>要晃一下</strong>?再回想雨天高速:同样的动作,是不是感觉车"更飘、更慢半拍"?那就是摩擦圆缩小 + 相位滞后。(务必低速、留足余量、注意安全。)</p>
+    <span class="k">?? ������֤��</span>
+    <p>��һ��<strong>�տ�������</strong>��·,������һ��������,��ᳵͷ"����"������㼸�롪������<strong>�ɴ�һ����λ</strong>,����<strong>Ҫ��һ��</strong>?�ٻ����������:ͬ���Ķ���,�ǲ��Ǹо���"��Ʈ����������"?�Ǿ���Ħ��Բ��С + ��λ�ͺ�(��ص��١�����������ע�ⰲȫ��)</p>
   </div>
 
   <div class="next">
-    <span class="arrow">→</span>
+    <span class="arrow">��</span>
     <div>
-      <div class="lbl">下一课预告</div>
-      <div class="ti">第 4 课 · 你的手和车之间</div>
-      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">既然响应质感这么重要,那"人"是怎么感知它的?下一课讲<strong>转向系统</strong>:路感从哪来、方向盘为什么自己回正、以及那一下"脱落感"。</p>
+      <div class="lbl">��һ��Ԥ��</div>
+      <div class="ti">�� 4 �� �� ����ֺͳ�֮��</div>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:14px">��Ȼ��Ӧ�ʸ���ô��Ҫ,��"��"����ô��֪����?��һ�ν�<strong>ת��ϵͳ</strong>:·�д�������������Ϊʲô�Լ��������Լ���һ��"�����"��</p>
     </div>
   </div>
 
   <footer>
-    <p class="src">星星人 · 讲运动学　|　第 3 课 / 共 7 课</p>
-    <p>本页为个人学习讲义,内容依据《汽车运动性能技术》(日本汽车技术协会「汽车技术经典书系」第 4 分册,主编 安部正人、大沢洋)整理讲解,不与外部资料对比、不扩展。文中插图均为按书中概念<b>原创重绘/动画</b>,未复制原书图片或成段原文。&nbsp;<a href="../index.html">← 回首页</a>&nbsp;·&nbsp;<a href="lesson-02-2dof.html">← 第 2 课</a>&nbsp;·&nbsp;<a href="lesson-04-steering.html">第 4 课 →</a></p>
+    <p class="src">������ �� ���˶�ѧ��|���� 3 �� / �� 7 ��</p>
+    <p>��ҳΪ����ѧϰ����,�������ݡ������˶����ܼ�����(�ձ���������Э�ᡸ��������������ϵ���� 4 �ֲ�,���� �������ˡ���g��)��������,�����ⲿ���϶Աȡ�����չ�����в�ͼ��Ϊ�����и���<b>ԭ���ػ�/����</b>,δ����ԭ��ͼƬ��ɶ�ԭ�ġ�&nbsp;<a href="../index.html">�� ����ҳ</a>&nbsp;��&nbsp;<a href="lesson-02-2dof.html">�� �� 2 ��</a>&nbsp;��&nbsp;<a href="lesson-04-steering.html">�� 4 �� ��</a></p>
   </footer>
 </div>
 <script src="../assets/anim-toggle.js"></script>
